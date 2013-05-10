@@ -24,6 +24,9 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "weight.db";
 
+	/**
+	 * Singleton instance
+	 */
 	private static WeightDBHelper instance = null;
 
 	private WeightDBHelper(Context context) {

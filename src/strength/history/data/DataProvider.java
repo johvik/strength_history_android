@@ -16,7 +16,16 @@ import android.util.Log;
 
 public class DataProvider implements WeightDataProvider {
 
+	/**
+	 * List of events listeners can support
+	 */
 	public interface Events {
+		/**
+		 * WeightData was changed
+		 * 
+		 * @param weightData
+		 *            The new data
+		 */
 		public void weightDataUpdate(Iterable<Weight> weightData);
 	}
 

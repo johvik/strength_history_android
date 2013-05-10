@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 public abstract class DataListener extends Activity implements
 		DataProvider.Events {
+	/**
+	 * Data provider object
+	 */
 	protected static final DataProvider data = new DataProvider();
 
 	@Override

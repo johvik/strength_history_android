@@ -22,6 +22,9 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "exercise.db";
 
+	/**
+	 * Singleton instance
+	 */
 	private static ExerciseDBHelper instance = null;
 
 	private ExerciseDBHelper(Context context) {
