@@ -4,13 +4,13 @@ import strength.history.data.structure.Weight;
 import android.content.Intent;
 import android.os.Messenger;
 
-public abstract class WeightDataServiceBase extends ServiceBase {
+public abstract class WeightServiceBase extends ServiceBase {
 	/**
 	 * Name of the weight data passed with the intent
 	 */
 	public static final String WEIGHT = "WEIGHT";
 
-	public interface WeightDataProvider {
+	public interface WeightProvider {
 		/**
 		 * Deletes weight
 		 * 
@@ -81,7 +81,7 @@ public abstract class WeightDataServiceBase extends ServiceBase {
 	 */
 	protected boolean query_interrupt = false;
 
-	public WeightDataServiceBase(String name) {
+	public WeightServiceBase(String name) {
 		super(name);
 	}
 

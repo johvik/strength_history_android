@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import strength.history.data.service.ServiceBase;
-import strength.history.data.service.WeightDataServiceBase.WeightDataProvider;
-import strength.history.data.service.local.LocalWeightDataService;
+import strength.history.data.service.WeightServiceBase.WeightProvider;
+import strength.history.data.service.local.LocalWeightService;
 import strength.history.data.structure.Weight;
 
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 
-public class DataProvider implements WeightDataProvider {
+public class DataProvider implements WeightProvider {
 
 	/**
 	 * List of events listeners can support
@@ -43,12 +43,11 @@ public class DataProvider implements WeightDataProvider {
 	@Override
 	public void deleteWeight(Weight weight) {
 		if (dataListener != null) {
-			Intent intent = new Intent(dataListener,
-					LocalWeightDataService.class);
+			Intent intent = new Intent(dataListener, LocalWeightService.class);
 			intent.putExtra(ServiceBase.REQUEST,
-					LocalWeightDataService.Request.DELETE);
+					LocalWeightService.Request.DELETE);
 			intent.putExtra(ServiceBase.MESSENGER, mMessenger);
-			intent.putExtra(LocalWeightDataService.WEIGHT, weight);
+			intent.putExtra(LocalWeightService.WEIGHT, weight);
 			dataListener.startService(intent);
 		}
 	}
@@ -56,12 +55,11 @@ public class DataProvider implements WeightDataProvider {
 	@Override
 	public void insertWeight(Weight weight) {
 		if (dataListener != null) {
-			Intent intent = new Intent(dataListener,
-					LocalWeightDataService.class);
+			Intent intent = new Intent(dataListener, LocalWeightService.class);
 			intent.putExtra(ServiceBase.REQUEST,
-					LocalWeightDataService.Request.INSERT);
+					LocalWeightService.Request.INSERT);
 			intent.putExtra(ServiceBase.MESSENGER, mMessenger);
-			intent.putExtra(LocalWeightDataService.WEIGHT, weight);
+			intent.putExtra(LocalWeightService.WEIGHT, weight);
 			dataListener.startService(intent);
 		}
 	}
@@ -69,10 +67,9 @@ public class DataProvider implements WeightDataProvider {
 	@Override
 	public void queryWeight() {
 		if (dataListener != null) {
-			Intent intent = new Intent(dataListener,
-					LocalWeightDataService.class);
+			Intent intent = new Intent(dataListener, LocalWeightService.class);
 			intent.putExtra(ServiceBase.REQUEST,
-					LocalWeightDataService.Request.QUERY);
+					LocalWeightService.Request.QUERY);
 			intent.putExtra(ServiceBase.MESSENGER, mMessenger);
 			dataListener.startService(intent);
 		}
@@ -81,12 +78,11 @@ public class DataProvider implements WeightDataProvider {
 	@Override
 	public void updateWeight(Weight weight) {
 		if (dataListener != null) {
-			Intent intent = new Intent(dataListener,
-					LocalWeightDataService.class);
+			Intent intent = new Intent(dataListener, LocalWeightService.class);
 			intent.putExtra(ServiceBase.REQUEST,
-					LocalWeightDataService.Request.UPDATE);
+					LocalWeightService.Request.UPDATE);
 			intent.putExtra(ServiceBase.MESSENGER, mMessenger);
-			intent.putExtra(LocalWeightDataService.WEIGHT, weight);
+			intent.putExtra(LocalWeightService.WEIGHT, weight);
 			dataListener.startService(intent);
 		}
 	}
@@ -98,7 +94,7 @@ public class DataProvider implements WeightDataProvider {
 			Log.d("DataProvider", "service=" + service);
 			switch (service) {
 			case WEIGHT_DATA:
-				LocalWeightDataService.Request request = LocalWeightDataService.Request
+				LocalWeightService.Request request = LocalWeightService.Request
 						.parse(msg.arg2);
 				Log.d("DataProvider", "request=" + request);
 				switch (request) {

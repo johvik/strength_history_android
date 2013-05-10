@@ -3,7 +3,7 @@ package strength.history.data.service.local;
 import java.util.ArrayList;
 
 import strength.history.data.db.WeightDBHelper;
-import strength.history.data.service.WeightDataServiceBase;
+import strength.history.data.service.WeightServiceBase;
 import strength.history.data.structure.Weight;
 import android.content.Intent;
 import android.os.Message;
@@ -11,20 +11,20 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
-public class LocalWeightDataService extends WeightDataServiceBase {
-	public LocalWeightDataService() {
-		super("LocalWeightDataService");
+public class LocalWeightService extends WeightServiceBase {
+	public LocalWeightService() {
+		super("LocalWeightService");
 	}
 
 	@Override
 	public void onDestroy() {
-		Log.d("LocalWeightDataService", "onDestroy");
+		Log.d("LocalWeightService", "onDestroy");
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d("LocalWeightDataService", "onHandleIntent");
+		Log.d("LocalWeightService", "onHandleIntent");
 
 		Request request = (Request) intent.getSerializableExtra(REQUEST);
 		Messenger messenger = intent.getParcelableExtra(MESSENGER);
@@ -65,7 +65,7 @@ public class LocalWeightDataService extends WeightDataServiceBase {
 			try {
 				messenger.send(msg);
 			} catch (RemoteException e) {
-				Log.e("LocalWeightDataService", "Failed to send message");
+				Log.e("LocalWeightService", "Failed to send message");
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class LocalWeightDataService extends WeightDataServiceBase {
 			try {
 				messenger.send(msg);
 			} catch (RemoteException e) {
-				Log.e("LocalWeightDataService", "Failed to send message");
+				Log.e("LocalWeightService", "Failed to send message");
 			}
 		}
 	}
@@ -110,7 +110,7 @@ public class LocalWeightDataService extends WeightDataServiceBase {
 			try {
 				messenger.send(msg);
 			} catch (RemoteException e) {
-				Log.e("LocalWeightDataService", "Failed to send message");
+				Log.e("LocalWeightService", "Failed to send message");
 			}
 
 			if (res.size() < QUERY_LIMIT) {
@@ -138,7 +138,7 @@ public class LocalWeightDataService extends WeightDataServiceBase {
 			try {
 				messenger.send(msg);
 			} catch (RemoteException e) {
-				Log.e("LocalWeightDataService", "Failed to send message");
+				Log.e("LocalWeightService", "Failed to send message");
 			}
 		}
 	}
