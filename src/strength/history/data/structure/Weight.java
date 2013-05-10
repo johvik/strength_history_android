@@ -23,25 +23,52 @@ public class Weight implements Base<Weight> {
 		this.sync = sync;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	private Weight(Parcel in) {
+		id = in.readLong();
+		time = in.readLong();
+		weight = in.readDouble();
+		sync = in.readInt();
 	}
 
-	public long getId() {
-		return id;
+	@Override
+	public int compareTo(Weight another) {
+		int c = Long.valueOf(another.time).compareTo(time); // descending time
+		if (c == 0) {
+			c = Long.valueOf(id).compareTo(another.id);
+			if (c == 0) {
+				c = Double.valueOf(weight).compareTo(another.weight);
+				if (c == 0) {
+					c = Integer.valueOf(sync).compareTo(another.sync);
+				}
+			}
+		}
+		return c;
 	}
 
-	public long getTime() {
-		return time;
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 
-	public double getWeight() {
-		return weight;
+	@Override
+	public void writeToParcel(Parcel out, int flags) {
+		out.writeLong(id);
+		out.writeLong(time);
+		out.writeDouble(weight);
+		out.writeInt(sync);
 	}
 
-	public int getSync() {
-		return sync;
-	}
+	public static final Parcelable.Creator<Weight> CREATOR = new Parcelable.Creator<Weight>() {
+		@Override
+		public Weight createFromParcel(Parcel in) {
+			return new Weight(in);
+		}
+
+		@Override
+		public Weight[] newArray(int size) {
+			return new Weight[size];
+		}
+	};
 
 	@Override
 	public void updateFrom(Weight another) {
@@ -53,8 +80,7 @@ public class Weight implements Base<Weight> {
 
 	@Override
 	public Weight copy() {
-		Weight copy = new Weight(id, time, weight, sync);
-		return copy;
+		return new Weight(id, time, weight, sync);
 	}
 
 	@Override
@@ -78,55 +104,36 @@ public class Weight implements Base<Weight> {
 	}
 
 	@Override
-	public int describeContents() {
-		return 0;
+	public long getId() {
+		return id;
 	}
 
 	@Override
-	public void writeToParcel(Parcel out, int flags) {
-		out.writeLong(id);
-		out.writeLong(time);
-		out.writeDouble(weight);
-		out.writeInt(sync);
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	private Weight(Parcel in) {
-		id = in.readLong();
-		time = in.readLong();
-		weight = in.readDouble();
-		sync = in.readInt();
+	@Override
+	public int getSync() {
+		return sync;
 	}
 
-	public static final Parcelable.Creator<Weight> CREATOR = new Parcelable.Creator<Weight>() {
-		@Override
-		public Weight createFromParcel(Parcel in) {
-			return new Weight(in);
-		}
-
-		@Override
-		public Weight[] newArray(int size) {
-			return new Weight[size];
-		}
-	};
+	@Override
+	public void setSync(int sync) {
+		this.sync = sync;
+	}
 
 	@Override
 	public String toString() {
-		return id + " " + new Date(time).toLocaleString() + " " + weight
-				+ " kg " + sync;
+		return "Weight=" + id + " " + new Date(time).toLocaleString() + " "
+				+ weight + " kg " + sync;
 	}
 
-	@Override
-	public int compareTo(Weight another) {
-		int c = Long.valueOf(another.time).compareTo(time); // descending time
-		if (c == 0) {
-			c = Long.valueOf(id).compareTo(another.id);
-			if (c == 0) {
-				c = Double.valueOf(weight).compareTo(another.weight);
-				if (c == 0) {
-					c = Integer.valueOf(sync).compareTo(another.sync);
-				}
-			}
-		}
-		return c;
-	};
+	public long getTime() {
+		return time;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
 }
