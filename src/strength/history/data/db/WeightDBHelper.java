@@ -13,19 +13,16 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 public class WeightDBHelper extends DBHelperBase<Weight> {
-	public abstract class WeightEntry implements BaseColumns, SyncColumns,
-			TimeColumn {
-		private WeightEntry() {
-		}
-
+	private interface WeightEntry extends BaseColumns, SyncColumns, TimeColumn {
 		public static final String TABLE_NAME = "weight";
 		public static final String WEIGHT = "weight";
+		public static final String[] ALL_COLUMNS = new String[] {
+				WeightEntry._ID, WeightEntry.TIME, WeightEntry.WEIGHT,
+				WeightEntry.SYNC };
 	}
 
-	public static final int DATABASE_VERSION = 1;
-	public static final String DATABASE_NAME = "weight.db";
-	public static final String[] ALL_COLUMNS = new String[] { WeightEntry._ID,
-			WeightEntry.TIME, WeightEntry.WEIGHT, WeightEntry.SYNC };
+	private static final int DATABASE_VERSION = 1;
+	private static final String DATABASE_NAME = "weight.db";
 
 	private static WeightDBHelper instance = null;
 
@@ -90,7 +87,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		ArrayList<Weight> res = new ArrayList<Weight>();
 		SQLiteDatabase db = instance.getReadableDatabase();
 		Cursor cursor = db.query(WeightEntry.TABLE_NAME,
-				WeightDBHelper.ALL_COLUMNS, null, null, null, null,
+				WeightEntry.ALL_COLUMNS, null, null, null, null,
 				WeightEntry.TIME + " DESC, " + WeightEntry._ID + " ASC", offset
 						+ ", " + limit);
 
