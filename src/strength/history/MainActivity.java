@@ -3,6 +3,7 @@ package strength.history;
 import java.util.Date;
 
 import strength.history.data.DataListener;
+import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Weight;
 
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
  * Main Activity
  */
 public class MainActivity extends DataListener {
+	private Iterable<Exercise> exercises; // initialized in super.onCreate
 	private Iterable<Weight> weights; // initialized in super.onCreate
 
 	@Override
@@ -75,9 +77,18 @@ public class MainActivity extends DataListener {
 	}
 
 	@Override
-	public void callback(Iterable<Weight> weights) {
-		this.weights = weights;
-		Log.d("MainActivity", "data update");
+	public void exerciseCallback(Iterable<Exercise> data) {
+		exercises = data;
+		Log.d("MainActivity", "exercise data update");
+		for (Exercise e : exercises) {
+			Log.d("MainActivity", e.toString());
+		}
+	}
+
+	@Override
+	public void weightCallback(Iterable<Weight> data) {
+		weights = data;
+		Log.d("MainActivity", "weight data update");
 		for (Weight w : weights) {
 			Log.d("MainActivity", w.toString());
 		}

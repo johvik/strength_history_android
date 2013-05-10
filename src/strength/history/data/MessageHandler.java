@@ -27,13 +27,16 @@ public class MessageHandler extends Handler {
 		boolean ok = msg.what == 1;
 		Log.d("MessageHandler", "service=" + service + " request=" + request
 				+ " ok=" + ok);
+
+		DataListener dataListener = dataProvider.getDataListener();
 		switch (service) {
 		case EXERCISE:
-			// TODO
+			dataProvider.getExerciseProvider().handleCallback(request, msg.obj,
+					ok, dataListener);
 			break;
 		case WEIGHT:
 			dataProvider.getWeightProvider().handleCallback(request, msg.obj,
-					ok, dataProvider.getDataListener());
+					ok, dataListener);
 			break;
 		}
 	}
