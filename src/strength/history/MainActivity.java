@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.RadioGroup;
 
 /**
  * Main Activity
@@ -17,11 +18,13 @@ import android.view.View;
 public class MainActivity extends DataListener {
 	private Iterable<Exercise> exercises; // initialized in super.onCreate
 	private Iterable<Weight> weights; // initialized in super.onCreate
+	private RadioGroup radioGroup;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 	}
 
 	@Override
@@ -31,48 +34,79 @@ public class MainActivity extends DataListener {
 		return true;
 	}
 
-	/**
-	 * @param view
-	 */
-	@SuppressWarnings("static-method")
-	public void onQueryWeightClick(View view) {
-		Log.d("MainActivity", "onQueryWeightClick");
-
-		data.query((Weight) null);
+	private int radioIndex() {
+		return radioGroup.indexOfChild(radioGroup.findViewById(radioGroup
+				.getCheckedRadioButtonId()));
 	}
 
 	/**
 	 * @param view
 	 */
-	@SuppressWarnings("static-method")
-	public void onInsertWeightClick(View view) {
-		Log.d("MainActivity", "onInsertWeightClick");
+	public void onQueryClick(View view) {
+		int i = radioIndex();
+		Log.d("MainActivity", "onQueryClick" + i);
 
-		data.insert(new Weight(new Date().getTime(), 75.5));
-	}
-
-	/**
-	 * @param view
-	 */
-	public void onDeleteWeightClick(View view) {
-		Log.d("MainActivity", "onDeleteWeightClick");
-
-		for (Weight w : weights) {
-			data.delete(w);
+		if (i == 0) {
+			data.query((Exercise) null);
+		} else {
+			data.query((Weight) null);
 		}
 	}
 
 	/**
 	 * @param view
 	 */
-	public void onUpdateWeightClick(View view) {
-		Log.d("MainActivity", "onUpdateWeightClick");
+	public void onInsertClick(View view) {
+		int i = radioIndex();
+		Log.d("MainActivity", "onInsertClick" + i);
 
-		for (Weight w : weights) {
-			Weight tmp = new Weight(w.getId(), w.getTime(), 99.9, w.getSync());
-			w.updateFrom(tmp);
-			data.update(w);
-			break;
+		if (i == 0) {
+			data.insert(new Exercise("Test1"));
+		} else {
+			data.insert(new Weight(new Date().getTime(), 75.5));
+		}
+	}
+
+	/**
+	 * @param view
+	 */
+	public void onDeleteClick(View view) {
+		int i = radioIndex();
+		Log.d("MainActivity", "onDeleteClick" + i);
+
+		if (i == 0) {
+			for (Exercise e : exercises) {
+				data.delete(e);
+			}
+		} else {
+			for (Weight w : weights) {
+				data.delete(w);
+			}
+		}
+	}
+
+	/**
+	 * @param view
+	 */
+	public void onUpdateClick(View view) {
+		int i = radioIndex();
+		Log.d("MainActivity", "onUpdateClick" + i);
+
+		if (i == 0) {
+			for (Exercise e : exercises) {
+				Exercise tmp = new Exercise(e.getId(), "Updated", e.getSync());
+				e.updateFrom(tmp);
+				data.update(e);
+				break;
+			}
+		} else {
+			for (Weight w : weights) {
+				Weight tmp = new Weight(w.getId(), w.getTime(), 99.9,
+						w.getSync());
+				w.updateFrom(tmp);
+				data.update(w);
+				break;
+			}
 		}
 	}
 

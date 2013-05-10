@@ -55,7 +55,6 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	@Override
 	protected ContentValues toContentValues(Exercise exercise) {
 		ContentValues values = new ContentValues();
-		values.put(Entry._ID, exercise.getId());
 		values.put(Entry.NAME, exercise.getName());
 		values.put(Entry.SYNC, exercise.getSync());
 

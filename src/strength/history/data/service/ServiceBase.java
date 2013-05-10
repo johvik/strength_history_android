@@ -1,5 +1,6 @@
 package strength.history.data.service;
 
+import strength.history.data.structure.Base;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Messenger;
@@ -10,43 +11,16 @@ import android.os.Messenger;
  * @param <E>
  *            Structure type it provides
  */
-public abstract class ServiceBase<E> extends IntentService {
-	/**
-	 * Deletes item in the service
-	 * 
-	 * @param e
-	 *            Item to delete
-	 * @param messenger
-	 *            Callback
-	 */
+public abstract class ServiceBase<E extends Base<E>> extends IntentService {
+
+	protected abstract int getArg1();
+
 	protected abstract void delete(E e, Messenger messenger);
 
-	/**
-	 * Inserts item in the service
-	 * 
-	 * @param e
-	 *            Item to insert
-	 * @param messenger
-	 *            Callback
-	 */
 	protected abstract void insert(E e, Messenger messenger);
 
-	/**
-	 * Gets all items in the service
-	 * 
-	 * @param messenger
-	 *            Callback
-	 */
 	protected abstract void query(Messenger messenger);
 
-	/**
-	 * Updates item in the service
-	 * 
-	 * @param e
-	 *            Item to update
-	 * @param messenger
-	 *            Callback
-	 */
 	protected abstract void update(E e, Messenger messenger);
 
 	/**

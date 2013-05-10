@@ -1,7 +1,6 @@
 package strength.history.data.provider;
 
 import strength.history.data.DataListener;
-import strength.history.data.service.WeightServiceBase;
 import strength.history.data.service.local.LocalWeightService;
 import strength.history.data.structure.Weight;
 
@@ -53,7 +52,7 @@ public class WeightProvider extends Provider<Weight> {
 
 	@Override
 	protected String getDataFieldName() {
-		return WeightServiceBase.WEIGHT;
+		return LocalWeightService.WEIGHT;
 	}
 
 	@Override

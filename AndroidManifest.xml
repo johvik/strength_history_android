@@ -24,6 +24,9 @@
         </activity>
 
         <service
+            android:name="strength.history.data.service.local.LocalExerciseService"
+            android:exported="false" />
+        <service
             android:name="strength.history.data.service.local.LocalWeightService"
             android:exported="false" />
     </application>

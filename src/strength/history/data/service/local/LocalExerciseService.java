@@ -2,49 +2,49 @@ package strength.history.data.service.local;
 
 import java.util.ArrayList;
 
-import strength.history.data.db.WeightDBHelper;
-import strength.history.data.service.LocalServiceBase;
-import strength.history.data.structure.Weight;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import strength.history.data.db.ExerciseDBHelper;
+import strength.history.data.service.LocalServiceBase;
+import strength.history.data.structure.Exercise;
 
 /**
- * Local weight service
+ * Local exercise service
  */
-public class LocalWeightService extends
-		LocalServiceBase<Weight, WeightDBHelper> {
+public class LocalExerciseService extends
+		LocalServiceBase<Exercise, ExerciseDBHelper> {
 	/**
 	 * Name of the weight data passed with the intent
 	 */
-	public static final String WEIGHT = "WEIGHT";
+	public static final String EXERCISE = "EXERCISE";
 
 	/**
 	 * Constructor
 	 */
-	public LocalWeightService() {
-		super("LocalWeightService");
+	public LocalExerciseService() {
+		super("LocalExerciseService");
 	}
 
 	@Override
-	protected WeightDBHelper getDB() {
-		return WeightDBHelper.getInstance(getApplicationContext());
+	protected ExerciseDBHelper getDB() {
+		return ExerciseDBHelper.getInstance(getApplicationContext());
 	}
 
 	@Override
 	protected int getArg1() {
-		return Service.WEIGHT.ordinal();
+		return Service.EXERCISE.ordinal();
 	}
 
 	@Override
-	protected void delete(Weight e, Messenger messenger) {
+	protected void delete(Exercise e, Messenger messenger) {
 		if (e != null) {
-			WeightDBHelper db = WeightDBHelper
+			ExerciseDBHelper db = ExerciseDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = getArg1();
+			msg.arg1 = Service.EXERCISE.ordinal();
 			msg.arg2 = Request.DELETE.ordinal();
 
 			boolean deleted = db.delete(e);
@@ -57,18 +57,18 @@ public class LocalWeightService extends
 			try {
 				messenger.send(msg);
 			} catch (RemoteException ex) {
-				Log.e("LocalWeightService", "Failed to send message");
+				Log.e("LocalExerciseService", "Failed to send message");
 			}
 		}
 	}
 
 	@Override
-	protected void insert(Weight e, Messenger messenger) {
+	protected void insert(Exercise e, Messenger messenger) {
 		if (e != null) {
-			WeightDBHelper db = WeightDBHelper
+			ExerciseDBHelper db = ExerciseDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = getArg1();
+			msg.arg1 = Service.EXERCISE.ordinal();
 			msg.arg2 = Request.INSERT.ordinal();
 
 			boolean inserted = db.insert(e);
@@ -81,7 +81,7 @@ public class LocalWeightService extends
 			try {
 				messenger.send(msg);
 			} catch (RemoteException ex) {
-				Log.e("LocalWeightService", "Failed to send message");
+				Log.e("LocalExerciseService", "Failed to send message");
 			}
 		}
 	}
@@ -90,20 +90,20 @@ public class LocalWeightService extends
 	protected void query(Messenger messenger) {
 		// Divide into smaller queries
 		for (int offset = 0; !query_interrupt; offset += QUERY_LIMIT) {
-			WeightDBHelper db = WeightDBHelper
+			ExerciseDBHelper db = ExerciseDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = getArg1();
+			msg.arg1 = Service.EXERCISE.ordinal();
 			msg.arg2 = Request.QUERY.ordinal();
 
-			ArrayList<Weight> res = db.query(offset, QUERY_LIMIT);
+			ArrayList<Exercise> res = db.query(offset, QUERY_LIMIT);
 			msg.what = 1;
 			msg.obj = res;
 
 			try {
 				messenger.send(msg);
 			} catch (RemoteException ex) {
-				Log.e("LocalWeightService", "Failed to send message");
+				Log.e("LocalExerciseService", "Failed to send message");
 			}
 
 			if (res.size() < QUERY_LIMIT) {
@@ -113,12 +113,12 @@ public class LocalWeightService extends
 	}
 
 	@Override
-	protected void update(Weight e, Messenger messenger) {
+	protected void update(Exercise e, Messenger messenger) {
 		if (e != null) {
-			WeightDBHelper db = WeightDBHelper
+			ExerciseDBHelper db = ExerciseDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = getArg1();
+			msg.arg1 = Service.EXERCISE.ordinal();
 			msg.arg2 = Request.UPDATE.ordinal();
 
 			boolean updated = db.update(e);
@@ -131,30 +131,33 @@ public class LocalWeightService extends
 			try {
 				messenger.send(msg);
 			} catch (RemoteException ex) {
-				Log.e("LocalWeightService", "Failed to send message");
+				Log.e("LocalExerciseService", "Failed to send message");
 			}
 		}
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d("LocalWeightService", "onHandleIntent");
+		Log.d("LocalExerciseService", "onHandleIntent");
 
 		Request request = (Request) intent.getSerializableExtra(REQUEST);
 		Messenger messenger = intent.getParcelableExtra(MESSENGER);
 		if (request != null && messenger != null) {
 			switch (request) {
 			case DELETE:
-				delete((Weight) intent.getParcelableExtra(WEIGHT), messenger);
+				delete((Exercise) intent.getParcelableExtra(EXERCISE),
+						messenger);
 				break;
 			case INSERT:
-				insert((Weight) intent.getParcelableExtra(WEIGHT), messenger);
+				insert((Exercise) intent.getParcelableExtra(EXERCISE),
+						messenger);
 				break;
 			case QUERY:
 				query(messenger);
 				break;
 			case UPDATE:
-				update((Weight) intent.getParcelableExtra(WEIGHT), messenger);
+				update((Exercise) intent.getParcelableExtra(EXERCISE),
+						messenger);
 				break;
 			}
 		}

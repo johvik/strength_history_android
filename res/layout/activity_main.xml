@@ -15,8 +15,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:onClick="onQueryWeightClick"
-        android:text="Query Weight" />
+        android:onClick="onQueryClick"
+        android:text="Query" />
 
     <Button
         android:id="@+id/button2"
@@ -25,8 +25,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
-        android:onClick="onInsertWeightClick"
-        android:text="Insert Weight" />
+        android:onClick="onInsertClick"
+        android:text="Insert" />
 
     <Button
         android:id="@+id/button3"
@@ -35,8 +35,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button2"
-        android:onClick="onDeleteWeightClick"
-        android:text="Delete Weight" />
+        android:onClick="onDeleteClick"
+        android:text="Delete" />
 
     <Button
         android:id="@+id/button4"
@@ -45,7 +45,29 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button3"
-        android:onClick="onUpdateWeightClick"
-        android:text="Update Weight" />
+        android:onClick="onUpdateClick"
+        android:text="Update" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/button4" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Exercise" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight" />
+    </RadioGroup>
 
 </RelativeLayout>

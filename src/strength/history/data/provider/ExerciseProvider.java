@@ -1,7 +1,7 @@
 package strength.history.data.provider;
 
 import strength.history.data.DataListener;
-import strength.history.data.service.ExerciseServiceBase;
+import strength.history.data.service.local.LocalExerciseService;
 import strength.history.data.structure.Exercise;
 
 /**
@@ -48,13 +48,12 @@ public class ExerciseProvider extends Provider<Exercise> {
 
 	@Override
 	protected Class<?> getLocalServiceClass() {
-		// TODO Auto-generated method stub
-		return null;
+		return LocalExerciseService.class;
 	}
 
 	@Override
 	protected String getDataFieldName() {
-		return ExerciseServiceBase.EXERCISE;
+		return LocalExerciseService.EXERCISE;
 	}
 
 	@Override
