@@ -3,16 +3,31 @@ package strength.history.data.structure;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Exercise class
+ */
 public class Exercise implements Base<Exercise> {
 	private long id;
 	private String name;
 	private int sync;
 	private Exercise backup = null;
 
+	/**
+	 * Constructs a new exercise
+	 * 
+	 * @param name
+	 */
 	public Exercise(String name) {
 		this(-1, name, Sync.NEW);
 	}
 
+	/**
+	 * Constructs a new exercise
+	 * 
+	 * @param id
+	 * @param name
+	 * @param sync
+	 */
 	public Exercise(long id, String name, int sync) {
 		this.id = id;
 		this.name = name;
@@ -49,6 +64,9 @@ public class Exercise implements Base<Exercise> {
 		out.writeInt(sync);
 	}
 
+	/**
+	 * 
+	 */
 	public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
 		@Override
 		public Exercise createFromParcel(Parcel in) {
@@ -118,6 +136,11 @@ public class Exercise implements Base<Exercise> {
 		return "Exercise=" + id + " " + name + " " + sync;
 	}
 
+	/**
+	 * Gets the name of the exercise
+	 * 
+	 * @return The name
+	 */
 	public String getName() {
 		return name;
 	}

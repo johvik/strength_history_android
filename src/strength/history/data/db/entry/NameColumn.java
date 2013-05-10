@@ -1,5 +1,8 @@
 package strength.history.data.db.entry;
 
+/**
+ * A DB field for a name
+ */
 public interface NameColumn {
 	/**
 	 * Type: TEXT

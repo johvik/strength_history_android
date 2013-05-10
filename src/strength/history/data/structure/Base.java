@@ -2,6 +2,11 @@ package strength.history.data.structure;
 
 import android.os.Parcelable;
 
+/**
+ * Base class for the structures
+ * 
+ * @param <T>
+ */
 public interface Base<T> extends Comparable<T>, Parcelable {
 	/**
 	 * Moves values into the object

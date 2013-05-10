@@ -11,7 +11,13 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+ * Local weight service
+ */
 public class LocalWeightService extends WeightServiceBase {
+	/**
+	 * Constructor
+	 */
 	public LocalWeightService() {
 		super("LocalWeightService");
 	}
@@ -52,7 +58,7 @@ public class LocalWeightService extends WeightServiceBase {
 			WeightDBHelper db = WeightDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = Service.WEIGHT_DATA.ordinal();
+			msg.arg1 = Service.WEIGHT.ordinal();
 			msg.arg2 = Request.DELETE.ordinal();
 
 			boolean deleted = db.delete(weight);
@@ -76,7 +82,7 @@ public class LocalWeightService extends WeightServiceBase {
 			WeightDBHelper db = WeightDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = Service.WEIGHT_DATA.ordinal();
+			msg.arg1 = Service.WEIGHT.ordinal();
 			msg.arg2 = Request.INSERT.ordinal();
 
 			boolean inserted = db.insert(weight);
@@ -101,10 +107,11 @@ public class LocalWeightService extends WeightServiceBase {
 			WeightDBHelper db = WeightDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = Service.WEIGHT_DATA.ordinal();
+			msg.arg1 = Service.WEIGHT.ordinal();
 			msg.arg2 = Request.QUERY.ordinal();
 
 			ArrayList<Weight> res = db.query(offset, QUERY_LIMIT);
+			msg.what = 1;
 			msg.obj = res;
 
 			try {
@@ -125,7 +132,7 @@ public class LocalWeightService extends WeightServiceBase {
 			WeightDBHelper db = WeightDBHelper
 					.getInstance(getApplicationContext());
 			Message msg = Message.obtain();
-			msg.arg1 = Service.WEIGHT_DATA.ordinal();
+			msg.arg1 = Service.WEIGHT.ordinal();
 			msg.arg2 = Request.UPDATE.ordinal();
 
 			boolean updated = db.update(weight);

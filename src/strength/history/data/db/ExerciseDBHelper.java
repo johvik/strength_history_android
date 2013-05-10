@@ -12,6 +12,9 @@ import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.structure.Exercise;
 
+/**
+ * DB helper for Exercise
+ */
 public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
 		public static final String TABLE_NAME = "exercise";
@@ -31,6 +34,12 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		super(context, DATABASE_NAME, DATABASE_VERSION);
 	}
 
+	/**
+	 * Static access to the instance
+	 * 
+	 * @param context
+	 * @return The instance
+	 */
 	public static ExerciseDBHelper getInstance(Context context) {
 		// Singleton pattern
 		if (instance == null) {

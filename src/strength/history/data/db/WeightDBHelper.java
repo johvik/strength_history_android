@@ -13,6 +13,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+/**
+ * DB helper for Weight
+ */
 public class WeightDBHelper extends DBHelperBase<Weight> {
 	private interface Entry extends BaseColumns, TimeColumn, WeightColumn,
 			SyncColumns {
@@ -33,6 +36,12 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		super(context, DATABASE_NAME, DATABASE_VERSION);
 	}
 
+	/**
+	 * Static access to the instance
+	 * 
+	 * @param context
+	 * @return The instance
+	 */
 	public static WeightDBHelper getInstance(Context context) {
 		// Singleton pattern
 		if (instance == null) {

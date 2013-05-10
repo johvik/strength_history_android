@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
+/**
+ * Main Activity
+ */
 public class MainActivity extends DataListener {
-	private Iterable<Weight> weightData; // initialized in super.onCreate
+	private Iterable<Weight> weights; // initialized in super.onCreate
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,44 +29,56 @@ public class MainActivity extends DataListener {
 		return true;
 	}
 
+	/**
+	 * @param view
+	 */
 	@SuppressWarnings("static-method")
 	public void onQueryWeightClick(View view) {
 		Log.d("MainActivity", "onQueryWeightClick");
 
-		data.queryWeight();
+		data.query((Weight) null);
 	}
 
+	/**
+	 * @param view
+	 */
 	@SuppressWarnings("static-method")
 	public void onInsertWeightClick(View view) {
 		Log.d("MainActivity", "onInsertWeightClick");
 
-		data.insertWeight(new Weight(new Date().getTime(), 75.5));
+		data.insert(new Weight(new Date().getTime(), 75.5));
 	}
 
+	/**
+	 * @param view
+	 */
 	public void onDeleteWeightClick(View view) {
 		Log.d("MainActivity", "onDeleteWeightClick");
 
-		for (Weight w : weightData) {
-			data.deleteWeight(w);
+		for (Weight w : weights) {
+			data.delete(w);
 		}
 	}
 
+	/**
+	 * @param view
+	 */
 	public void onUpdateWeightClick(View view) {
 		Log.d("MainActivity", "onUpdateWeightClick");
 
-		for (Weight w : weightData) {
+		for (Weight w : weights) {
 			Weight tmp = new Weight(w.getId(), w.getTime(), 99.9, w.getSync());
 			w.updateFrom(tmp);
-			data.updateWeight(w);
+			data.update(w);
 			break;
 		}
 	}
 
 	@Override
-	public void weightDataUpdate(Iterable<Weight> weightData) {
-		this.weightData = weightData;
+	public void callback(Iterable<Weight> weights) {
+		this.weights = weights;
 		Log.d("MainActivity", "data update");
-		for (Weight w : weightData) {
+		for (Weight w : weights) {
 			Log.d("MainActivity", w.toString());
 		}
 	}

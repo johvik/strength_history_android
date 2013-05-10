@@ -5,6 +5,9 @@ import java.util.Date;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Weight class
+ */
 public class Weight implements Base<Weight> {
 	private long id;
 	private long time;
@@ -12,10 +15,24 @@ public class Weight implements Base<Weight> {
 	private int sync;
 	private Weight backup = null;
 
+	/**
+	 * Constructs a new weight object
+	 * 
+	 * @param time
+	 * @param weight
+	 */
 	public Weight(long time, double weight) {
 		this(-1, time, weight, Sync.NEW);
 	}
 
+	/**
+	 * Constructs a new weight object
+	 * 
+	 * @param id
+	 * @param time
+	 * @param weight
+	 * @param sync
+	 */
 	public Weight(long id, long time, double weight, int sync) {
 		this.id = id;
 		this.time = time;
@@ -58,6 +75,9 @@ public class Weight implements Base<Weight> {
 		out.writeInt(sync);
 	}
 
+	/**
+	 * 
+	 */
 	public static final Parcelable.Creator<Weight> CREATOR = new Parcelable.Creator<Weight>() {
 		@Override
 		public Weight createFromParcel(Parcel in) {
@@ -129,10 +149,20 @@ public class Weight implements Base<Weight> {
 				+ weight + " kg " + sync;
 	}
 
+	/**
+	 * Gets the time of the weight
+	 * 
+	 * @return The time
+	 */
 	public long getTime() {
 		return time;
 	}
 
+	/**
+	 * Gets the weight
+	 * 
+	 * @return The weight
+	 */
 	public double getWeight() {
 		return weight;
 	}

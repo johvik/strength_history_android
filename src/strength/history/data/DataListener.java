@@ -3,6 +3,9 @@ package strength.history.data;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ * Base Activity that acts as a listener
+ */
 public abstract class DataListener extends Activity implements
 		DataProvider.Events {
 	/**
@@ -12,13 +15,13 @@ public abstract class DataListener extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		DataProvider.setListener(this);
+		data.setListener(this);
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onDestroy() {
-		DataProvider.setListener(null);
+		data.setListener(null);
 		super.onDestroy();
 	}
 }
