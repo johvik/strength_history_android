@@ -4,14 +4,12 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public abstract class DBHelperBase<E> extends SQLiteOpenHelper {
 
-	public DBHelperBase(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, name, factory, version);
+	public DBHelperBase(Context context, String name, int version) {
+		super(context, name, null, version);
 	}
 
 	/**

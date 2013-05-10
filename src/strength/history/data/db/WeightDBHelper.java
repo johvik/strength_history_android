@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.db.entry.TimeColumn;
+import strength.history.data.db.entry.WeightColumn;
 import strength.history.data.structure.Weight;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,12 +14,11 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 public class WeightDBHelper extends DBHelperBase<Weight> {
-	private interface WeightEntry extends BaseColumns, SyncColumns, TimeColumn {
+	private interface Entry extends BaseColumns, TimeColumn, WeightColumn,
+			SyncColumns {
 		public static final String TABLE_NAME = "weight";
-		public static final String WEIGHT = "weight";
-		public static final String[] ALL_COLUMNS = new String[] {
-				WeightEntry._ID, WeightEntry.TIME, WeightEntry.WEIGHT,
-				WeightEntry.SYNC };
+		public static final String[] ALL_COLUMNS = new String[] { _ID, TIME,
+				WEIGHT, SYNC };
 	}
 
 	private static final int DATABASE_VERSION = 1;
@@ -27,7 +27,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	private static WeightDBHelper instance = null;
 
 	private WeightDBHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME, DATABASE_VERSION);
 	}
 
 	public static WeightDBHelper getInstance(Context context) {
@@ -43,24 +43,11 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + WeightEntry.TABLE_NAME + " ("
-				+ WeightEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ WeightEntry.TIME + " INTEGER NOT NULL, " + WeightEntry.WEIGHT
-				+ " REAL NOT NULL, " + WeightEntry.SYNC + " INTEGER NOT NULL);");
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.e("WeightDBHelper", "onUpgrade not supported");
-	}
-
-	@Override
 	protected ContentValues toContentValues(Weight weight) {
 		ContentValues values = new ContentValues();
-		values.put(WeightEntry.TIME, weight.getTime());
-		values.put(WeightEntry.WEIGHT, weight.getWeight());
-		values.put(WeightEntry.SYNC, weight.getSync());
+		values.put(Entry.TIME, weight.getTime());
+		values.put(Entry.WEIGHT, weight.getWeight());
+		values.put(Entry.SYNC, weight.getSync());
 
 		return values;
 	}
@@ -68,7 +55,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	@Override
 	public boolean delete(Weight weight) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		int rows = db.delete(WeightEntry.TABLE_NAME, WeightEntry._ID + "=?",
+		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?",
 				new String[] { Long.toString(weight.getId()) });
 		return rows != 0;
 	}
@@ -76,7 +63,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	@Override
 	public boolean insert(Weight weight) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		long id = db.insert(WeightEntry.TABLE_NAME, null,
+		long id = db.insert(Entry.TABLE_NAME, null,
 				instance.toContentValues(weight));
 		weight.setId(id);
 		return id != -1;
@@ -86,10 +73,9 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	public ArrayList<Weight> query(int offset, int limit) {
 		ArrayList<Weight> res = new ArrayList<Weight>();
 		SQLiteDatabase db = instance.getReadableDatabase();
-		Cursor cursor = db.query(WeightEntry.TABLE_NAME,
-				WeightEntry.ALL_COLUMNS, null, null, null, null,
-				WeightEntry.TIME + " DESC, " + WeightEntry._ID + " ASC", offset
-						+ ", " + limit);
+		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, null,
+				null, null, null, Entry.TIME + " DESC, " + Entry._ID + " ASC",
+				offset + ", " + limit);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -108,9 +94,22 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	@Override
 	public boolean update(Weight weight) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		int rows = db.update(WeightEntry.TABLE_NAME,
-				instance.toContentValues(weight), WeightEntry._ID + "=?",
+		int rows = db.update(Entry.TABLE_NAME,
+				instance.toContentValues(weight), Entry._ID + "=?",
 				new String[] { Long.toString(weight.getId()) });
 		return rows != 0;
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.TIME
+				+ " INTEGER NOT NULL, " + Entry.WEIGHT + " REAL NOT NULL, "
+				+ Entry.SYNC + " INTEGER NOT NULL);");
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.e(this.getClass().getName(), "onUpgrade not supported");
 	}
 }
