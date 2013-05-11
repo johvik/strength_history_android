@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
-import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Workout;
 
 public class WorkoutDBHelper extends DBHelperBase<Workout> {
@@ -19,11 +18,9 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 				NAME };
 
 		public interface Binding extends BaseColumns {
+			public static final String TABLE_NAME = "binding";
 			public static final String WORKOUT_ID = "workout_id";
 			public static final String EXERCISE_ID = "exercise_id";
-			public static final String TABLE_NAME = "binding";
-			public static final String[] ALL_COLUMNS = new String[] { _ID,
-					WORKOUT_ID, EXERCISE_ID };
 		}
 	}
 
@@ -83,10 +80,10 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		long id = db.insert(Entry.TABLE_NAME, null, toContentValues(e));
 		e.setId(id);
 		if (id != -1) {
-			for (Exercise i : e) {
+			for (Long l : e) {
 				ContentValues values = new ContentValues();
 				values.put(Entry.Binding.WORKOUT_ID, id);
-				values.put(Entry.Binding.TABLE_NAME, i.getId());
+				values.put(Entry.Binding.EXERCISE_ID, l);
 				db.insert(Entry.Binding.TABLE_NAME, null, values);
 			}
 		}
@@ -109,15 +106,13 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 			Workout w = new Workout(id, sync, name);
 			// Load bindings
 			Cursor c2 = db.query(Entry.Binding.TABLE_NAME,
-					Entry.Binding.ALL_COLUMNS, Entry.Binding.WORKOUT_ID + "=?",
+					new String[] { Entry.Binding.EXERCISE_ID },
+					Entry.Binding.WORKOUT_ID + "=?",
 					new String[] { Long.toString(id) }, null, null, null);
 
 			c2.moveToFirst();
 			while (!c2.isAfterLast()) {
-				// 0 is _ID
-				long workout_id = cursor.getLong(1);
-				long exercise_id = cursor.getLong(2);
-				// TODO How to bind it with exercises?
+				w.add(cursor.getLong(0));
 				c2.moveToNext();
 			}
 			c2.close();
@@ -141,10 +136,10 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		db.delete(Entry.Binding.TABLE_NAME, Entry.Binding.WORKOUT_ID + "=?",
 				id_str);
 		// Store new ones
-		for (Exercise i : e) {
+		for (Long l : e) {
 			ContentValues values = new ContentValues();
 			values.put(Entry.Binding.WORKOUT_ID, id);
-			values.put(Entry.Binding.TABLE_NAME, i.getId());
+			values.put(Entry.Binding.EXERCISE_ID, l);
 			db.insert(Entry.Binding.TABLE_NAME, null, values);
 		}
 		db.close();

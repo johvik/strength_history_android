@@ -9,9 +9,13 @@ import java.util.ListIterator;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Workout extends Base<Workout> implements List<Exercise> {
+public class Workout extends Base<Workout> implements List<Long> {
 	private String name;
-	private ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
+
+	public Workout(String name) {
+		this(-1, Sync.NEW, name);
+	}
 
 	public Workout(long id, int sync, String name) {
 		super(id, sync);
@@ -21,20 +25,20 @@ public class Workout extends Base<Workout> implements List<Exercise> {
 	protected Workout(Parcel in) {
 		super(in);
 		name = in.readString();
-		in.readTypedList(exercises, Exercise.CREATOR);
+		in.readList(exercise_ids, Long.class.getClassLoader());
 	}
 
 	@Override
 	public String toString() {
 		return "Workout=" + getId() + ":" + getSync() + " " + name + " "
-				+ exercises;
+				+ exercise_ids;
 	}
 
 	@Override
 	protected Workout _copy() {
 		Workout copy = new Workout(getId(), getSync(), name);
-		for (Exercise e : exercises) {
-			copy.add(e._copy());
+		for (Long l : exercise_ids) {
+			copy.add(l.longValue());
 		}
 		return copy;
 	}
@@ -48,13 +52,13 @@ public class Workout extends Base<Workout> implements List<Exercise> {
 	@Override
 	protected void _updateFrom(Workout another) {
 		name = another.name;
-		exercises = another.exercises;
+		exercise_ids = another.exercise_ids;
 	}
 
 	@Override
 	protected void _writeToParcel(Parcel out, int flags) {
 		out.writeString(name);
-		out.writeTypedList(exercises);
+		out.writeList(exercise_ids);
 	}
 
 	/**
@@ -90,117 +94,117 @@ public class Workout extends Base<Workout> implements List<Exercise> {
 	 */
 
 	@Override
-	public boolean add(Exercise object) {
-		return exercises.add(object);
+	public boolean add(Long object) {
+		return exercise_ids.add(object);
 	}
 
 	@Override
-	public void add(int location, Exercise object) {
-		exercises.add(location, object);
+	public void add(int location, Long object) {
+		exercise_ids.add(location, object);
 	}
 
 	@Override
-	public boolean addAll(Collection<? extends Exercise> arg0) {
-		return exercises.addAll(arg0);
+	public boolean addAll(Collection<? extends Long> arg0) {
+		return exercise_ids.addAll(arg0);
 	}
 
 	@Override
-	public boolean addAll(int arg0, Collection<? extends Exercise> arg1) {
-		return exercises.addAll(arg0, arg1);
+	public boolean addAll(int arg0, Collection<? extends Long> arg1) {
+		return exercise_ids.addAll(arg0, arg1);
 	}
 
 	@Override
 	public void clear() {
-		exercises.clear();
+		exercise_ids.clear();
 	}
 
 	@Override
 	public boolean contains(Object object) {
-		return exercises.contains(object);
+		return exercise_ids.contains(object);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> arg0) {
-		return exercises.containsAll(arg0);
+		return exercise_ids.containsAll(arg0);
 	}
 
 	@Override
-	public Exercise get(int location) {
-		return exercises.get(location);
+	public Long get(int location) {
+		return exercise_ids.get(location);
 	}
 
 	@Override
 	public int indexOf(Object object) {
-		return exercises.indexOf(object);
+		return exercise_ids.indexOf(object);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return exercises.isEmpty();
+		return exercise_ids.isEmpty();
 	}
 
 	@Override
-	public Iterator<Exercise> iterator() {
-		return exercises.iterator();
+	public Iterator<Long> iterator() {
+		return exercise_ids.iterator();
 	}
 
 	@Override
 	public int lastIndexOf(Object object) {
-		return exercises.lastIndexOf(object);
+		return exercise_ids.lastIndexOf(object);
 	}
 
 	@Override
-	public ListIterator<Exercise> listIterator() {
-		return exercises.listIterator();
+	public ListIterator<Long> listIterator() {
+		return exercise_ids.listIterator();
 	}
 
 	@Override
-	public ListIterator<Exercise> listIterator(int location) {
-		return exercises.listIterator(location);
+	public ListIterator<Long> listIterator(int location) {
+		return exercise_ids.listIterator(location);
 	}
 
 	@Override
-	public Exercise remove(int location) {
-		return exercises.remove(location);
+	public Long remove(int location) {
+		return exercise_ids.remove(location);
 	}
 
 	@Override
 	public boolean remove(Object object) {
-		return exercises.remove(object);
+		return exercise_ids.remove(object);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> arg0) {
-		return exercises.removeAll(arg0);
+		return exercise_ids.removeAll(arg0);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> arg0) {
-		return exercises.retainAll(arg0);
+		return exercise_ids.retainAll(arg0);
 	}
 
 	@Override
-	public Exercise set(int location, Exercise object) {
-		return exercises.set(location, object);
+	public Long set(int location, Long object) {
+		return exercise_ids.set(location, object);
 	}
 
 	@Override
 	public int size() {
-		return exercises.size();
+		return exercise_ids.size();
 	}
 
 	@Override
-	public List<Exercise> subList(int start, int end) {
-		return exercises.subList(start, end);
+	public List<Long> subList(int start, int end) {
+		return exercise_ids.subList(start, end);
 	}
 
 	@Override
 	public Object[] toArray() {
-		return exercises.toArray();
+		return exercise_ids.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] array) {
-		return exercises.toArray(array);
+		return exercise_ids.toArray(array);
 	}
 }

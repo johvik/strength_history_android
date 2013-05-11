@@ -2,6 +2,7 @@ package strength.history.data.service;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -29,6 +30,8 @@ public abstract class LocalServiceBase<E extends Base<E>, D extends DBHelperBase
 	}
 
 	protected abstract D getDB();
+
+	protected abstract String getIntentName();
 
 	@Override
 	protected final void delete(E e, Messenger messenger) {
@@ -122,6 +125,33 @@ public abstract class LocalServiceBase<E extends Base<E>, D extends DBHelperBase
 				Log.e("LocalServiceBase", "Failed to send message");
 			}
 		}
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected final void onHandleIntent(Intent intent) {
+		Log.d("LocalServiceBase", "onHandleIntent");
+
+		Request request = (Request) intent.getSerializableExtra(REQUEST);
+		Messenger messenger = intent.getParcelableExtra(MESSENGER);
+		if (request != null && messenger != null) {
+			switch (request) {
+			case DELETE:
+				delete((E) intent.getParcelableExtra(getIntentName()),
+						messenger);
+				break;
+			case INSERT:
+				insert((E) intent.getParcelableExtra(getIntentName()),
+						messenger);
+				break;
+			case QUERY:
+				query(messenger);
+				break;
+			case UPDATE:
+				update((E) intent.getParcelableExtra(getIntentName()),
+						messenger);
+				break;
+			}
+		}
 	}
 }

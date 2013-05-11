@@ -3,8 +3,10 @@ package strength.history;
 import java.util.Date;
 
 import strength.history.data.DataListener;
+import strength.history.data.service.ServiceBase.Service;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Weight;
+import strength.history.data.structure.Workout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +18,11 @@ import android.widget.RadioGroup;
  * Main Activity
  */
 public class MainActivity extends DataListener {
-	private Iterable<Exercise> exercises; // initialized in super.onCreate
-	private Iterable<Weight> weights; // initialized in super.onCreate
+	// initialized in super.onCreate from callback
+	private Iterable<Exercise> exercises;
+	private Iterable<Weight> weights;
+	private Iterable<Workout> workouts;
+
 	private RadioGroup radioGroup;
 
 	@Override
@@ -43,13 +48,19 @@ public class MainActivity extends DataListener {
 	 * @param view
 	 */
 	public void onQueryClick(View view) {
-		int i = radioIndex();
-		Log.d("MainActivity", "onQueryClick" + i);
+		Service s = Service.parse(radioIndex());
+		Log.d("MainActivity", "onQueryClick " + s);
 
-		if (i == 0) {
+		switch (s) {
+		case EXERCISE:
 			data.query((Exercise) null);
-		} else {
+			break;
+		case WEIGHT:
 			data.query((Weight) null);
+			break;
+		case WORKOUT:
+			data.query((Workout) null);
+			break;
 		}
 	}
 
@@ -57,13 +68,21 @@ public class MainActivity extends DataListener {
 	 * @param view
 	 */
 	public void onInsertClick(View view) {
-		int i = radioIndex();
-		Log.d("MainActivity", "onInsertClick" + i);
+		Service s = Service.parse(radioIndex());
+		Log.d("MainActivity", "onInsertClick " + s);
 
-		if (i == 0) {
+		switch (s) {
+		case EXERCISE:
 			data.insert(new Exercise("Test1"));
-		} else {
+			break;
+		case WEIGHT:
 			data.insert(new Weight(new Date().getTime(), 75.5));
+			break;
+		case WORKOUT:
+			Workout w = new Workout("Testing!");
+			w.add((long) 10);
+			data.insert(w);
+			break;
 		}
 	}
 
@@ -71,17 +90,25 @@ public class MainActivity extends DataListener {
 	 * @param view
 	 */
 	public void onDeleteClick(View view) {
-		int i = radioIndex();
-		Log.d("MainActivity", "onDeleteClick" + i);
+		Service s = Service.parse(radioIndex());
+		Log.d("MainActivity", "onDeleteClick " + s);
 
-		if (i == 0) {
+		switch (s) {
+		case EXERCISE:
 			for (Exercise e : exercises) {
 				data.delete(e);
 			}
-		} else {
+			break;
+		case WEIGHT:
 			for (Weight w : weights) {
 				data.delete(w);
 			}
+			break;
+		case WORKOUT:
+			for (Workout w : workouts) {
+				data.delete(w);
+			}
+			break;
 		}
 	}
 
@@ -89,17 +116,19 @@ public class MainActivity extends DataListener {
 	 * @param view
 	 */
 	public void onUpdateClick(View view) {
-		int i = radioIndex();
-		Log.d("MainActivity", "onUpdateClick" + i);
+		Service s = Service.parse(radioIndex());
+		Log.d("MainActivity", "onUpdateClick " + s);
 
-		if (i == 0) {
+		switch (s) {
+		case EXERCISE:
 			for (Exercise e : exercises) {
 				Exercise tmp = new Exercise(e.getId(), e.getSync(), "Updated");
 				e.updateFrom(tmp);
 				data.update(e);
 				break;
 			}
-		} else {
+			break;
+		case WEIGHT:
 			for (Weight w : weights) {
 				Weight tmp = new Weight(w.getId(), w.getSync(), w.getTime(),
 						99.9);
@@ -107,6 +136,15 @@ public class MainActivity extends DataListener {
 				data.update(w);
 				break;
 			}
+			break;
+		case WORKOUT:
+			for (Workout w : workouts) {
+				Workout tmp = new Workout(w.getId(), w.getSync(), "Updated!!!");
+				w.updateFrom(tmp);
+				data.update(w);
+				break;
+			}
+			break;
 		}
 	}
 
@@ -124,6 +162,15 @@ public class MainActivity extends DataListener {
 		weights = data;
 		Log.d("MainActivity", "weight data update");
 		for (Weight w : weights) {
+			Log.d("MainActivity", w.toString());
+		}
+	}
+
+	@Override
+	public void workoutCallback(Iterable<Workout> data) {
+		workouts = data;
+		Log.d("MainActivity", "workout data update");
+		for (Workout w : workouts) {
 			Log.d("MainActivity", w.toString());
 		}
 	}

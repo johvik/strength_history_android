@@ -91,7 +91,11 @@ public abstract class ServiceBase<E extends Base<E>> extends IntentService {
 		/**
 		 * Service that provides weight
 		 */
-		WEIGHT;
+		WEIGHT,
+		/**
+		 * Service that provides workout
+		 */
+		WORKOUT;
 
 		private static final Service[] SERVICE_VALUES = Service.values();
 
