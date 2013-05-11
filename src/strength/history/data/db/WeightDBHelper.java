@@ -20,8 +20,8 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	private interface Entry extends BaseColumns, TimeColumn, WeightColumn,
 			SyncColumns {
 		public static final String TABLE_NAME = "weight";
-		public static final String[] ALL_COLUMNS = new String[] { _ID, TIME,
-				WEIGHT, SYNC };
+		public static final String[] ALL_COLUMNS = new String[] { _ID, SYNC,
+				TIME, WEIGHT };
 	}
 
 	private static final int DATABASE_VERSION = 1;
@@ -58,8 +58,8 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	protected ContentValues toContentValues(Weight weight) {
 		ContentValues values = new ContentValues();
 		values.put(Entry.TIME, weight.getTime());
-		values.put(Entry.WEIGHT, weight.getWeight());
 		values.put(Entry.SYNC, weight.getSync());
+		values.put(Entry.WEIGHT, weight.getWeight());
 
 		return values;
 	}
@@ -86,16 +86,15 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		ArrayList<Weight> res = new ArrayList<Weight>();
 		SQLiteDatabase db = instance.getReadableDatabase();
 		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, null,
-				null, null, null, Entry.TIME + " DESC, " + Entry._ID + " ASC",
-				offset + ", " + limit);
+				null, null, null, null, offset + ", " + limit);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			long time = cursor.getLong(1);
-			double weight = cursor.getDouble(2);
-			int sync = cursor.getInt(3);
-			res.add(new Weight(id, time, weight, sync));
+			int sync = cursor.getInt(1);
+			long time = cursor.getLong(2);
+			double weight = cursor.getDouble(3);
+			res.add(new Weight(id, sync, time, weight));
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -115,9 +114,9 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.TIME
-				+ " INTEGER NOT NULL, " + Entry.WEIGHT + " REAL NOT NULL, "
-				+ Entry.SYNC + " INTEGER NOT NULL);");
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
+				+ " INTEGER NOT NULL, " + Entry.TIME + " INTEGER NOT NULL, "
+				+ Entry.WEIGHT + " REAL NOT NULL);");
 	}
 
 	@Override

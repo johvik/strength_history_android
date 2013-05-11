@@ -94,15 +94,15 @@ public class MainActivity extends DataListener {
 
 		if (i == 0) {
 			for (Exercise e : exercises) {
-				Exercise tmp = new Exercise(e.getId(), "Updated", e.getSync());
+				Exercise tmp = new Exercise(e.getId(), e.getSync(), "Updated");
 				e.updateFrom(tmp);
 				data.update(e);
 				break;
 			}
 		} else {
 			for (Weight w : weights) {
-				Weight tmp = new Weight(w.getId(), w.getTime(), 99.9,
-						w.getSync());
+				Weight tmp = new Weight(w.getId(), w.getSync(), w.getTime(),
+						99.9);
 				w.updateFrom(tmp);
 				data.update(w);
 				break;

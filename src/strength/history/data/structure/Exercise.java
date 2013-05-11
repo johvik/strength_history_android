@@ -6,11 +6,8 @@ import android.os.Parcelable;
 /**
  * Exercise class
  */
-public class Exercise implements Base<Exercise> {
-	private long id;
+public class Exercise extends Base<Exercise> {
 	private String name;
-	private int sync;
-	private Exercise backup = null;
 
 	/**
 	 * Constructs a new exercise
@@ -18,50 +15,55 @@ public class Exercise implements Base<Exercise> {
 	 * @param name
 	 */
 	public Exercise(String name) {
-		this(-1, name, Sync.NEW);
+		this(-1, Sync.NEW, name);
 	}
 
 	/**
 	 * Constructs a new exercise
 	 * 
 	 * @param id
-	 * @param name
 	 * @param sync
+	 * @param name
 	 */
-	public Exercise(long id, String name, int sync) {
-		this.id = id;
+	public Exercise(long id, int sync, String name) {
+		super(id, sync);
 		this.name = name;
-		this.sync = sync;
 	}
 
-	private Exercise(Parcel in) {
-		id = in.readLong();
+	protected Exercise(Parcel in) {
+		super(in);
 		name = in.readString();
-		sync = in.readInt();
+	}
+
+	@Override
+	public Exercise copy() {
+		return new Exercise(getId(), getSync(), name);
+	}
+
+	@Override
+	public String toString() {
+		return "Exercise=" + getId() + " " + name + " " + getSync();
+	}
+
+	@Override
+	public void updateFrom(Exercise another) {
+		super.updateFrom(another);
+		name = another.name;
 	}
 
 	@Override
 	public int compareTo(Exercise another) {
 		int c = name.compareTo(another.name);
 		if (c == 0) {
-			c = Long.valueOf(id).compareTo(another.id);
-			if (c == 0) {
-				c = Integer.valueOf(sync).compareTo(another.sync);
-			}
+			c = super.compareTo(another);
 		}
 		return c;
 	}
 
 	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeLong(id);
+		super.writeToParcel(out, flags);
 		out.writeString(name);
-		out.writeInt(sync);
 	}
 
 	/**
@@ -78,63 +80,6 @@ public class Exercise implements Base<Exercise> {
 			return new Exercise[size];
 		}
 	};
-
-	@Override
-	public void updateFrom(Exercise another) {
-		id = another.id;
-		name = another.name;
-		sync = another.sync;
-	}
-
-	@Override
-	public Exercise copy() {
-		return new Exercise(id, name, sync);
-	}
-
-	@Override
-	public void backup() {
-		if (backup == null) {
-			backup = copy();
-		}
-	}
-
-	@Override
-	public void commit() {
-		backup = null;
-	}
-
-	@Override
-	public void revert() {
-		if (backup != null) {
-			updateFrom(backup);
-			backup = null;
-		}
-	}
-
-	@Override
-	public long getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	@Override
-	public int getSync() {
-		return sync;
-	}
-
-	@Override
-	public void setSync(int sync) {
-		this.sync = sync;
-	}
-
-	@Override
-	public String toString() {
-		return "Exercise=" + id + " " + name + " " + sync;
-	}
 
 	/**
 	 * Gets the name of the exercise

@@ -18,8 +18,8 @@ import strength.history.data.structure.Exercise;
 public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
 		public static final String TABLE_NAME = "exercise";
-		public static final String[] ALL_COLUMNS = new String[] { _ID, NAME,
-				SYNC };
+		public static final String[] ALL_COLUMNS = new String[] { _ID, SYNC,
+				NAME };
 	}
 
 	private static final int DATABASE_VERSION = 1;
@@ -55,8 +55,8 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	@Override
 	protected ContentValues toContentValues(Exercise exercise) {
 		ContentValues values = new ContentValues();
-		values.put(Entry.NAME, exercise.getName());
 		values.put(Entry.SYNC, exercise.getSync());
+		values.put(Entry.NAME, exercise.getName());
 
 		return values;
 	}
@@ -83,15 +83,14 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		ArrayList<Exercise> res = new ArrayList<Exercise>();
 		SQLiteDatabase db = instance.getReadableDatabase();
 		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, null,
-				null, null, null, Entry.NAME + " ASC, " + Entry._ID + " ASC",
-				offset + ", " + limit);
+				null, null, null, null, offset + ", " + limit);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			String name = cursor.getString(1);
-			int sync = cursor.getInt(2);
-			res.add(new Exercise(id, name, sync));
+			int sync = cursor.getInt(1);
+			String name = cursor.getString(2);
+			res.add(new Exercise(id, sync, name));
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -111,8 +110,8 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.NAME
-				+ " TEXT NOT NULL, " + Entry.SYNC + " INTEGER NOT NULL);");
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
+				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL);");
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package strength.history.data.db;
 
 import java.util.ArrayList;
 
+import strength.history.data.structure.Base;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * @param <E>
  *            Structure class they handle
  */
-public abstract class DBHelperBase<E> extends SQLiteOpenHelper {
+public abstract class DBHelperBase<E extends Base<E>> extends SQLiteOpenHelper {
 
 	/**
 	 * Constructor
