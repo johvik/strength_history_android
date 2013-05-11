@@ -4,5 +4,12 @@
     <string name="app_name">Strength History</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="query">Query</string>
+    <string name="insert">Insert</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="exercise">Exercise</string>
+    <string name="weight">Weight</string>
+    <string name="workout">Workout</string>
 
 </resources>
