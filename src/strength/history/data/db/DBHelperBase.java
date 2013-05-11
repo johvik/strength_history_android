@@ -6,7 +6,9 @@ import strength.history.data.structure.Base;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Base class for DB helpers
@@ -76,4 +78,11 @@ public abstract class DBHelperBase<E extends Base<E>> extends SQLiteOpenHelper {
 	 */
 	public abstract boolean update(E e);
 
+	@Override
+	public abstract void onCreate(SQLiteDatabase db);
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.e(this.getClass().getName(), "onUpgrade not supported");
+	}
 }

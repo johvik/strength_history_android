@@ -7,7 +7,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
-import android.util.Log;
 import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.structure.Exercise;
@@ -22,8 +21,8 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 				NAME };
 	}
 
-	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "exercise.db";
+	private static final int DATABASE_VERSION = 1;
 
 	/**
 	 * Singleton instance
@@ -53,28 +52,30 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	}
 
 	@Override
-	protected ContentValues toContentValues(Exercise exercise) {
+	protected ContentValues toContentValues(Exercise e) {
 		ContentValues values = new ContentValues();
-		values.put(Entry.SYNC, exercise.getSync());
-		values.put(Entry.NAME, exercise.getName());
+		values.put(Entry.SYNC, e.getSync());
+		values.put(Entry.NAME, e.getName());
 
 		return values;
 	}
 
 	@Override
-	public boolean delete(Exercise exercise) {
+	public boolean delete(Exercise e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?",
-				new String[] { Long.toString(exercise.getId()) });
+				new String[] { Long.toString(e.getId()) });
+		db.close();
 		return rows != 0;
 	}
 
 	@Override
-	public boolean insert(Exercise exercise) {
+	public boolean insert(Exercise e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		long id = db.insert(Entry.TABLE_NAME, null,
-				instance.toContentValues(exercise));
-		exercise.setId(id);
+		long id = db
+				.insert(Entry.TABLE_NAME, null, instance.toContentValues(e));
+		e.setId(id);
+		db.close();
 		return id != -1;
 	}
 
@@ -99,11 +100,11 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	}
 
 	@Override
-	public boolean update(Exercise exercise) {
+	public boolean update(Exercise e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		int rows = db.update(Entry.TABLE_NAME,
-				instance.toContentValues(exercise), Entry._ID + "=?",
-				new String[] { Long.toString(exercise.getId()) });
+		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
+				Entry._ID + "=?", new String[] { Long.toString(e.getId()) });
+		db.close();
 		return rows != 0;
 	}
 
@@ -112,10 +113,5 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
 				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL);");
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.e(this.getClass().getName(), "onUpgrade not supported");
 	}
 }

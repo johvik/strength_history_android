@@ -11,7 +11,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 /**
  * DB helper for Weight
@@ -24,8 +23,8 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 				TIME, WEIGHT };
 	}
 
-	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "weight.db";
+	private static final int DATABASE_VERSION = 1;
 
 	/**
 	 * Singleton instance
@@ -55,29 +54,31 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	}
 
 	@Override
-	protected ContentValues toContentValues(Weight weight) {
+	protected ContentValues toContentValues(Weight e) {
 		ContentValues values = new ContentValues();
-		values.put(Entry.TIME, weight.getTime());
-		values.put(Entry.SYNC, weight.getSync());
-		values.put(Entry.WEIGHT, weight.getWeight());
+		values.put(Entry.TIME, e.getTime());
+		values.put(Entry.SYNC, e.getSync());
+		values.put(Entry.WEIGHT, e.getWeight());
 
 		return values;
 	}
 
 	@Override
-	public boolean delete(Weight weight) {
+	public boolean delete(Weight e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?",
-				new String[] { Long.toString(weight.getId()) });
+				new String[] { Long.toString(e.getId()) });
+		db.close();
 		return rows != 0;
 	}
 
 	@Override
-	public boolean insert(Weight weight) {
+	public boolean insert(Weight e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		long id = db.insert(Entry.TABLE_NAME, null,
-				instance.toContentValues(weight));
-		weight.setId(id);
+		long id = db
+				.insert(Entry.TABLE_NAME, null, instance.toContentValues(e));
+		e.setId(id);
+		db.close();
 		return id != -1;
 	}
 
@@ -103,11 +104,11 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	}
 
 	@Override
-	public boolean update(Weight weight) {
+	public boolean update(Weight e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		int rows = db.update(Entry.TABLE_NAME,
-				instance.toContentValues(weight), Entry._ID + "=?",
-				new String[] { Long.toString(weight.getId()) });
+		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
+				Entry._ID + "=?", new String[] { Long.toString(e.getId()) });
+		db.close();
 		return rows != 0;
 	}
 
@@ -117,10 +118,5 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
 				+ " INTEGER NOT NULL, " + Entry.TIME + " INTEGER NOT NULL, "
 				+ Entry.WEIGHT + " REAL NOT NULL);");
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.e(this.getClass().getName(), "onUpgrade not supported");
 	}
 }
