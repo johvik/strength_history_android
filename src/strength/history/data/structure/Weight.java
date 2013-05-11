@@ -43,38 +43,33 @@ public class Weight extends Base<Weight> {
 	}
 
 	@Override
-	public Weight copy() {
+	public String toString() {
+		return "Weight=" + getId() + ":" + getSync()
+				+ new Date(time).toLocaleString() + " " + weight + " kg";
+	}
+
+	@Override
+	protected Weight _copy() {
 		return new Weight(getId(), getSync(), time, weight);
 	}
 
 	@Override
-	public String toString() {
-		return "Weight=" + getId() + " " + new Date(time).toLocaleString()
-				+ " " + weight + " kg " + getSync();
-	}
-
-	@Override
-	public void updateFrom(Weight another) {
-		super.updateFrom(another);
-		time = another.time;
-		weight = another.weight;
-	}
-
-	@Override
-	public int compareTo(Weight another) {
+	protected int _compareTo(Weight another) {
 		int c = Long.valueOf(another.time).compareTo(time); // descending time
 		if (c == 0) {
 			c = Double.valueOf(weight).compareTo(another.weight);
-			if (c == 0) {
-				c = super.compareTo(another);
-			}
 		}
 		return c;
 	}
 
 	@Override
-	public void writeToParcel(Parcel out, int flags) {
-		super.writeToParcel(out, flags);
+	protected void _updateFrom(Weight another) {
+		time = another.time;
+		weight = another.weight;
+	}
+
+	@Override
+	protected void _writeToParcel(Parcel out, int flags) {
 		out.writeLong(time);
 		out.writeDouble(weight);
 	}

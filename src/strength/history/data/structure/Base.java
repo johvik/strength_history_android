@@ -25,20 +25,26 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 		this.sync = sync;
 	}
 
+	/**
+	 * Should be inherited!
+	 * 
+	 * @param in
+	 */
 	protected Base(Parcel in) {
 		id = in.readLong();
 		sync = in.readInt();
 	}
 
-	/**
-	 * Creates a new object with the same properties
-	 * 
-	 * @return The new object
-	 */
-	public abstract T copy();
-
 	@Override
 	public abstract String toString();
+
+	protected abstract T _copy();
+
+	protected abstract int _compareTo(T another);
+
+	protected abstract void _updateFrom(T another);
+
+	protected abstract void _writeToParcel(Parcel out, int flags);
 
 	/**
 	 * Moves values into the object
@@ -46,24 +52,29 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	 * @param another
 	 *            The new values
 	 */
-	public void updateFrom(T another) {
+	public final void updateFrom(T another) {
 		id = another.id;
 		sync = another.sync;
+		_updateFrom(another);
 	}
 
 	@Override
-	public int compareTo(T another) {
-		int c = Long.valueOf(id).compareTo(another.id);
+	public final int compareTo(T another) {
+		int c = _compareTo(another);
 		if (c == 0) {
-			c = Integer.valueOf(sync).compareTo(another.sync);
+			c = Long.valueOf(id).compareTo(another.id);
+			if (c == 0) {
+				c = Integer.valueOf(sync).compareTo(another.sync);
+			}
 		}
 		return c;
 	}
 
 	@Override
-	public void writeToParcel(Parcel out, int flags) {
+	public final void writeToParcel(Parcel out, int flags) {
 		out.writeLong(id);
 		out.writeInt(sync);
+		_writeToParcel(out, flags);
 	}
 
 	@Override
@@ -76,7 +87,7 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	 */
 	public final void backup() {
 		if (backup == null) {
-			backup = copy();
+			backup = _copy();
 		}
 	}
 

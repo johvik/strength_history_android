@@ -36,33 +36,27 @@ public class Exercise extends Base<Exercise> {
 	}
 
 	@Override
-	public Exercise copy() {
+	public String toString() {
+		return "Exercise=" + getId() + ":" + getSync() + " " + name;
+	}
+
+	@Override
+	protected Exercise _copy() {
 		return new Exercise(getId(), getSync(), name);
 	}
 
 	@Override
-	public String toString() {
-		return "Exercise=" + getId() + " " + name + " " + getSync();
+	protected int _compareTo(Exercise another) {
+		return name.compareTo(another.name);
 	}
 
 	@Override
-	public void updateFrom(Exercise another) {
-		super.updateFrom(another);
+	protected void _updateFrom(Exercise another) {
 		name = another.name;
 	}
 
 	@Override
-	public int compareTo(Exercise another) {
-		int c = name.compareTo(another.name);
-		if (c == 0) {
-			c = super.compareTo(another);
-		}
-		return c;
-	}
-
-	@Override
-	public void writeToParcel(Parcel out, int flags) {
-		super.writeToParcel(out, flags);
+	protected void _writeToParcel(Parcel out, int flags) {
 		out.writeString(name);
 	}
 
@@ -82,7 +76,7 @@ public class Exercise extends Base<Exercise> {
 	};
 
 	/**
-	 * Gets the name of the exercise
+	 * Gets the name
 	 * 
 	 * @return The name
 	 */
