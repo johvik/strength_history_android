@@ -105,6 +105,7 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 				values.put(Entry.ExerciseData.EXERCISE_ID, d.getExerciseId());
 				long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null,
 						values);
+				d.setId(id2);
 				if (id2 != -1) {
 					for (SetData s : d) {
 						ContentValues values2 = new ContentValues();
@@ -115,8 +116,10 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 								s.getWeight());
 						values2.put(Entry.ExerciseData.SetData.REPETITIONS,
 								s.getRepetitions());
-						db.insert(Entry.ExerciseData.SetData.TABLE_NAME, null,
+						long id3 = db.insert(
+								Entry.ExerciseData.SetData.TABLE_NAME, null,
 								values2);
+						s.setId(id3);
 					}
 				}
 			}
@@ -201,6 +204,7 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			values.put(Entry.ExerciseData.WORKOUT_DATA_ID, id);
 			values.put(Entry.ExerciseData.EXERCISE_ID, d.getExerciseId());
 			long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null, values);
+			d.setId(id2);
 			if (id2 != -1) {
 				for (SetData s : d) {
 					ContentValues values2 = new ContentValues();
@@ -210,8 +214,9 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 							s.getWeight());
 					values2.put(Entry.ExerciseData.SetData.REPETITIONS,
 							s.getRepetitions());
-					db.insert(Entry.ExerciseData.SetData.TABLE_NAME, null,
-							values2);
+					long id3 = db.insert(Entry.ExerciseData.SetData.TABLE_NAME,
+							null, values2);
+					s.setId(id3);
 				}
 			}
 		}

@@ -2,11 +2,13 @@ package strength.history.data;
 
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.provider.WeightProvider;
+import strength.history.data.provider.WorkoutDataProvider;
 import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.service.ServiceBase;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
+import strength.history.data.structure.WorkoutData;
 
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +19,8 @@ import android.util.Log;
  * Combines several data providers into one
  */
 public class DataProvider extends Handler implements ExerciseProvider.Provides,
-		WeightProvider.Provides, WorkoutProvider.Provides {
+		WeightProvider.Provides, WorkoutProvider.Provides,
+		WorkoutDataProvider.Provides {
 	/**
 	 * Interface that contains callback events
 	 */
@@ -45,12 +48,21 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		 *            The new data
 		 */
 		public void workoutCallback(Iterable<Workout> data);
+
+		/**
+		 * Called when data was changed
+		 * 
+		 * @param data
+		 *            The new data
+		 */
+		public void workoutDataCallback(Iterable<WorkoutData> data);
 	}
 
 	private Messenger messenger = new Messenger(this);
 	private ExerciseProvider exerciseProvider = new ExerciseProvider();
 	private WeightProvider weightProvider = new WeightProvider();
 	private WorkoutProvider workoutProvider = new WorkoutProvider();
+	private WorkoutDataProvider workoutDataProvider = new WorkoutDataProvider();
 	private DataListener dataListener = null;
 
 	/**
@@ -65,6 +77,7 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 			dataListener.exerciseCallback(exerciseProvider.get());
 			dataListener.weightCallback(weightProvider.get());
 			dataListener.workoutCallback(workoutProvider.get());
+			dataListener.workoutDataCallback(workoutDataProvider.get());
 		}
 	}
 
@@ -85,6 +98,10 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 			break;
 		case WORKOUT:
 			workoutProvider.handleCallback(request, msg.obj, ok, dataListener);
+			break;
+		case WORKOUT_DATA:
+			workoutDataProvider.handleCallback(request, msg.obj, ok,
+					dataListener);
 			break;
 		}
 	}
@@ -147,5 +164,25 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void update(Workout e) {
 		workoutProvider.update(e, dataListener, messenger);
+	}
+
+	@Override
+	public void delete(WorkoutData e) {
+		workoutDataProvider.delete(e, dataListener, messenger);
+	}
+
+	@Override
+	public void insert(WorkoutData e) {
+		workoutDataProvider.insert(e, dataListener, messenger);
+	}
+
+	@Override
+	public void query(WorkoutData e) {
+		workoutDataProvider.query(e, dataListener, messenger);
+	}
+
+	@Override
+	public void update(WorkoutData e) {
+		workoutDataProvider.update(e, dataListener, messenger);
 	}
 }

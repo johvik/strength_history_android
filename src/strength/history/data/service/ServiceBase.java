@@ -95,7 +95,11 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 		/**
 		 * Service that provides workout
 		 */
-		WORKOUT;
+		WORKOUT,
+		/**
+		 * Service that provides workout data
+		 */
+		WORKOUT_DATA;
 
 		private static final Service[] SERVICE_VALUES = Service.values();
 

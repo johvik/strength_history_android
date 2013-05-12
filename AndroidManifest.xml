@@ -32,6 +32,9 @@
         <service
             android:name="strength.history.data.service.local.LocalWorkoutService"
             android:exported="false" />
+        <service
+            android:name="strength.history.data.service.local.LocalWorkoutDataService"
+            android:exported="false" />
     </application>
 
 </manifest>

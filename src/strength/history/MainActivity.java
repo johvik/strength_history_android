@@ -5,8 +5,11 @@ import java.util.Date;
 import strength.history.data.DataListener;
 import strength.history.data.service.ServiceBase.Service;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.ExerciseData;
+import strength.history.data.structure.SetData;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
+import strength.history.data.structure.WorkoutData;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,7 @@ public class MainActivity extends DataListener {
 	private Iterable<Exercise> exercises;
 	private Iterable<Weight> weights;
 	private Iterable<Workout> workouts;
+	private Iterable<WorkoutData> workoutData;
 
 	private RadioGroup radioGroup;
 
@@ -61,6 +65,9 @@ public class MainActivity extends DataListener {
 		case WORKOUT:
 			data.query((Workout) null);
 			break;
+		case WORKOUT_DATA:
+			data.query((WorkoutData) null);
+			break;
 		}
 	}
 
@@ -82,6 +89,20 @@ public class MainActivity extends DataListener {
 			Workout w = new Workout("Testing!");
 			w.add((long) 10);
 			data.insert(w);
+			break;
+		case WORKOUT_DATA:
+			for (Workout wo : workouts) {
+				WorkoutData d = new WorkoutData(new Date().getTime(),
+						wo.getId());
+				for (Exercise e : exercises) {
+					ExerciseData ed = new ExerciseData(e.getId());
+					ed.add(new SetData(55, 2));
+					d.add(ed);
+					break;
+				}
+				data.insert(d);
+				break;
+			}
 			break;
 		}
 	}
@@ -109,6 +130,11 @@ public class MainActivity extends DataListener {
 				data.delete(w);
 			}
 			break;
+		case WORKOUT_DATA:
+			for (WorkoutData w : workoutData) {
+				data.delete(w);
+			}
+			break;
 		}
 	}
 
@@ -131,7 +157,7 @@ public class MainActivity extends DataListener {
 		case WEIGHT:
 			for (Weight w : weights) {
 				Weight tmp = new Weight(w.getId(), w.getSync(), w.getTime(),
-						99.9);
+						w.getWeight() + 0.1);
 				w.updateFrom(tmp);
 				data.update(w);
 				break;
@@ -140,6 +166,29 @@ public class MainActivity extends DataListener {
 		case WORKOUT:
 			for (Workout w : workouts) {
 				Workout tmp = new Workout(w.getId(), w.getSync(), "Updated!!!");
+				w.updateFrom(tmp);
+				data.update(w);
+				break;
+			}
+			break;
+		case WORKOUT_DATA:
+			for (WorkoutData w : workoutData) {
+				WorkoutData tmp = new WorkoutData(w.getId(), w.getSync(),
+						w.getTime(), w.getWorkoutId());
+				for (ExerciseData e : w) {
+					ExerciseData t2 = new ExerciseData(e.getId(),
+							e.getExerciseId());
+					for (SetData d : e) {
+						SetData t3 = new SetData(d.getId(),
+								d.getWeight() + 0.5, d.getRepetitions());
+						d.updateFrom(t3);
+						t2.add(d);
+						break;
+					}
+					e.updateFrom(t2);
+					tmp.add(e);
+					break;
+				}
 				w.updateFrom(tmp);
 				data.update(w);
 				break;
@@ -171,6 +220,15 @@ public class MainActivity extends DataListener {
 		workouts = data;
 		Log.d("MainActivity", "workout data update");
 		for (Workout w : workouts) {
+			Log.d("MainActivity", w.toString());
+		}
+	}
+
+	@Override
+	public void workoutDataCallback(Iterable<WorkoutData> data) {
+		workoutData = data;
+		Log.d("MainActivity", "workoutdata data update");
+		for (WorkoutData w : workoutData) {
 			Log.d("MainActivity", w.toString());
 		}
 	}
