@@ -16,9 +16,8 @@ import strength.history.data.structure.Exercise;
  */
 public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
-		public static final String TABLE_NAME = "exercise";
-		public static final String[] ALL_COLUMNS = new String[] { _ID, SYNC,
-				NAME };
+		static final String TABLE_NAME = "exercise";
+		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME };
 	}
 
 	private static final String DATABASE_NAME = "exercise.db";

@@ -11,5 +11,6 @@
     <string name="exercise">Exercise</string>
     <string name="weight">Weight</string>
     <string name="workout">Workout</string>
+    <string name="workout_data">Workout data</string>
 
 </resources>

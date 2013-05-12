@@ -18,9 +18,9 @@ import android.provider.BaseColumns;
 public class WeightDBHelper extends DBHelperBase<Weight> {
 	private interface Entry extends BaseColumns, TimeColumn, WeightColumn,
 			SyncColumns {
-		public static final String TABLE_NAME = "weight";
-		public static final String[] ALL_COLUMNS = new String[] { _ID, SYNC,
-				TIME, WEIGHT };
+		static final String TABLE_NAME = "weight";
+		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, TIME,
+				WEIGHT };
 	}
 
 	private static final String DATABASE_NAME = "weight.db";

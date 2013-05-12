@@ -10,33 +10,32 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
-	private long workout_data_id;
 	private long exercise_id;
 	private ArrayList<SetData> sets = new ArrayList<SetData>();
 
-	public ExerciseData(long id, long workout_data_id, long exercise_id) {
+	public ExerciseData(long exercise_id) {
+		this(-1, exercise_id);
+	}
+
+	public ExerciseData(long id, long exercise_id) {
 		super(id);
-		this.workout_data_id = workout_data_id;
 		this.exercise_id = exercise_id;
 	}
 
 	protected ExerciseData(Parcel in) {
 		super(in);
-		workout_data_id = in.readLong();
 		exercise_id = in.readLong();
 		in.readTypedList(sets, SetData.CREATOR);
 	}
 
 	@Override
 	public String toString() {
-		return "ExerciseData=" + getId() + " " + workout_data_id + " "
-				+ exercise_id + " " + sets;
+		return "ExerciseData=" + getId() + " " + exercise_id + " " + sets;
 	}
 
 	@Override
 	protected ExerciseData _copy() {
-		ExerciseData copy = new ExerciseData(getId(), workout_data_id,
-				exercise_id);
+		ExerciseData copy = new ExerciseData(getId(), exercise_id);
 		for (SetData s : sets) {
 			copy.add(s._copy());
 		}
@@ -45,14 +44,12 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 
 	@Override
 	protected void _updateFrom(ExerciseData another) {
-		workout_data_id = another.workout_data_id;
 		exercise_id = another.exercise_id;
 		sets = another.sets;
 	}
 
 	@Override
 	protected void _writeToParcel(Parcel out, int flags) {
-		out.writeLong(workout_data_id);
 		out.writeLong(exercise_id);
 		out.writeTypedList(sets);
 	}
@@ -77,17 +74,9 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 		// Don't care about array
 		int c = Long.valueOf(getId()).compareTo(another.getId());
 		if (c == 0) {
-			c = Long.valueOf(workout_data_id)
-					.compareTo(another.workout_data_id);
-			if (c == 0) {
-				c = Long.valueOf(exercise_id).compareTo(another.exercise_id);
-			}
+			c = Long.valueOf(exercise_id).compareTo(another.exercise_id);
 		}
 		return c;
-	}
-
-	public long getWorkoutDataId() {
-		return workout_data_id;
 	}
 
 	public long getExerciseId() {

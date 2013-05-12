@@ -16,7 +16,8 @@ import android.util.Log;
  * @param <E>
  *            Structure class they handle
  */
-public abstract class DBHelperBase<E extends SyncBase<E>> extends SQLiteOpenHelper {
+public abstract class DBHelperBase<E extends SyncBase<E>> extends
+		SQLiteOpenHelper {
 
 	/**
 	 * Constructor

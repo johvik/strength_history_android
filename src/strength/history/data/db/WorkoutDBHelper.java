@@ -13,14 +13,14 @@ import strength.history.data.structure.Workout;
 
 public class WorkoutDBHelper extends DBHelperBase<Workout> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
-		public static final String TABLE_NAME = "workout";
-		public static final String[] ALL_COLUMNS = new String[] { _ID, SYNC,
-				NAME };
+		static final String TABLE_NAME = "workout";
+		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME };
 
-		public interface Binding extends BaseColumns {
-			public static final String TABLE_NAME = "binding";
-			public static final String WORKOUT_ID = "workout_id";
-			public static final String EXERCISE_ID = "exercise_id";
+		interface Binding extends BaseColumns {
+			static final String TABLE_NAME = "binding";
+			static final String WORKOUT_ID = "workout_id";
+			static final String EXERCISE_ID = "exercise_id";
+			static final String[] ALL_COLUMNS = new String[] { EXERCISE_ID };
 		}
 	}
 
@@ -106,13 +106,12 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 			Workout w = new Workout(id, sync, name);
 			// Load bindings
 			Cursor c2 = db.query(Entry.Binding.TABLE_NAME,
-					new String[] { Entry.Binding.EXERCISE_ID },
-					Entry.Binding.WORKOUT_ID + "=?",
+					Entry.Binding.ALL_COLUMNS, Entry.Binding.WORKOUT_ID + "=?",
 					new String[] { Long.toString(id) }, null, null, null);
 
 			c2.moveToFirst();
 			while (!c2.isAfterLast()) {
-				w.add(cursor.getLong(0));
+				w.add(c2.getLong(0));
 				c2.moveToNext();
 			}
 			c2.close();
