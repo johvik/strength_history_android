@@ -1,5 +1,7 @@
 package strength.history.data;
 
+import java.util.ArrayList;
+
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.provider.WeightProvider;
 import strength.history.data.provider.WorkoutDataProvider;
@@ -20,57 +22,33 @@ import android.util.Log;
  */
 public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		WeightProvider.Provides, WorkoutProvider.Provides,
-		WorkoutDataProvider.Provides {
+		WorkoutDataProvider.Provides, ExerciseProvider.Events,
+		WeightProvider.Events, WorkoutDataProvider.Events,
+		WorkoutProvider.Events {
 	/**
 	 * Interface that contains callback events
 	 */
 	public interface Events {
-		/**
-		 * Called when data was changed
-		 * 
-		 * @param data
-		 *            The new data
-		 */
 		public void exerciseCallback(Iterable<Exercise> data);
 
-		/**
-		 * Called when data was changed
-		 * 
-		 * @param data
-		 *            The new data
-		 */
 		public void weightCallback(Iterable<Weight> data);
 
-		/**
-		 * Called when data was changed
-		 * 
-		 * @param data
-		 *            The new data
-		 */
 		public void workoutCallback(Iterable<Workout> data);
 
-		/**
-		 * Called when data was changed
-		 * 
-		 * @param data
-		 *            The new data
-		 */
 		public void workoutDataCallback(Iterable<WorkoutData> data);
 	}
 
 	private Messenger messenger = new Messenger(this);
-	private ExerciseProvider exerciseProvider = new ExerciseProvider();
-	private WeightProvider weightProvider = new WeightProvider();
-	private WorkoutProvider workoutProvider = new WorkoutProvider();
-	private WorkoutDataProvider workoutDataProvider = new WorkoutDataProvider();
+	private ExerciseProvider<DataProvider> exerciseProvider = new ExerciseProvider<DataProvider>(
+			this);
+	private WeightProvider<DataProvider> weightProvider = new WeightProvider<DataProvider>(
+			this);
+	private WorkoutProvider<DataProvider> workoutProvider = new WorkoutProvider<DataProvider>(
+			this);
+	private WorkoutDataProvider<DataProvider> workoutDataProvider = new WorkoutDataProvider<DataProvider>(
+			this);
 	private DataListener dataListener = null;
 
-	/**
-	 * Changes the listener for callback
-	 * 
-	 * @param dataListener
-	 *            The new listener, may be null
-	 */
 	public void setListener(DataListener dataListener) {
 		this.dataListener = dataListener;
 		if (dataListener != null) {
@@ -91,17 +69,16 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 
 		switch (service) {
 		case EXERCISE:
-			exerciseProvider.handleCallback(request, msg.obj, ok, dataListener);
+			exerciseProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WEIGHT:
-			weightProvider.handleCallback(request, msg.obj, ok, dataListener);
+			weightProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WORKOUT:
-			workoutProvider.handleCallback(request, msg.obj, ok, dataListener);
+			workoutProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WORKOUT_DATA:
-			workoutDataProvider.handleCallback(request, msg.obj, ok,
-					dataListener);
+			workoutDataProvider.handleMessage(request, msg.obj, ok);
 			break;
 		}
 	}
@@ -184,5 +161,101 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void update(WorkoutData e) {
 		workoutDataProvider.update(e, dataListener, messenger);
+	}
+
+	@Override
+	public void deleteCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.exerciseCallback(exerciseProvider.get());
+	}
+
+	@Override
+	public void insertCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.exerciseCallback(exerciseProvider.get());
+	}
+
+	@Override
+	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.exerciseCallback(exerciseProvider.get());
+	}
+
+	@Override
+	public void updateCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.exerciseCallback(exerciseProvider.get());
+	}
+
+	@Override
+	public void deleteCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.weightCallback(weightProvider.get());
+	}
+
+	@Override
+	public void insertCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.weightCallback(weightProvider.get());
+	}
+
+	@Override
+	public void weightQueryCallback(ArrayList<Weight> e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.weightCallback(weightProvider.get());
+	}
+
+	@Override
+	public void updateCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.weightCallback(weightProvider.get());
+	}
+
+	@Override
+	public void deleteCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutDataCallback(workoutDataProvider.get());
+	}
+
+	@Override
+	public void insertCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutDataCallback(workoutDataProvider.get());
+	}
+
+	@Override
+	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutDataCallback(workoutDataProvider.get());
+	}
+
+	@Override
+	public void updateCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutDataCallback(workoutDataProvider.get());
+	}
+
+	@Override
+	public void deleteCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutCallback(workoutProvider.get());
+	}
+
+	@Override
+	public void insertCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutCallback(workoutProvider.get());
+	}
+
+	@Override
+	public void workoutQueryCallback(ArrayList<Workout> e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutCallback(workoutProvider.get());
+	}
+
+	@Override
+	public void updateCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+		dataListener.workoutCallback(workoutProvider.get());
 	}
 }

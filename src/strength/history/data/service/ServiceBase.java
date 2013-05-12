@@ -24,7 +24,7 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 	protected abstract void update(E e, Messenger messenger);
 
 	/**
-	 * enum with possible requests to the WeightService
+	 * enum with possible requests to the Service
 	 */
 	public enum Request {
 		/**

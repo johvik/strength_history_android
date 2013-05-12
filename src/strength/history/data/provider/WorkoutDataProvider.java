@@ -1,45 +1,37 @@
 package strength.history.data.provider;
 
-import strength.history.data.DataListener;
+import java.util.ArrayList;
+
 import strength.history.data.service.local.LocalWorkoutDataService;
 import strength.history.data.structure.WorkoutData;
 
-public class WorkoutDataProvider extends Provider<WorkoutData> {
-	/**
-	 * Interface of methods that this service provides
-	 */
+public class WorkoutDataProvider<T extends WorkoutDataProvider.Events> extends
+		Provider<WorkoutData> {
+	public interface Events {
+		public void deleteCallback(WorkoutData e, boolean ok);
+
+		public void insertCallback(WorkoutData e, boolean ok);
+
+		public void workoutDataQueryCallback(ArrayList<WorkoutData> e,
+				boolean ok);
+
+		public void updateCallback(WorkoutData e, boolean ok);
+	}
+
 	public interface Provides {
-		/**
-		 * Deletes item
-		 * 
-		 * @param e
-		 *            Item to delete
-		 */
 		public void delete(WorkoutData e);
 
-		/**
-		 * Inserts item
-		 * 
-		 * @param e
-		 *            Item to insert
-		 */
 		public void insert(WorkoutData e);
 
-		/**
-		 * Gets all items
-		 * 
-		 * @param e
-		 *            Unused, pass null
-		 */
 		public void query(WorkoutData e);
 
-		/**
-		 * Updates item
-		 * 
-		 * @param e
-		 *            Item to update
-		 */
 		public void update(WorkoutData e);
+	}
+
+	private T t;
+
+	public WorkoutDataProvider(T t) {
+		this.t = t;
 	}
 
 	@Override
@@ -53,8 +45,22 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	}
 
 	@Override
-	protected void callback(DataListener dataListener) {
-		dataListener.workoutDataCallback(data);
+	protected void deleteCallback(WorkoutData e, boolean ok) {
+		t.deleteCallback(e, ok);
 	}
 
+	@Override
+	protected void insertCallback(WorkoutData e, boolean ok) {
+		t.insertCallback(e, ok);
+	}
+
+	@Override
+	protected void queryCallback(ArrayList<WorkoutData> e, boolean ok) {
+		t.workoutDataQueryCallback(e, ok);
+	}
+
+	@Override
+	protected void updateCallback(WorkoutData e, boolean ok) {
+		t.updateCallback(e, ok);
+	}
 }

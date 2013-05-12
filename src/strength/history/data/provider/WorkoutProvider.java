@@ -1,45 +1,36 @@
 package strength.history.data.provider;
 
-import strength.history.data.DataListener;
+import java.util.ArrayList;
+
 import strength.history.data.service.local.LocalWorkoutService;
 import strength.history.data.structure.Workout;
 
-public class WorkoutProvider extends Provider<Workout> {
-	/**
-	 * Interface of methods that this service provides
-	 */
+public class WorkoutProvider<T extends WorkoutProvider.Events> extends
+		Provider<Workout> {
+	public interface Events {
+		public void deleteCallback(Workout e, boolean ok);
+
+		public void insertCallback(Workout e, boolean ok);
+
+		public void workoutQueryCallback(ArrayList<Workout> e, boolean ok);
+
+		public void updateCallback(Workout e, boolean ok);
+	}
+
 	public interface Provides {
-		/**
-		 * Deletes item
-		 * 
-		 * @param e
-		 *            Item to delete
-		 */
 		public void delete(Workout e);
 
-		/**
-		 * Inserts item
-		 * 
-		 * @param e
-		 *            Item to insert
-		 */
 		public void insert(Workout e);
 
-		/**
-		 * Gets all items
-		 * 
-		 * @param e
-		 *            Unused, pass null
-		 */
 		public void query(Workout e);
 
-		/**
-		 * Updates item
-		 * 
-		 * @param e
-		 *            Item to update
-		 */
 		public void update(Workout e);
+	}
+
+	private T t;
+
+	public WorkoutProvider(T t) {
+		this.t = t;
 	}
 
 	@Override
@@ -53,7 +44,22 @@ public class WorkoutProvider extends Provider<Workout> {
 	}
 
 	@Override
-	protected void callback(DataListener dataListener) {
-		dataListener.workoutCallback(data);
+	protected void deleteCallback(Workout e, boolean ok) {
+		t.deleteCallback(e, ok);
+	}
+
+	@Override
+	protected void insertCallback(Workout e, boolean ok) {
+		t.insertCallback(e, ok);
+	}
+
+	@Override
+	protected void queryCallback(ArrayList<Workout> e, boolean ok) {
+		t.workoutQueryCallback(e, ok);
+	}
+
+	@Override
+	protected void updateCallback(Workout e, boolean ok) {
+		t.updateCallback(e, ok);
 	}
 }

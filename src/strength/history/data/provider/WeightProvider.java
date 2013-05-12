@@ -1,48 +1,41 @@
 package strength.history.data.provider;
 
-import strength.history.data.DataListener;
+import java.util.ArrayList;
+
 import strength.history.data.service.local.LocalWeightService;
 import strength.history.data.structure.Weight;
 
 /**
  * Provides data mappings for the weight service
+ * 
+ * @param <T>
  */
-public class WeightProvider extends Provider<Weight> {
-	/**
-	 * Interface of methods that this service provides
-	 */
+public class WeightProvider<T extends WeightProvider.Events> extends
+		Provider<Weight> {
+	public interface Events {
+		public void deleteCallback(Weight e, boolean ok);
+
+		public void insertCallback(Weight e, boolean ok);
+
+		public void weightQueryCallback(ArrayList<Weight> e, boolean ok);
+
+		public void updateCallback(Weight e, boolean ok);
+	}
+
 	public interface Provides {
-		/**
-		 * Deletes item
-		 * 
-		 * @param e
-		 *            Item to delete
-		 */
 		public void delete(Weight e);
 
-		/**
-		 * Inserts item
-		 * 
-		 * @param e
-		 *            Item to insert
-		 */
 		public void insert(Weight e);
 
-		/**
-		 * Gets all items
-		 * 
-		 * @param e
-		 *            Unused, pass null
-		 */
 		public void query(Weight e);
 
-		/**
-		 * Updates item
-		 * 
-		 * @param e
-		 *            Item to update
-		 */
 		public void update(Weight e);
+	}
+
+	private T t;
+
+	public WeightProvider(T t) {
+		this.t = t;
 	}
 
 	@Override
@@ -56,7 +49,22 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	@Override
-	protected void callback(DataListener dataListener) {
-		dataListener.weightCallback(data);
+	protected void deleteCallback(Weight e, boolean ok) {
+		t.deleteCallback(e, ok);
+	}
+
+	@Override
+	protected void insertCallback(Weight e, boolean ok) {
+		t.insertCallback(e, ok);
+	}
+
+	@Override
+	protected void queryCallback(ArrayList<Weight> e, boolean ok) {
+		t.weightQueryCallback(e, ok);
+	}
+
+	@Override
+	protected void updateCallback(Weight e, boolean ok) {
+		t.updateCallback(e, ok);
 	}
 }
