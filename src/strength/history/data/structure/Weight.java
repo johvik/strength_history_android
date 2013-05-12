@@ -44,7 +44,7 @@ public class Weight extends SyncBase<Weight> {
 
 	@Override
 	public String toString() {
-		return "Weight=" + getId() + ":" + getSync()
+		return "Weight=" + getId() + ":" + getSync() + " "
 				+ new Date(time).toLocaleString() + " " + weight + " kg";
 	}
 
