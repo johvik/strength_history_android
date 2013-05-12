@@ -8,7 +8,6 @@ import strength.history.data.structure.Exercise;
  * Provides data mappings for the exercise service
  */
 public class ExerciseProvider extends Provider<Exercise> {
-
 	/**
 	 * Interface of methods that this service provides
 	 */

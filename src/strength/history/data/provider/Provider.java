@@ -171,7 +171,6 @@ public abstract class Provider<E extends SyncBase<E>> {
 				callback(dataListener);
 			}
 		}
-
 	}
 
 	private void runLocalService(E e, DataListener dataListener,
