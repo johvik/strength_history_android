@@ -1,12 +1,15 @@
 package strength.history.data.provider;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
+import android.content.Context;
+
+import strength.history.data.DataListener;
 import strength.history.data.service.local.LocalWorkoutService;
 import strength.history.data.structure.Workout;
 
-public class WorkoutProvider<T extends WorkoutProvider.Events> extends
-		Provider<Workout> {
+public class WorkoutProvider extends Provider<Workout> {
 	public interface Events {
 		public void deleteCallback(Workout e, boolean ok);
 
@@ -18,19 +21,29 @@ public class WorkoutProvider<T extends WorkoutProvider.Events> extends
 	}
 
 	public interface Provides {
-		public void delete(Workout e);
+		public void delete(Workout e, Context context);
 
-		public void insert(Workout e);
+		public void insert(Workout e, Context context);
 
-		public void query(Workout e);
+		public void query(Workout e, Context context);
 
-		public void update(Workout e);
+		public void update(Workout e, Context context);
 	}
 
-	private T t;
+	private LinkedHashSet<Events> listeners = new LinkedHashSet<Events>();
 
-	public WorkoutProvider(T t) {
-		this.t = t;
+	@Override
+	public void tryAddListener(DataListener dataListener) {
+		if (dataListener instanceof Events) {
+			listeners.add((Events) dataListener);
+		}
+	}
+
+	@Override
+	public void tryRemoveListener(DataListener dataListener) {
+		if (dataListener instanceof Events) {
+			listeners.add((Events) dataListener);
+		}
 	}
 
 	@Override
@@ -45,21 +58,29 @@ public class WorkoutProvider<T extends WorkoutProvider.Events> extends
 
 	@Override
 	protected void deleteCallback(Workout e, boolean ok) {
-		t.deleteCallback(e, ok);
+		for (Events t : listeners) {
+			t.deleteCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void insertCallback(Workout e, boolean ok) {
-		t.insertCallback(e, ok);
+		for (Events t : listeners) {
+			t.insertCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void queryCallback(ArrayList<Workout> e, boolean ok) {
-		t.workoutQueryCallback(e, ok);
+		for (Events t : listeners) {
+			t.workoutQueryCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void updateCallback(Workout e, boolean ok) {
-		t.updateCallback(e, ok);
+		for (Events t : listeners) {
+			t.updateCallback(e, ok);
+		}
 	}
 }

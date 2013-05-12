@@ -1,8 +1,14 @@
 package strength.history;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeSet;
 
 import strength.history.data.DataListener;
+import strength.history.data.provider.ExerciseProvider;
+import strength.history.data.provider.WeightProvider;
+import strength.history.data.provider.WorkoutDataProvider;
+import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.service.ServiceBase.Service;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
@@ -20,12 +26,13 @@ import android.widget.RadioGroup;
 /**
  * Main Activity
  */
-public class MainActivity extends DataListener {
-	// initialized in super.onCreate from callback
-	private Iterable<Exercise> exercises;
-	private Iterable<Weight> weights;
-	private Iterable<Workout> workouts;
-	private Iterable<WorkoutData> workoutData;
+public class MainActivity extends DataListener implements
+		ExerciseProvider.Events, WeightProvider.Events, WorkoutProvider.Events,
+		WorkoutDataProvider.Events {
+	private Iterable<Exercise> exercises = new TreeSet<Exercise>();
+	private Iterable<Weight> weights = new TreeSet<Weight>();
+	private Iterable<Workout> workouts = new TreeSet<Workout>();
+	private Iterable<WorkoutData> workoutData = new TreeSet<WorkoutData>();
 
 	private RadioGroup radioGroup;
 
@@ -57,16 +64,16 @@ public class MainActivity extends DataListener {
 
 		switch (s) {
 		case EXERCISE:
-			data.query((Exercise) null);
+			data.query((Exercise) null, getApplicationContext());
 			break;
 		case WEIGHT:
-			data.query((Weight) null);
+			data.query((Weight) null, getApplicationContext());
 			break;
 		case WORKOUT:
-			data.query((Workout) null);
+			data.query((Workout) null, getApplicationContext());
 			break;
 		case WORKOUT_DATA:
-			data.query((WorkoutData) null);
+			data.query((WorkoutData) null, getApplicationContext());
 			break;
 		}
 	}
@@ -80,15 +87,16 @@ public class MainActivity extends DataListener {
 
 		switch (s) {
 		case EXERCISE:
-			data.insert(new Exercise("Test1"));
+			data.insert(new Exercise("Test1"), getApplicationContext());
 			break;
 		case WEIGHT:
-			data.insert(new Weight(new Date().getTime(), 75.5));
+			data.insert(new Weight(new Date().getTime(), 75.5),
+					getApplicationContext());
 			break;
 		case WORKOUT:
 			Workout w = new Workout("Testing!");
 			w.add((long) 10);
-			data.insert(w);
+			data.insert(w, getApplicationContext());
 			break;
 		case WORKOUT_DATA:
 			for (Workout wo : workouts) {
@@ -100,7 +108,7 @@ public class MainActivity extends DataListener {
 					d.add(ed);
 					break;
 				}
-				data.insert(d);
+				data.insert(d, getApplicationContext());
 				break;
 			}
 			break;
@@ -117,22 +125,22 @@ public class MainActivity extends DataListener {
 		switch (s) {
 		case EXERCISE:
 			for (Exercise e : exercises) {
-				data.delete(e);
+				data.delete(e, getApplicationContext());
 			}
 			break;
 		case WEIGHT:
 			for (Weight w : weights) {
-				data.delete(w);
+				data.delete(w, getApplicationContext());
 			}
 			break;
 		case WORKOUT:
 			for (Workout w : workouts) {
-				data.delete(w);
+				data.delete(w, getApplicationContext());
 			}
 			break;
 		case WORKOUT_DATA:
 			for (WorkoutData w : workoutData) {
-				data.delete(w);
+				data.delete(w, getApplicationContext());
 			}
 			break;
 		}
@@ -150,7 +158,7 @@ public class MainActivity extends DataListener {
 			for (Exercise e : exercises) {
 				Exercise tmp = new Exercise(e.getId(), e.getSync(), "Updated");
 				e.updateFrom(tmp);
-				data.update(e);
+				data.update(e, getApplicationContext());
 				break;
 			}
 			break;
@@ -159,7 +167,7 @@ public class MainActivity extends DataListener {
 				Weight tmp = new Weight(w.getId(), w.getSync(), w.getTime(),
 						w.getWeight() + 0.1);
 				w.updateFrom(tmp);
-				data.update(w);
+				data.update(w, getApplicationContext());
 				break;
 			}
 			break;
@@ -167,7 +175,7 @@ public class MainActivity extends DataListener {
 			for (Workout w : workouts) {
 				Workout tmp = new Workout(w.getId(), w.getSync(), "Updated!!!");
 				w.updateFrom(tmp);
-				data.update(w);
+				data.update(w, getApplicationContext());
 				break;
 			}
 			break;
@@ -190,7 +198,7 @@ public class MainActivity extends DataListener {
 					break;
 				}
 				w.updateFrom(tmp);
-				data.update(w);
+				data.update(w, getApplicationContext());
 				break;
 			}
 			break;
@@ -198,38 +206,86 @@ public class MainActivity extends DataListener {
 	}
 
 	@Override
-	public void exerciseCallback(Iterable<Exercise> data) {
-		exercises = data;
-		Log.d("MainActivity", "exercise data update");
-		for (Exercise e : exercises) {
-			Log.d("MainActivity", e.toString());
-		}
+	public void deleteCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void weightCallback(Iterable<Weight> data) {
-		weights = data;
-		Log.d("MainActivity", "weight data update");
-		for (Weight w : weights) {
-			Log.d("MainActivity", w.toString());
-		}
+	public void insertCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void workoutCallback(Iterable<Workout> data) {
-		workouts = data;
-		Log.d("MainActivity", "workout data update");
-		for (Workout w : workouts) {
-			Log.d("MainActivity", w.toString());
-		}
+	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean ok) {
+		Log.d("MainActivity", "exercise data update=" + ok);
+		Log.d("MainActivity", e.toString());
 	}
 
 	@Override
-	public void workoutDataCallback(Iterable<WorkoutData> data) {
-		workoutData = data;
-		Log.d("MainActivity", "workoutdata data update");
-		for (WorkoutData w : workoutData) {
-			Log.d("MainActivity", w.toString());
-		}
+	public void updateCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void deleteCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void insertCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean ok) {
+		Log.d("MainActivity", "workoutdata data update=" + ok);
+		Log.d("MainActivity", e.toString());
+	}
+
+	@Override
+	public void updateCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void deleteCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void insertCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void workoutQueryCallback(ArrayList<Workout> e, boolean ok) {
+		Log.d("MainActivity", "workout data update=" + ok);
+		Log.d("MainActivity", e.toString());
+	}
+
+	@Override
+	public void updateCallback(Workout e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void deleteCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void insertCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void weightQueryCallback(ArrayList<Weight> e, boolean ok) {
+		Log.d("MainActivity", "weight data update=" + ok);
+		Log.d("MainActivity", e.toString());
+	}
+
+	@Override
+	public void updateCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
 	}
 }

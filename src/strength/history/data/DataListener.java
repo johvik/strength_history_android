@@ -6,8 +6,7 @@ import android.os.Bundle;
 /**
  * Base Activity that acts as a listener
  */
-public abstract class DataListener extends Activity implements
-		DataProvider.Events {
+public abstract class DataListener extends Activity {
 	/**
 	 * Data provider object
 	 */
@@ -15,13 +14,13 @@ public abstract class DataListener extends Activity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		data.setListener(this);
+		data.addListeners(this);
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onDestroy() {
-		data.setListener(null);
+		data.removeListeners(this);
 		super.onDestroy();
 	}
 }

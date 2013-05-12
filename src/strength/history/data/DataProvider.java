@@ -1,7 +1,5 @@
 package strength.history.data;
 
-import java.util.ArrayList;
-
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.provider.WeightProvider;
 import strength.history.data.provider.WorkoutDataProvider;
@@ -12,6 +10,7 @@ import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -22,41 +21,26 @@ import android.util.Log;
  */
 public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		WeightProvider.Provides, WorkoutProvider.Provides,
-		WorkoutDataProvider.Provides, ExerciseProvider.Events,
-		WeightProvider.Events, WorkoutDataProvider.Events,
-		WorkoutProvider.Events {
-	/**
-	 * Interface that contains callback events
-	 */
-	public interface Events {
-		public void exerciseCallback(Iterable<Exercise> data);
+		WorkoutDataProvider.Provides {
+	private Messenger messenger = new Messenger(this);
 
-		public void weightCallback(Iterable<Weight> data);
+	private ExerciseProvider exerciseProvider = new ExerciseProvider();
+	private WeightProvider weightProvider = new WeightProvider();
+	private WorkoutProvider workoutProvider = new WorkoutProvider();
+	private WorkoutDataProvider workoutDataProvider = new WorkoutDataProvider();
 
-		public void workoutCallback(Iterable<Workout> data);
-
-		public void workoutDataCallback(Iterable<WorkoutData> data);
+	public void addListeners(DataListener dataListener) {
+		exerciseProvider.tryAddListener(dataListener);
+		weightProvider.tryAddListener(dataListener);
+		workoutProvider.tryAddListener(dataListener);
+		workoutDataProvider.tryAddListener(dataListener);
 	}
 
-	private Messenger messenger = new Messenger(this);
-	private ExerciseProvider<DataProvider> exerciseProvider = new ExerciseProvider<DataProvider>(
-			this);
-	private WeightProvider<DataProvider> weightProvider = new WeightProvider<DataProvider>(
-			this);
-	private WorkoutProvider<DataProvider> workoutProvider = new WorkoutProvider<DataProvider>(
-			this);
-	private WorkoutDataProvider<DataProvider> workoutDataProvider = new WorkoutDataProvider<DataProvider>(
-			this);
-	private DataListener dataListener = null;
-
-	public void setListener(DataListener dataListener) {
-		this.dataListener = dataListener;
-		if (dataListener != null) {
-			dataListener.exerciseCallback(exerciseProvider.get());
-			dataListener.weightCallback(weightProvider.get());
-			dataListener.workoutCallback(workoutProvider.get());
-			dataListener.workoutDataCallback(workoutDataProvider.get());
-		}
+	public void removeListeners(DataListener dataListener) {
+		exerciseProvider.tryRemoveListener(dataListener);
+		weightProvider.tryRemoveListener(dataListener);
+		workoutProvider.tryRemoveListener(dataListener);
+		workoutDataProvider.tryRemoveListener(dataListener);
 	}
 
 	@Override
@@ -84,178 +68,82 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void delete(Exercise e) {
-		exerciseProvider.delete(e, dataListener, messenger);
+	public void delete(Exercise e, Context context) {
+		exerciseProvider.delete(e, context, messenger);
 	}
 
 	@Override
-	public void insert(Exercise e) {
-		exerciseProvider.insert(e, dataListener, messenger);
+	public void insert(Exercise e, Context context) {
+		exerciseProvider.insert(e, context, messenger);
 	}
 
 	@Override
-	public void query(Exercise e) {
-		exerciseProvider.query(e, dataListener, messenger);
+	public void query(Exercise e, Context context) {
+		exerciseProvider.query(e, context, messenger);
 	}
 
 	@Override
-	public void update(Exercise e) {
-		exerciseProvider.update(e, dataListener, messenger);
+	public void update(Exercise e, Context context) {
+		exerciseProvider.update(e, context, messenger);
 	}
 
 	@Override
-	public void delete(Weight e) {
-		weightProvider.delete(e, dataListener, messenger);
+	public void delete(Weight e, Context context) {
+		weightProvider.delete(e, context, messenger);
 	}
 
 	@Override
-	public void insert(Weight e) {
-		weightProvider.insert(e, dataListener, messenger);
+	public void insert(Weight e, Context context) {
+		weightProvider.insert(e, context, messenger);
 	}
 
 	@Override
-	public void query(Weight e) {
-		weightProvider.query(e, dataListener, messenger);
+	public void query(Weight e, Context context) {
+		weightProvider.query(e, context, messenger);
 	}
 
 	@Override
-	public void update(Weight e) {
-		weightProvider.update(e, dataListener, messenger);
+	public void update(Weight e, Context context) {
+		weightProvider.update(e, context, messenger);
 	}
 
 	@Override
-	public void delete(Workout e) {
-		workoutProvider.delete(e, dataListener, messenger);
+	public void delete(Workout e, Context context) {
+		workoutProvider.delete(e, context, messenger);
 	}
 
 	@Override
-	public void insert(Workout e) {
-		workoutProvider.insert(e, dataListener, messenger);
+	public void insert(Workout e, Context context) {
+		workoutProvider.insert(e, context, messenger);
 	}
 
 	@Override
-	public void query(Workout e) {
-		workoutProvider.query(e, dataListener, messenger);
+	public void query(Workout e, Context context) {
+		workoutProvider.query(e, context, messenger);
 	}
 
 	@Override
-	public void update(Workout e) {
-		workoutProvider.update(e, dataListener, messenger);
+	public void update(Workout e, Context context) {
+		workoutProvider.update(e, context, messenger);
 	}
 
 	@Override
-	public void delete(WorkoutData e) {
-		workoutDataProvider.delete(e, dataListener, messenger);
+	public void delete(WorkoutData e, Context context) {
+		workoutDataProvider.delete(e, context, messenger);
 	}
 
 	@Override
-	public void insert(WorkoutData e) {
-		workoutDataProvider.insert(e, dataListener, messenger);
+	public void insert(WorkoutData e, Context context) {
+		workoutDataProvider.insert(e, context, messenger);
 	}
 
 	@Override
-	public void query(WorkoutData e) {
-		workoutDataProvider.query(e, dataListener, messenger);
+	public void query(WorkoutData e, Context context) {
+		workoutDataProvider.query(e, context, messenger);
 	}
 
 	@Override
-	public void update(WorkoutData e) {
-		workoutDataProvider.update(e, dataListener, messenger);
-	}
-
-	@Override
-	public void deleteCallback(Exercise e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.exerciseCallback(exerciseProvider.get());
-	}
-
-	@Override
-	public void insertCallback(Exercise e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.exerciseCallback(exerciseProvider.get());
-	}
-
-	@Override
-	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.exerciseCallback(exerciseProvider.get());
-	}
-
-	@Override
-	public void updateCallback(Exercise e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.exerciseCallback(exerciseProvider.get());
-	}
-
-	@Override
-	public void deleteCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.weightCallback(weightProvider.get());
-	}
-
-	@Override
-	public void insertCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.weightCallback(weightProvider.get());
-	}
-
-	@Override
-	public void weightQueryCallback(ArrayList<Weight> e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.weightCallback(weightProvider.get());
-	}
-
-	@Override
-	public void updateCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.weightCallback(weightProvider.get());
-	}
-
-	@Override
-	public void deleteCallback(WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutDataCallback(workoutDataProvider.get());
-	}
-
-	@Override
-	public void insertCallback(WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutDataCallback(workoutDataProvider.get());
-	}
-
-	@Override
-	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutDataCallback(workoutDataProvider.get());
-	}
-
-	@Override
-	public void updateCallback(WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutDataCallback(workoutDataProvider.get());
-	}
-
-	@Override
-	public void deleteCallback(Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutCallback(workoutProvider.get());
-	}
-
-	@Override
-	public void insertCallback(Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutCallback(workoutProvider.get());
-	}
-
-	@Override
-	public void workoutQueryCallback(ArrayList<Workout> e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutCallback(workoutProvider.get());
-	}
-
-	@Override
-	public void updateCallback(Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-		dataListener.workoutCallback(workoutProvider.get());
+	public void update(WorkoutData e, Context context) {
+		workoutDataProvider.update(e, context, messenger);
 	}
 }

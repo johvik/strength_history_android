@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Messenger;
 import android.util.Log;
 
+import strength.history.data.DataListener;
 import strength.history.data.service.ServiceBase;
 import strength.history.data.service.ServiceBase.Request;
 import strength.history.data.structure.SyncBase;
@@ -146,6 +147,10 @@ public abstract class Provider<E extends SyncBase<E>> {
 	public final void update(E e, Context context, Messenger messenger) {
 		runLocalService(e, context, messenger, Request.UPDATE);
 	}
+
+	public abstract void tryAddListener(DataListener dataListener);
+
+	public abstract void tryRemoveListener(DataListener dataListener);
 
 	protected abstract Class<?> getLocalServiceClass();
 

@@ -1,17 +1,18 @@
 package strength.history.data.provider;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
+import android.content.Context;
+
+import strength.history.data.DataListener;
 import strength.history.data.service.local.LocalWeightService;
 import strength.history.data.structure.Weight;
 
 /**
  * Provides data mappings for the weight service
- * 
- * @param <T>
  */
-public class WeightProvider<T extends WeightProvider.Events> extends
-		Provider<Weight> {
+public class WeightProvider extends Provider<Weight> {
 	public interface Events {
 		public void deleteCallback(Weight e, boolean ok);
 
@@ -23,19 +24,29 @@ public class WeightProvider<T extends WeightProvider.Events> extends
 	}
 
 	public interface Provides {
-		public void delete(Weight e);
+		public void delete(Weight e, Context context);
 
-		public void insert(Weight e);
+		public void insert(Weight e, Context context);
 
-		public void query(Weight e);
+		public void query(Weight e, Context context);
 
-		public void update(Weight e);
+		public void update(Weight e, Context context);
 	}
 
-	private T t;
+	private LinkedHashSet<Events> listeners = new LinkedHashSet<Events>();
 
-	public WeightProvider(T t) {
-		this.t = t;
+	@Override
+	public void tryAddListener(DataListener dataListener) {
+		if (dataListener instanceof Events) {
+			listeners.add((Events) dataListener);
+		}
+	}
+
+	@Override
+	public void tryRemoveListener(DataListener dataListener) {
+		if (dataListener instanceof Events) {
+			listeners.add((Events) dataListener);
+		}
 	}
 
 	@Override
@@ -50,21 +61,29 @@ public class WeightProvider<T extends WeightProvider.Events> extends
 
 	@Override
 	protected void deleteCallback(Weight e, boolean ok) {
-		t.deleteCallback(e, ok);
+		for (Events t : listeners) {
+			t.deleteCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void insertCallback(Weight e, boolean ok) {
-		t.insertCallback(e, ok);
+		for (Events t : listeners) {
+			t.insertCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void queryCallback(ArrayList<Weight> e, boolean ok) {
-		t.weightQueryCallback(e, ok);
+		for (Events t : listeners) {
+			t.weightQueryCallback(e, ok);
+		}
 	}
 
 	@Override
 	protected void updateCallback(Weight e, boolean ok) {
-		t.updateCallback(e, ok);
+		for (Events t : listeners) {
+			t.updateCallback(e, ok);
+		}
 	}
 }
