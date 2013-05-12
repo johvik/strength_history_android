@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Exercise class
  */
-public class Exercise extends Base<Exercise> {
+public class Exercise extends SyncBase<Exercise> {
 	private String name;
 
 	/**
@@ -46,8 +46,15 @@ public class Exercise extends Base<Exercise> {
 	}
 
 	@Override
-	protected int _compareTo(Exercise another) {
-		return name.compareTo(another.name);
+	public int compareTo(Exercise another) {
+		int c = name.compareTo(another.name);
+		if (c == 0) {
+			c = Long.valueOf(getId()).compareTo(another.getId());
+			if (c == 0) {
+				c = Integer.valueOf(getSync()).compareTo(another.getSync());
+			}
+		}
+		return c;
 	}
 
 	@Override

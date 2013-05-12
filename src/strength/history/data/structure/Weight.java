@@ -8,7 +8,7 @@ import android.os.Parcelable;
 /**
  * Weight class
  */
-public class Weight extends Base<Weight> {
+public class Weight extends SyncBase<Weight> {
 	private long time;
 	private double weight;
 
@@ -54,10 +54,16 @@ public class Weight extends Base<Weight> {
 	}
 
 	@Override
-	protected int _compareTo(Weight another) {
+	public int compareTo(Weight another) {
 		int c = Long.valueOf(another.time).compareTo(time); // descending time
 		if (c == 0) {
 			c = Double.valueOf(weight).compareTo(another.weight);
+			if (c == 0) {
+				c = Long.valueOf(getId()).compareTo(another.getId());
+				if (c == 0) {
+					c = Integer.valueOf(getSync()).compareTo(another.getSync());
+				}
+			}
 		}
 		return c;
 	}

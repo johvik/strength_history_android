@@ -10,14 +10,14 @@ import android.util.Log;
 import strength.history.data.DataListener;
 import strength.history.data.service.ServiceBase;
 import strength.history.data.service.ServiceBase.Request;
-import strength.history.data.structure.Base;
+import strength.history.data.structure.SyncBase;
 
 /**
  * Base class for providers
  * 
  * @param <E>
  */
-public abstract class Provider<E extends Base<E>> {
+public abstract class Provider<E extends SyncBase<E>> {
 	protected final TreeSet<E> data = new TreeSet<E>();
 
 	/**

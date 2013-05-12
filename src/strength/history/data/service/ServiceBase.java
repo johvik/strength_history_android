@@ -1,6 +1,6 @@
 package strength.history.data.service;
 
-import strength.history.data.structure.Base;
+import strength.history.data.structure.SyncBase;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Messenger;
@@ -11,7 +11,7 @@ import android.os.Messenger;
  * @param <E>
  *            Structure type it provides
  */
-public abstract class ServiceBase<E extends Base<E>> extends IntentService {
+public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 
 	protected abstract int getArg1();
 

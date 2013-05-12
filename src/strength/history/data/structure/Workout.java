@@ -9,7 +9,7 @@ import java.util.ListIterator;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Workout extends Base<Workout> implements List<Long> {
+public class Workout extends SyncBase<Workout> implements List<Long> {
 	private String name;
 	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
 
@@ -44,9 +44,16 @@ public class Workout extends Base<Workout> implements List<Long> {
 	}
 
 	@Override
-	protected int _compareTo(Workout another) {
+	public int compareTo(Workout another) {
 		// Don't care about the array...
-		return name.compareTo(another.name);
+		int c = name.compareTo(another.name);
+		if (c == 0) {
+			c = Long.valueOf(getId()).compareTo(another.getId());
+			if (c == 0) {
+				c = Integer.valueOf(getSync()).compareTo(another.getSync());
+			}
+		}
+		return c;
 	}
 
 	@Override

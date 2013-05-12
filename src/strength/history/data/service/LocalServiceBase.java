@@ -8,7 +8,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import strength.history.data.db.DBHelperBase;
-import strength.history.data.structure.Base;
+import strength.history.data.structure.SyncBase;
 
 /**
  * Local base class for the service framework
@@ -18,7 +18,7 @@ import strength.history.data.structure.Base;
  * @param <D>
  *            DBHelper class
  */
-public abstract class LocalServiceBase<E extends Base<E>, D extends DBHelperBase<E>>
+public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelperBase<E>>
 		extends ServiceBase<E> {
 	/**
 	 * Constructor
@@ -81,6 +81,7 @@ public abstract class LocalServiceBase<E extends Base<E>, D extends DBHelperBase
 
 	@Override
 	protected final void query(Messenger messenger) {
+		// TODO Create stop message instead of query interrupt
 		// Divide into smaller queries
 		for (int offset = 0; !query_interrupt; offset += QUERY_LIMIT) {
 			D db = getDB();

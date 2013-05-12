@@ -2,7 +2,7 @@ package strength.history.data.db;
 
 import java.util.ArrayList;
 
-import strength.history.data.structure.Base;
+import strength.history.data.structure.SyncBase;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.util.Log;
  * @param <E>
  *            Structure class they handle
  */
-public abstract class DBHelperBase<E extends Base<E>> extends SQLiteOpenHelper {
+public abstract class DBHelperBase<E extends SyncBase<E>> extends SQLiteOpenHelper {
 
 	/**
 	 * Constructor
