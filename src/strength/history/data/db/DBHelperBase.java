@@ -84,6 +84,6 @@ public abstract class DBHelperBase<E extends SyncBase<E>> extends
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.e(this.getClass().getName(), "onUpgrade not supported");
+		Log.e(this.getClass().getSimpleName(), "onUpgrade not supported");
 	}
 }

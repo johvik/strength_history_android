@@ -62,7 +62,14 @@ public abstract class Provider<E extends SyncBase<E>> {
 			if (!added) {
 				Log.d("Provider", "query nothing changed");
 			}
+			if (ok) {
+				Log.d("Provider", "query done");
+			}
 			queryCallback(e, ok);
+			break;
+		}
+		case STOP: {
+			// Do nothing (see ServiceBase.onStartCommand)
 			break;
 		}
 		case UPDATE: {
@@ -136,6 +143,19 @@ public abstract class Provider<E extends SyncBase<E>> {
 	}
 
 	/**
+	 * Stops all ongoing queries
+	 * 
+	 * @param e
+	 *            Not used, pass null
+	 * @param context
+	 * @param messenger
+	 *            Messenger for callback
+	 */
+	public final void stop(E e, Context context, Messenger messenger) {
+		runLocalService(e, context, messenger, Request.STOP);
+	}
+
+	/**
 	 * Updates item
 	 * 
 	 * @param e
@@ -160,7 +180,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 
 	protected abstract void insertCallback(E e, boolean ok);
 
-	protected abstract void queryCallback(ArrayList<E> e, boolean ok);
+	protected abstract void queryCallback(ArrayList<E> e, boolean done);
 
 	protected abstract void updateCallback(E e, boolean ok);
 

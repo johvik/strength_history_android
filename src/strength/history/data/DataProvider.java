@@ -83,6 +83,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
+	public void stop(Exercise e, Context context) {
+		exerciseProvider.stop(e, context, messenger);
+	}
+
+	@Override
 	public void update(Exercise e, Context context) {
 		exerciseProvider.update(e, context, messenger);
 	}
@@ -100,6 +105,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void query(Weight e, Context context) {
 		weightProvider.query(e, context, messenger);
+	}
+
+	@Override
+	public void stop(Weight e, Context context) {
+		weightProvider.stop(e, context, messenger);
 	}
 
 	@Override
@@ -123,6 +133,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
+	public void stop(Workout e, Context context) {
+		workoutProvider.stop(e, context, messenger);
+	}
+
+	@Override
 	public void update(Workout e, Context context) {
 		workoutProvider.update(e, context, messenger);
 	}
@@ -140,6 +155,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void query(WorkoutData e, Context context) {
 		workoutDataProvider.query(e, context, messenger);
+	}
+
+	@Override
+	public void stop(WorkoutData e, Context context) {
+		workoutDataProvider.stop(e, context, messenger);
 	}
 
 	@Override

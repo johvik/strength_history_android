@@ -81,7 +81,6 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 
 	@Override
 	protected final void query(Messenger messenger) {
-		// TODO Create stop message instead of query interrupt
 		// Divide into smaller queries
 		for (int offset = 0; !query_interrupt; offset += QUERY_LIMIT) {
 			D db = getDB();
@@ -90,7 +89,8 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			msg.arg2 = Request.QUERY.ordinal();
 
 			ArrayList<E> res = db.query(offset, QUERY_LIMIT);
-			msg.what = 1;
+			boolean doBreak = res.size() < QUERY_LIMIT;
+			msg.what = doBreak ? 1 : 0;
 			msg.obj = res;
 
 			try {
@@ -99,7 +99,7 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 				Log.e("LocalServiceBase", "Failed to send message");
 			}
 
-			if (res.size() < QUERY_LIMIT) {
+			if (doBreak) {
 				break;
 			}
 		}
@@ -148,11 +148,21 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			case QUERY:
 				query(messenger);
 				break;
+			case STOP:
+				// Do nothing (see ServiceBase.onStartCommand)
+				break;
 			case UPDATE:
 				update((E) intent.getParcelableExtra(getIntentName()),
 						messenger);
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void onDestroy() {
+		Log.d(this.getClass().getSimpleName(),
+				"onDestroy " + Service.parse(getArg1()));
+		super.onDestroy();
 	}
 }

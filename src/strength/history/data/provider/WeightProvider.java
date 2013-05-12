@@ -18,7 +18,7 @@ public class WeightProvider extends Provider<Weight> {
 
 		public void insertCallback(Weight e, boolean ok);
 
-		public void weightQueryCallback(ArrayList<Weight> e, boolean ok);
+		public void weightQueryCallback(ArrayList<Weight> e, boolean done);
 
 		public void updateCallback(Weight e, boolean ok);
 	}
@@ -29,6 +29,8 @@ public class WeightProvider extends Provider<Weight> {
 		public void insert(Weight e, Context context);
 
 		public void query(Weight e, Context context);
+
+		public void stop(Weight e, Context context);
 
 		public void update(Weight e, Context context);
 	}
@@ -74,9 +76,9 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	@Override
-	protected void queryCallback(ArrayList<Weight> e, boolean ok) {
+	protected void queryCallback(ArrayList<Weight> e, boolean done) {
 		for (Events t : listeners) {
-			t.weightQueryCallback(e, ok);
+			t.weightQueryCallback(e, done);
 		}
 	}
 

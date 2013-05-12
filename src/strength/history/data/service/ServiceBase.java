@@ -40,6 +40,10 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 		 */
 		QUERY,
 		/**
+		 * Stops all ongoing queries
+		 */
+		STOP,
+		/**
 		 * Updates the provided item
 		 */
 		UPDATE;
@@ -127,10 +131,15 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Request request = (Request) intent.getSerializableExtra(REQUEST);
-		if (request != Request.QUERY) {
-			query_interrupt = true;
-		} else {
+		switch (request) {
+		case QUERY:
 			query_interrupt = false;
+			break;
+		case STOP:
+			query_interrupt = true;
+			break;
+		default:
+			break;
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}

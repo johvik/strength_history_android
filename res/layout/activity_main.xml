@@ -43,6 +43,13 @@
             android:onClick="onUpdateClick"
             android:text="@string/update" />
 
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onStopClick"
+            android:text="@string/stop" />
+
         <RadioGroup
             android:id="@+id/radioGroup1"
             android:layout_width="wrap_content"

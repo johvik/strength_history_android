@@ -8,6 +8,7 @@
     <string name="insert">Insert</string>
     <string name="delete">Delete</string>
     <string name="update">Update</string>
+    <string name="stop">Stop</string>
     <string name="exercise">Exercise</string>
     <string name="weight">Weight</string>
     <string name="workout">Workout</string>

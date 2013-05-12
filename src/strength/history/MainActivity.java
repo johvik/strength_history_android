@@ -29,10 +29,10 @@ import android.widget.RadioGroup;
 public class MainActivity extends DataListener implements
 		ExerciseProvider.Events, WeightProvider.Events, WorkoutProvider.Events,
 		WorkoutDataProvider.Events {
-	private Iterable<Exercise> exercises = new TreeSet<Exercise>();
-	private Iterable<Weight> weights = new TreeSet<Weight>();
-	private Iterable<Workout> workouts = new TreeSet<Workout>();
-	private Iterable<WorkoutData> workoutData = new TreeSet<WorkoutData>();
+	private TreeSet<Exercise> exercises = new TreeSet<Exercise>();
+	private TreeSet<Weight> weights = new TreeSet<Weight>();
+	private TreeSet<Workout> workouts = new TreeSet<Workout>();
+	private TreeSet<WorkoutData> workoutData = new TreeSet<WorkoutData>();
 
 	private RadioGroup radioGroup;
 
@@ -205,6 +205,26 @@ public class MainActivity extends DataListener implements
 		}
 	}
 
+	public void onStopClick(View view) {
+		Service s = Service.parse(radioIndex());
+		Log.d("MainActivity", "onStopClick " + s);
+
+		switch (s) {
+		case EXERCISE:
+			data.stop((Exercise) null, getApplicationContext());
+			break;
+		case WEIGHT:
+			data.stop((Weight) null, getApplicationContext());
+			break;
+		case WORKOUT:
+			data.stop((Workout) null, getApplicationContext());
+			break;
+		case WORKOUT_DATA:
+			data.stop((WorkoutData) null, getApplicationContext());
+			break;
+		}
+	}
+
 	@Override
 	public void deleteCallback(Exercise e, boolean ok) {
 		// TODO Auto-generated method stub
@@ -216,9 +236,10 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean ok) {
-		Log.d("MainActivity", "exercise data update=" + ok);
+	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean done) {
+		Log.d("MainActivity", "exercise data update=" + done);
 		Log.d("MainActivity", e.toString());
+		exercises.addAll(e);
 	}
 
 	@Override
@@ -237,9 +258,10 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean ok) {
-		Log.d("MainActivity", "workoutdata data update=" + ok);
+	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean done) {
+		Log.d("MainActivity", "workoutdata data update=" + done);
 		Log.d("MainActivity", e.toString());
+		workoutData.addAll(e);
 	}
 
 	@Override
@@ -258,9 +280,10 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void workoutQueryCallback(ArrayList<Workout> e, boolean ok) {
-		Log.d("MainActivity", "workout data update=" + ok);
+	public void workoutQueryCallback(ArrayList<Workout> e, boolean done) {
+		Log.d("MainActivity", "workout data update=" + done);
 		Log.d("MainActivity", e.toString());
+		workouts.addAll(e);
 	}
 
 	@Override
@@ -279,9 +302,10 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void weightQueryCallback(ArrayList<Weight> e, boolean ok) {
-		Log.d("MainActivity", "weight data update=" + ok);
+	public void weightQueryCallback(ArrayList<Weight> e, boolean done) {
+		Log.d("MainActivity", "weight data update=" + done);
 		Log.d("MainActivity", e.toString());
+		weights.addAll(e);
 	}
 
 	@Override

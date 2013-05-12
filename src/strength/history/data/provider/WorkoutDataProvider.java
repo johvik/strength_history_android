@@ -16,7 +16,7 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		public void insertCallback(WorkoutData e, boolean ok);
 
 		public void workoutDataQueryCallback(ArrayList<WorkoutData> e,
-				boolean ok);
+				boolean done);
 
 		public void updateCallback(WorkoutData e, boolean ok);
 	}
@@ -27,6 +27,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		public void insert(WorkoutData e, Context context);
 
 		public void query(WorkoutData e, Context context);
+
+		public void stop(WorkoutData e, Context context);
 
 		public void update(WorkoutData e, Context context);
 	}
@@ -72,9 +74,9 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	}
 
 	@Override
-	protected void queryCallback(ArrayList<WorkoutData> e, boolean ok) {
+	protected void queryCallback(ArrayList<WorkoutData> e, boolean done) {
 		for (Events t : listeners) {
-			t.workoutDataQueryCallback(e, ok);
+			t.workoutDataQueryCallback(e, done);
 		}
 	}
 

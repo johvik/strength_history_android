@@ -18,7 +18,7 @@ public class ExerciseProvider extends Provider<Exercise> {
 
 		public void insertCallback(Exercise e, boolean ok);
 
-		public void exerciseQueryCallback(ArrayList<Exercise> e, boolean ok);
+		public void exerciseQueryCallback(ArrayList<Exercise> e, boolean done);
 
 		public void updateCallback(Exercise e, boolean ok);
 	}
@@ -29,6 +29,8 @@ public class ExerciseProvider extends Provider<Exercise> {
 		public void insert(Exercise e, Context context);
 
 		public void query(Exercise e, Context context);
+
+		public void stop(Exercise e, Context context);
 
 		public void update(Exercise e, Context context);
 	}
@@ -74,9 +76,9 @@ public class ExerciseProvider extends Provider<Exercise> {
 	}
 
 	@Override
-	protected void queryCallback(ArrayList<Exercise> e, boolean ok) {
+	protected void queryCallback(ArrayList<Exercise> e, boolean done) {
 		for (Events t : listeners) {
-			t.exerciseQueryCallback(e, ok);
+			t.exerciseQueryCallback(e, done);
 		}
 	}
 
