@@ -2,6 +2,7 @@ package strength.history.data;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Base Activity that acts as a listener
@@ -20,6 +21,7 @@ public abstract class DataListener extends Activity {
 
 	@Override
 	protected void onDestroy() {
+		Log.d("DataListener", "onDestroy");
 		data.removeListeners(this);
 		super.onDestroy();
 	}
