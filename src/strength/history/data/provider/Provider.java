@@ -1,6 +1,7 @@
 package strength.history.data.provider;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.TreeSet;
 
 import android.content.Context;
@@ -20,6 +21,7 @@ import strength.history.data.structure.SyncBase;
  */
 public abstract class Provider<E extends SyncBase<E>> {
 	protected final TreeSet<E> data = new TreeSet<E>();
+	private boolean loaded = false;
 
 	/**
 	 * Handles a request
@@ -63,6 +65,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 				Log.d("Provider", "query nothing changed");
 			}
 			if (ok) {
+				loaded = true; // TODO Verify that this works...
 				Log.d("Provider", "query done");
 			}
 			queryCallback(e, ok);
@@ -99,7 +102,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 * 
 	 * @return The data
 	 */
-	public final Iterable<E> get() {
+	public final Collection<E> get() {
 		return data;
 	}
 
@@ -139,7 +142,11 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void query(E e, Context context, Messenger messenger) {
-		runLocalService(e, context, messenger, Request.QUERY);
+		if (!loaded) {
+			runLocalService(e, context, messenger, Request.QUERY);
+		} else {
+			queryCallback(data, true);
+		}
 	}
 
 	/**
@@ -180,7 +187,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 
 	protected abstract void insertCallback(E e, boolean ok);
 
-	protected abstract void queryCallback(ArrayList<E> e, boolean done);
+	protected abstract void queryCallback(Collection<E> e, boolean done);
 
 	protected abstract void updateCallback(E e, boolean ok);
 

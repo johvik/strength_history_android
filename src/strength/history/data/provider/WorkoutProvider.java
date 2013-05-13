@@ -1,6 +1,6 @@
 package strength.history.data.provider;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import android.content.Context;
@@ -15,7 +15,7 @@ public class WorkoutProvider extends Provider<Workout> {
 
 		public void insertCallback(Workout e, boolean ok);
 
-		public void workoutQueryCallback(ArrayList<Workout> e, boolean done);
+		public void workoutQueryCallback(Collection<Workout> e, boolean done);
 
 		public void updateCallback(Workout e, boolean ok);
 	}
@@ -73,7 +73,7 @@ public class WorkoutProvider extends Provider<Workout> {
 	}
 
 	@Override
-	protected void queryCallback(ArrayList<Workout> e, boolean done) {
+	protected void queryCallback(Collection<Workout> e, boolean done) {
 		for (Events t : listeners) {
 			t.workoutQueryCallback(e, done);
 		}

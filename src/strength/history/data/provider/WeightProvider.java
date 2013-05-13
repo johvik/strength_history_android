@@ -1,6 +1,6 @@
 package strength.history.data.provider;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import android.content.Context;
@@ -18,7 +18,7 @@ public class WeightProvider extends Provider<Weight> {
 
 		public void insertCallback(Weight e, boolean ok);
 
-		public void weightQueryCallback(ArrayList<Weight> e, boolean done);
+		public void weightQueryCallback(Collection<Weight> e, boolean done);
 
 		public void updateCallback(Weight e, boolean ok);
 	}
@@ -76,7 +76,7 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	@Override
-	protected void queryCallback(ArrayList<Weight> e, boolean done) {
+	protected void queryCallback(Collection<Weight> e, boolean done) {
 		for (Events t : listeners) {
 			t.weightQueryCallback(e, done);
 		}

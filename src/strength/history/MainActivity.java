@@ -1,6 +1,6 @@
 package strength.history;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.TreeSet;
 
@@ -236,7 +236,7 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void exerciseQueryCallback(ArrayList<Exercise> e, boolean done) {
+	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
 		Log.d("MainActivity", "exercise data update=" + done);
 		Log.d("MainActivity", e.toString());
 		exercises.addAll(e);
@@ -258,7 +258,7 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void workoutDataQueryCallback(ArrayList<WorkoutData> e, boolean done) {
+	public void workoutDataQueryCallback(Collection<WorkoutData> e, boolean done) {
 		Log.d("MainActivity", "workoutdata data update=" + done);
 		Log.d("MainActivity", e.toString());
 		workoutData.addAll(e);
@@ -280,7 +280,7 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void workoutQueryCallback(ArrayList<Workout> e, boolean done) {
+	public void workoutQueryCallback(Collection<Workout> e, boolean done) {
 		Log.d("MainActivity", "workout data update=" + done);
 		Log.d("MainActivity", e.toString());
 		workouts.addAll(e);
@@ -302,7 +302,7 @@ public class MainActivity extends DataListener implements
 	}
 
 	@Override
-	public void weightQueryCallback(ArrayList<Weight> e, boolean done) {
+	public void weightQueryCallback(Collection<Weight> e, boolean done) {
 		Log.d("MainActivity", "weight data update=" + done);
 		Log.d("MainActivity", e.toString());
 		weights.addAll(e);
