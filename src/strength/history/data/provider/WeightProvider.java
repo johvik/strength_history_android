@@ -47,7 +47,7 @@ public class WeightProvider extends Provider<Weight> {
 	@Override
 	public void tryRemoveListener(DataListener dataListener) {
 		if (dataListener instanceof Events) {
-			listeners.add((Events) dataListener);
+			listeners.remove((Events) dataListener);
 		}
 	}
 
