@@ -68,6 +68,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?",
 				new String[] { Long.toString(e.getId()) });
+		// TODO Transaction
 		db.close();
 		return rows == 1;
 	}
@@ -108,6 +109,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
 				Entry._ID + "=?", new String[] { Long.toString(e.getId()) });
+		// TODO Transaction
 		db.close();
 		return rows == 1;
 	}
