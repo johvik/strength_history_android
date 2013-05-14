@@ -81,51 +81,85 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	public boolean delete(WorkoutData e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		String[] id_str = new String[] { Long.toString(e.getId()) };
-		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
-		db.delete(Entry.ExerciseData.TABLE_NAME,
-				Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
-		for (ExerciseData d : e) {
-			db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
-					Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
-					new String[] { Long.toString(d.getId()) });
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
+			int r2 = db.delete(Entry.ExerciseData.TABLE_NAME,
+					Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
+			ok = rows == 1 && r2 == e.size();
+			for (ExerciseData d : e) {
+				int r3 = db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
+						Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
+						new String[] { Long.toString(d.getId()) });
+				ok = ok && r3 == d.size();
+			}
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
-		return rows != 0;
+		return ok;
 	}
 
 	@Override
 	public boolean insert(WorkoutData e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		long id = db.insert(Entry.TABLE_NAME, null, toContentValues(e));
-		e.setId(id);
-		if (id != -1) {
-			for (ExerciseData d : e) {
-				ContentValues values = new ContentValues();
-				values.put(Entry.ExerciseData.WORKOUT_DATA_ID, id);
-				values.put(Entry.ExerciseData.EXERCISE_ID, d.getExerciseId());
-				long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null,
-						values);
-				d.setId(id2);
-				if (id2 != -1) {
-					for (SetData s : d) {
-						ContentValues values2 = new ContentValues();
-						values2.put(
-								Entry.ExerciseData.SetData.EXERCISE_DATA_ID,
-								id2);
-						values2.put(Entry.ExerciseData.SetData.WEIGHT,
-								s.getWeight());
-						values2.put(Entry.ExerciseData.SetData.REPETITIONS,
-								s.getRepetitions());
-						long id3 = db.insert(
-								Entry.ExerciseData.SetData.TABLE_NAME, null,
-								values2);
-						s.setId(id3);
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			long id = db.insert(Entry.TABLE_NAME, null, toContentValues(e));
+			e.setId(id);
+			ok = id != -1;
+			if (id != -1) {
+				for (ExerciseData d : e) {
+					ContentValues values = new ContentValues();
+					values.put(Entry.ExerciseData.WORKOUT_DATA_ID, id);
+					values.put(Entry.ExerciseData.EXERCISE_ID,
+							d.getExerciseId());
+					long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null,
+							values);
+					d.setId(id2);
+					ok = ok && id2 != -1;
+					if (id2 != -1) {
+						for (SetData s : d) {
+							ContentValues values2 = new ContentValues();
+							values2.put(
+									Entry.ExerciseData.SetData.EXERCISE_DATA_ID,
+									id2);
+							values2.put(Entry.ExerciseData.SetData.WEIGHT,
+									s.getWeight());
+							values2.put(Entry.ExerciseData.SetData.REPETITIONS,
+									s.getRepetitions());
+							long id3 = db.insert(
+									Entry.ExerciseData.SetData.TABLE_NAME,
+									null, values2);
+							s.setId(id3);
+							ok = ok && id3 != -1;
+						}
 					}
 				}
 			}
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
-		return id != -1;
+		if (!ok) {
+			// Restore all IDs if they changed...
+			e.setId(-1);
+			for (ExerciseData d : e) {
+				d.setId(-1);
+				for (SetData s : d) {
+					s.setId(-1);
+				}
+			}
+		}
+		return ok;
 	}
 
 	@Override
@@ -188,40 +222,55 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		long id = e.getId();
 		String[] id_str = new String[] { Long.toString(id) };
-		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
-				Entry._ID + "=?", id_str);
-		// Delete old data
-		db.delete(Entry.ExerciseData.TABLE_NAME,
-				Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
-		for (ExerciseData d : e) {
-			db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
-					Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
-					new String[] { Long.toString(d.getId()) });
-		}
-		// Store new ones
-		for (ExerciseData d : e) {
-			ContentValues values = new ContentValues();
-			values.put(Entry.ExerciseData.WORKOUT_DATA_ID, id);
-			values.put(Entry.ExerciseData.EXERCISE_ID, d.getExerciseId());
-			long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null, values);
-			d.setId(id2);
-			if (id2 != -1) {
-				for (SetData s : d) {
-					ContentValues values2 = new ContentValues();
-					values2.put(Entry.ExerciseData.SetData.EXERCISE_DATA_ID,
-							id2);
-					values2.put(Entry.ExerciseData.SetData.WEIGHT,
-							s.getWeight());
-					values2.put(Entry.ExerciseData.SetData.REPETITIONS,
-							s.getRepetitions());
-					long id3 = db.insert(Entry.ExerciseData.SetData.TABLE_NAME,
-							null, values2);
-					s.setId(id3);
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
+					Entry._ID + "=?", id_str);
+			ok = rows == 1;
+			// Delete old data
+			db.delete(Entry.ExerciseData.TABLE_NAME,
+					Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
+			for (ExerciseData d : e) {
+				db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
+						Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
+						new String[] { Long.toString(d.getId()) });
+			}
+			// Store new ones
+			for (ExerciseData d : e) {
+				ContentValues values = new ContentValues();
+				values.put(Entry.ExerciseData.WORKOUT_DATA_ID, id);
+				values.put(Entry.ExerciseData.EXERCISE_ID, d.getExerciseId());
+				long id2 = db.insert(Entry.ExerciseData.TABLE_NAME, null,
+						values);
+				d.setId(id2);
+				ok = ok && id2 != -1;
+				if (id2 != -1) {
+					for (SetData s : d) {
+						ContentValues values2 = new ContentValues();
+						values2.put(
+								Entry.ExerciseData.SetData.EXERCISE_DATA_ID,
+								id2);
+						values2.put(Entry.ExerciseData.SetData.WEIGHT,
+								s.getWeight());
+						values2.put(Entry.ExerciseData.SetData.REPETITIONS,
+								s.getRepetitions());
+						long id3 = db.insert(
+								Entry.ExerciseData.SetData.TABLE_NAME, null,
+								values2);
+						s.setId(id3);
+						ok = ok && id3 != -1;
+					}
 				}
 			}
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
-		return rows != 0;
+		return ok;
 	}
 
 	@Override

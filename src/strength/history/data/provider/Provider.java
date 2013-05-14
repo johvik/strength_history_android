@@ -78,20 +78,25 @@ public abstract class Provider<E extends SyncBase<E>> {
 		case UPDATE: {
 			@SuppressWarnings("unchecked")
 			E e = (E) object;
+			E old = null;
+			long id = e.getId();
+			// Search by id
+			for (E d : data) {
+				if (d.getId() == id) {
+					old = d;
+					break;
+				}
+			}
 			if (ok) {
-				// Search by id
-				for (E d : data) {
-					if (e.getId() == d.getId()) {
-						data.remove(d);
-						d.updateFrom(e);
-						data.add(d);
-						break;
-					}
+				if (old != null) {
+					old.updateFrom(e);
 				}
 			} else {
 				Log.e("Provider", "failed to update " + e);
 			}
-			updateCallback(e, ok);
+			// return the old one if failed
+			// but if old is null return e
+			updateCallback(ok || old == null ? e : old, ok);
 			break;
 		}
 		}
@@ -143,6 +148,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 */
 	public final void query(E e, Context context, Messenger messenger) {
 		if (!loaded) {
+			// TODO Take advantage of that some may have been loaded?
 			runLocalService(e, context, messenger, Request.QUERY);
 		} else {
 			queryCallback(data, true);

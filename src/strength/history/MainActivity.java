@@ -228,11 +228,13 @@ public class MainActivity extends DataListener implements
 	@Override
 	public void deleteCallback(Exercise e, boolean ok) {
 		// TODO Auto-generated method stub
+		exercises.clear();
 	}
 
 	@Override
 	public void insertCallback(Exercise e, boolean ok) {
 		// TODO Auto-generated method stub
+		exercises.clear();
 	}
 
 	@Override
@@ -245,16 +247,19 @@ public class MainActivity extends DataListener implements
 	@Override
 	public void updateCallback(Exercise e, boolean ok) {
 		// TODO Auto-generated method stub
+		exercises.clear();
 	}
 
 	@Override
 	public void deleteCallback(WorkoutData e, boolean ok) {
 		// TODO Auto-generated method stub
+		workoutData.clear();
 	}
 
 	@Override
 	public void insertCallback(WorkoutData e, boolean ok) {
 		// TODO Auto-generated method stub
+		workoutData.clear();
 	}
 
 	@Override
@@ -267,16 +272,19 @@ public class MainActivity extends DataListener implements
 	@Override
 	public void updateCallback(WorkoutData e, boolean ok) {
 		// TODO Auto-generated method stub
+		workoutData.clear();
 	}
 
 	@Override
 	public void deleteCallback(Workout e, boolean ok) {
 		// TODO Auto-generated method stub
+		workouts.clear();
 	}
 
 	@Override
 	public void insertCallback(Workout e, boolean ok) {
 		// TODO Auto-generated method stub
+		workouts.clear();
 	}
 
 	@Override
@@ -289,16 +297,19 @@ public class MainActivity extends DataListener implements
 	@Override
 	public void updateCallback(Workout e, boolean ok) {
 		// TODO Auto-generated method stub
+		workouts.clear();
 	}
 
 	@Override
 	public void deleteCallback(Weight e, boolean ok) {
 		// TODO Auto-generated method stub
+		weights.clear();
 	}
 
 	@Override
 	public void insertCallback(Weight e, boolean ok) {
 		// TODO Auto-generated method stub
+		weights.clear();
 	}
 
 	@Override
@@ -311,5 +322,6 @@ public class MainActivity extends DataListener implements
 	@Override
 	public void updateCallback(Weight e, boolean ok) {
 		// TODO Auto-generated method stub
+		weights.clear();
 	}
 }

@@ -67,28 +67,51 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 	public boolean delete(Workout e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		String[] id_str = new String[] { Long.toString(e.getId()) };
-		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
-		db.delete(Entry.Binding.TABLE_NAME, Entry.Binding.WORKOUT_ID + "=?",
-				id_str);
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
+			ok = rows == 1;
+			int r2 = db.delete(Entry.Binding.TABLE_NAME,
+					Entry.Binding.WORKOUT_ID + "=?", id_str);
+			ok = ok && r2 == e.size();
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
+		}
 		db.close();
-		return rows != 0;
+		return ok;
 	}
 
 	@Override
 	public boolean insert(Workout e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
-		long id = db.insert(Entry.TABLE_NAME, null, toContentValues(e));
-		e.setId(id);
-		if (id != -1) {
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			long id = db.insert(Entry.TABLE_NAME, null, toContentValues(e));
+			e.setId(id);
+			ok = id != -1;
 			for (Long l : e) {
 				ContentValues values = new ContentValues();
 				values.put(Entry.Binding.WORKOUT_ID, id);
 				values.put(Entry.Binding.EXERCISE_ID, l);
-				db.insert(Entry.Binding.TABLE_NAME, null, values);
+				long id2 = db.insert(Entry.Binding.TABLE_NAME, null, values);
+				ok = ok && id2 != -1;
 			}
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
-		return id != -1;
+		if (!ok) {
+			e.setId(-1);
+		}
+		return ok;
 	}
 
 	@Override
@@ -129,20 +152,31 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		long id = e.getId();
 		String[] id_str = new String[] { Long.toString(id) };
-		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
-				Entry._ID + "=?", id_str);
-		// Delete old bindings
-		db.delete(Entry.Binding.TABLE_NAME, Entry.Binding.WORKOUT_ID + "=?",
-				id_str);
-		// Store new ones
-		for (Long l : e) {
-			ContentValues values = new ContentValues();
-			values.put(Entry.Binding.WORKOUT_ID, id);
-			values.put(Entry.Binding.EXERCISE_ID, l);
-			db.insert(Entry.Binding.TABLE_NAME, null, values);
+		boolean ok = false;
+		db.beginTransaction();
+		try {
+			int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
+					Entry._ID + "=?", id_str);
+			ok = rows == 1;
+			// Delete old bindings
+			db.delete(Entry.Binding.TABLE_NAME,
+					Entry.Binding.WORKOUT_ID + "=?", id_str);
+			// Store new ones
+			for (Long l : e) {
+				ContentValues values = new ContentValues();
+				values.put(Entry.Binding.WORKOUT_ID, id);
+				values.put(Entry.Binding.EXERCISE_ID, l);
+				long id2 = db.insert(Entry.Binding.TABLE_NAME, null, values);
+				ok = ok && id2 != -1;
+			}
+			if (ok) {
+				db.setTransactionSuccessful();
+			}
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
-		return rows != 0;
+		return ok;
 	}
 
 	@Override

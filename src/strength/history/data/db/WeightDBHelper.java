@@ -69,7 +69,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?",
 				new String[] { Long.toString(e.getId()) });
 		db.close();
-		return rows != 0;
+		return rows == 1;
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
 				Entry._ID + "=?", new String[] { Long.toString(e.getId()) });
 		db.close();
-		return rows != 0;
+		return rows == 1;
 	}
 
 	@Override
