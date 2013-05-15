@@ -40,7 +40,9 @@ public class WeightProvider extends Provider<Weight> {
 	@Override
 	public void tryAddListener(DataListener dataListener) {
 		if (dataListener instanceof Events) {
-			listeners.add((Events) dataListener);
+			Events e = (Events) dataListener;
+			e.weightQueryCallback(data, false); // Initial values
+			listeners.add(e);
 		}
 	}
 
