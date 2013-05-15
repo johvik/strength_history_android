@@ -40,7 +40,7 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		if (dataListener instanceof Events) {
 			Events e = (Events) dataListener;
 			e.workoutDataQueryCallback(data, false); // Initial values
-			listeners.add((Events) dataListener);
+			listeners.add(e);
 		}
 	}
 
