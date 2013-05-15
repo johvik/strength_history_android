@@ -81,27 +81,16 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	public boolean delete(WorkoutData e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		String[] id_str = new String[] { Long.toString(e.getId()) };
-		boolean ok = false;
-		db.beginTransaction();
-		try {
-			int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
-			int r2 = db.delete(Entry.ExerciseData.TABLE_NAME,
-					Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
-			ok = rows == 1 && r2 == e.size();
-			for (ExerciseData d : e) {
-				int r3 = db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
-						Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
-						new String[] { Long.toString(d.getId()) });
-				ok = ok && r3 == d.size();
-			}
-			if (ok) {
-				db.setTransactionSuccessful();
-			}
-		} finally {
-			db.endTransaction();
+		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
+		db.delete(Entry.ExerciseData.TABLE_NAME,
+				Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);
+		for (ExerciseData d : e) {
+			db.delete(Entry.ExerciseData.SetData.TABLE_NAME,
+					Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
+					new String[] { Long.toString(d.getId()) });
 		}
 		db.close();
-		return ok;
+		return rows != 0;
 	}
 
 	@Override
@@ -227,7 +216,7 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 		try {
 			int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
 					Entry._ID + "=?", id_str);
-			ok = rows == 1;
+			ok = rows != 0;
 			// Delete old data
 			db.delete(Entry.ExerciseData.TABLE_NAME,
 					Entry.ExerciseData.WORKOUT_DATA_ID + "=?", id_str);

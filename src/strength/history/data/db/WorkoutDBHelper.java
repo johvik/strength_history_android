@@ -67,22 +67,11 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 	public boolean delete(Workout e) {
 		SQLiteDatabase db = instance.getWritableDatabase();
 		String[] id_str = new String[] { Long.toString(e.getId()) };
-		boolean ok = false;
-		db.beginTransaction();
-		try {
-			int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
-			ok = rows == 1;
-			int r2 = db.delete(Entry.Binding.TABLE_NAME,
-					Entry.Binding.WORKOUT_ID + "=?", id_str);
-			ok = ok && r2 == e.size();
-			if (ok) {
-				db.setTransactionSuccessful();
-			}
-		} finally {
-			db.endTransaction();
-		}
+		int rows = db.delete(Entry.TABLE_NAME, Entry._ID + "=?", id_str);
+		db.delete(Entry.Binding.TABLE_NAME, Entry.Binding.WORKOUT_ID + "=?",
+				id_str);
 		db.close();
-		return ok;
+		return rows != 0;
 	}
 
 	@Override
@@ -157,7 +146,7 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		try {
 			int rows = db.update(Entry.TABLE_NAME, instance.toContentValues(e),
 					Entry._ID + "=?", id_str);
-			ok = rows == 1;
+			ok = rows != 0;
 			// Delete old bindings
 			db.delete(Entry.Binding.TABLE_NAME,
 					Entry.Binding.WORKOUT_ID + "=?", id_str);
