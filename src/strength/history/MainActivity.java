@@ -41,6 +41,9 @@ public class MainActivity extends DataListener implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
+
+		// Intent i = new Intent(this, DataTest.class);
+		// startActivity(i);
 	}
 
 	@Override
