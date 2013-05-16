@@ -41,6 +41,35 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof WorkoutData)) {
+			return false;
+		} else {
+			WorkoutData d = (WorkoutData) o;
+			return getId() == d.getId() && time == d.time;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		long id = getId();
+		int result = 37 + (int) (id ^ (id >>> 32));
+		return result * 37 + (int) (time ^ (time >>> 32));
+	}
+
+	@Override
+	public int compareTo(WorkoutData another) {
+		// Don't care about array
+		int c = Long.valueOf(another.time).compareTo(time); // descending time
+		if (c == 0) {
+			return Long.valueOf(getId()).compareTo(another.getId());
+		}
+		return c;
+	}
+
+	@Override
 	protected WorkoutData _copy() {
 		WorkoutData copy = new WorkoutData(getId(), getSync(), time, workout_id);
 		for (ExerciseData e : exercises) {
@@ -77,22 +106,6 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 			return new WorkoutData[size];
 		}
 	};
-
-	@Override
-	public int compareTo(WorkoutData another) {
-		// Don't care about array
-		int c = Long.valueOf(another.time).compareTo(time); // descending time
-		if (c == 0) {
-			c = Long.valueOf(workout_id).compareTo(another.workout_id);
-			if (c == 0) {
-				c = Long.valueOf(getId()).compareTo(another.getId());
-				if (c == 0) {
-					c = Integer.valueOf(getSync()).compareTo(another.getSync());
-				}
-			}
-		}
-		return c;
-	}
 
 	public long getTime() {
 		return time;

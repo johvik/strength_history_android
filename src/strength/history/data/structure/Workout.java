@@ -35,25 +35,24 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof Workout)) {
+			return false;
+		} else {
+			Workout w = (Workout) o;
+			return getId() == w.getId();
+		}
+	}
+
+	@Override
 	protected Workout _copy() {
 		Workout copy = new Workout(getId(), getSync(), name);
 		for (Long l : exercise_ids) {
 			copy.add(l.longValue());
 		}
 		return copy;
-	}
-
-	@Override
-	public int compareTo(Workout another) {
-		// Don't care about the array...
-		int c = name.compareTo(another.name);
-		if (c == 0) {
-			c = Long.valueOf(getId()).compareTo(another.getId());
-			if (c == 0) {
-				c = Integer.valueOf(getSync()).compareTo(another.getSync());
-			}
-		}
-		return c;
 	}
 
 	@Override

@@ -49,23 +49,36 @@ public class Weight extends SyncBase<Weight> {
 	}
 
 	@Override
-	protected Weight _copy() {
-		return new Weight(getId(), getSync(), time, weight);
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof Weight)) {
+			return false;
+		} else {
+			Weight w = (Weight) o;
+			return getId() == w.getId() && time == w.time;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		long id = getId();
+		int result = 37 + (int) (id ^ (id >>> 32));
+		return result * 37 + (int) (time ^ (time >>> 32));
 	}
 
 	@Override
 	public int compareTo(Weight another) {
 		int c = Long.valueOf(another.time).compareTo(time); // descending time
 		if (c == 0) {
-			c = Double.valueOf(weight).compareTo(another.weight);
-			if (c == 0) {
-				c = Long.valueOf(getId()).compareTo(another.getId());
-				if (c == 0) {
-					c = Integer.valueOf(getSync()).compareTo(another.getSync());
-				}
-			}
+			return Long.valueOf(getId()).compareTo(another.getId());
 		}
 		return c;
+	}
+
+	@Override
+	protected Weight _copy() {
+		return new Weight(getId(), getSync(), time, weight);
 	}
 
 	@Override

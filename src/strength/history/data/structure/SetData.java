@@ -29,20 +29,20 @@ public class SetData extends Base<SetData> {
 	}
 
 	@Override
-	protected SetData _copy() {
-		return new SetData(getId(), weight, repetitions);
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof SetData)) {
+			return false;
+		} else {
+			SetData d = (SetData) o;
+			return getId() == d.getId();
+		}
 	}
 
 	@Override
-	public int compareTo(SetData another) {
-		int c = Long.valueOf(getId()).compareTo(another.getId());
-		if (c == 0) {
-			c = Double.valueOf(weight).compareTo(another.weight);
-			if (c == 0) {
-				c = Integer.valueOf(repetitions).compareTo(another.repetitions);
-			}
-		}
-		return c;
+	protected SetData _copy() {
+		return new SetData(getId(), weight, repetitions);
 	}
 
 	@Override

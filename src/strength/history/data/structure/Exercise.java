@@ -41,20 +41,20 @@ public class Exercise extends SyncBase<Exercise> {
 	}
 
 	@Override
-	protected Exercise _copy() {
-		return new Exercise(getId(), getSync(), name);
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof Exercise)) {
+			return false;
+		} else {
+			Exercise e = (Exercise) o;
+			return getId() == e.getId();
+		}
 	}
 
 	@Override
-	public int compareTo(Exercise another) {
-		int c = name.compareTo(another.name);
-		if (c == 0) {
-			c = Long.valueOf(getId()).compareTo(another.getId());
-			if (c == 0) {
-				c = Integer.valueOf(getSync()).compareTo(another.getSync());
-			}
-		}
-		return c;
+	protected Exercise _copy() {
+		return new Exercise(getId(), getSync(), name);
 	}
 
 	@Override

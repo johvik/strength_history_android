@@ -42,7 +42,17 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	}
 
 	@Override
-	public abstract int compareTo(T another);
+	public abstract boolean equals(Object o);
+
+	@Override
+	public int hashCode() {
+		return 37 + (int) (id ^ (id >>> 32));
+	}
+
+	@Override
+	public int compareTo(T another) {
+		return Long.valueOf(id).compareTo(another.id);
+	}
 
 	@Override
 	public void writeToParcel(Parcel out, int flags) {

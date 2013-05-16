@@ -51,6 +51,9 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 		_writeToParcel(out, flags);
 	}
 
+	@Override
+	public abstract boolean equals(Object o);
+
 	/**
 	 * Gets the sync state of the object
 	 * 

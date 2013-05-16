@@ -34,6 +34,18 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (o == null) {
+			return false;
+		} else if (!(o instanceof ExerciseData)) {
+			return false;
+		} else {
+			ExerciseData d = (ExerciseData) o;
+			return getId() == d.getId();
+		}
+	}
+
+	@Override
 	protected ExerciseData _copy() {
 		ExerciseData copy = new ExerciseData(getId(), exercise_id);
 		for (SetData s : sets) {
@@ -68,16 +80,6 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 			return new ExerciseData[size];
 		}
 	};
-
-	@Override
-	public int compareTo(ExerciseData another) {
-		// Don't care about array
-		int c = Long.valueOf(getId()).compareTo(another.getId());
-		if (c == 0) {
-			c = Long.valueOf(exercise_id).compareTo(another.exercise_id);
-		}
-		return c;
-	}
 
 	public long getExerciseId() {
 		return exercise_id;
