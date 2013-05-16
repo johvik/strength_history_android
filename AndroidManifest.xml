@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="strength.history.data.DataTest" >
+        <activity android:name="strength.history.settings.ExerciseActivity" >
         </activity>
 
         <service
@@ -37,6 +37,11 @@
         <service
             android:name="strength.history.data.service.local.LocalWorkoutDataService"
             android:exported="false" />
+
+        <activity
+            android:name="strength.history.ExercisesActivity"
+            android:label="@string/title_activity_exercises" >
+        </activity>
     </application>
 
 </manifest>
