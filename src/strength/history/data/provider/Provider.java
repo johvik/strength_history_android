@@ -2,7 +2,7 @@ package strength.history.data.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import strength.history.data.structure.SyncBase;
  * @param <E>
  */
 public abstract class Provider<E extends SyncBase<E>> {
-	protected final TreeSet<E> data = new TreeSet<E>();
+	protected final HashSet<E> data = new HashSet<E>();
 	private boolean loaded = false;
 
 	/**
