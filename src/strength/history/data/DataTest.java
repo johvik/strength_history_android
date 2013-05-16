@@ -18,16 +18,12 @@ public class DataTest extends DataListener implements ExerciseProvider.Events {
 			public void run() {
 				try {
 					// TODO Clear DB and provider
-					Thread.sleep(100);
 					data.insert(new Exercise("abc"), getApplicationContext());
-					Thread.sleep(100);
 					data.delete(e, getApplicationContext());
-					Thread.sleep(100);
 					data.insert(new Exercise("abc"), getApplicationContext());
-					Thread.sleep(100);
 					data.update(e, getApplicationContext());
-					Thread.sleep(100);
 					data.query((Exercise) null, getApplicationContext());
+					// TODO Add more tests
 					Thread.sleep(100);
 					finish();
 				} catch (InterruptedException e) {

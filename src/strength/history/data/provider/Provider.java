@@ -103,15 +103,6 @@ public abstract class Provider<E extends SyncBase<E>> {
 	}
 
 	/**
-	 * Retrieves the data
-	 * 
-	 * @return The data
-	 */
-	public final Collection<E> get() {
-		return data;
-	}
-
-	/**
 	 * Deletes item
 	 * 
 	 * @param e
