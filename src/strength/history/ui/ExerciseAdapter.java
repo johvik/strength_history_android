@@ -1,6 +1,5 @@
 package strength.history.ui;
 
-import strength.history.R;
 import strength.history.data.SortedList;
 import strength.history.data.structure.Exercise;
 import android.content.Context;
@@ -15,28 +14,28 @@ public class ExerciseAdapter extends SortedAdapter<Exercise> {
 	}
 
 	private static class ViewHolder {
-		public final TextView textView1;
+		public final TextView text1;
 
-		public ViewHolder(TextView textView1) {
-			this.textView1 = textView1;
+		public ViewHolder(TextView text1) {
+			this.text1 = text1;
 		}
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView textView1;
+		TextView text1;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.list_item_exercise, parent, false);
-			textView1 = (TextView) convertView.findViewById(R.id.textView1);
-			convertView.setTag(new ViewHolder(textView1));
+					android.R.layout.simple_list_item_1, parent, false);
+			text1 = (TextView) convertView.findViewById(android.R.id.text1);
+			convertView.setTag(new ViewHolder(text1));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			textView1 = viewHolder.textView1;
+			text1 = viewHolder.text1;
 		}
 
 		Exercise e = list.get(position);
-		textView1.setText(e.getName());
+		text1.setText(e.getName());
 		return convertView;
 	}
 }

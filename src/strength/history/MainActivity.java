@@ -17,6 +17,7 @@ import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -42,8 +43,8 @@ public class MainActivity extends DataListener implements
 		setContentView(R.layout.activity_main);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 
-		// Intent i = new Intent(this, DataTest.class);
-		// startActivity(i);
+		Intent i = new Intent(this, ExercisesActivity.class);
+		startActivity(i);
 	}
 
 	@Override
