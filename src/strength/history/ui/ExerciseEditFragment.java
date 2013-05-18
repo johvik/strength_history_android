@@ -5,7 +5,6 @@ import strength.history.data.structure.Exercise;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +14,7 @@ import android.widget.EditText;
 
 public class ExerciseEditFragment extends Fragment {
 	public interface Creator {
-		public void saveCallback(Exercise e);
+		public void saveCallback();
 
 		public void cancelCallback();
 	}
@@ -25,7 +24,7 @@ public class ExerciseEditFragment extends Fragment {
 	private Button saveButton;
 	private Button cancelButton;
 	private EditText editTextName;
-	private Exercise e;
+	public static Exercise editExercise = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -42,7 +41,8 @@ public class ExerciseEditFragment extends Fragment {
 			saveButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					c.saveCallback(e);
+					save();
+					c.saveCallback();
 				}
 			});
 		} else {
@@ -52,23 +52,28 @@ public class ExerciseEditFragment extends Fragment {
 
 	@Override
 	public void onPause() {
-		Log.d("ExerciseEditFragment", "onPause");
 		super.onPause();
+		save();
 	}
 
-	public void setExercise(Exercise e) {
-		if (e != null) {
+	private void save() {
+		String name = editTextName.getText().toString();
+		if (editExercise != null) {
+			editExercise.setName(name);
+		}
+	}
+
+	public void update() {
+		if (editExercise != null) {
 			relativeLayoutActive.setVisibility(View.VISIBLE);
 			relativeLayoutInactive.setVisibility(View.GONE);
-			this.e = e;
-			String name = e.getName();
+			String name = editExercise.getName();
 			editTextName.setText(name);
 			editTextName.setSelection(name.length());
 			editTextName.requestFocus();
 		} else {
 			relativeLayoutActive.setVisibility(View.GONE);
 			relativeLayoutInactive.setVisibility(View.VISIBLE);
-			this.e = e;
 		}
 	}
 
