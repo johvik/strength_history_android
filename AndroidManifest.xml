@@ -42,6 +42,10 @@
             android:name="strength.history.ExercisesActivity"
             android:label="@string/title_activity_exercises" >
         </activity>
+        <activity
+            android:name="strength.history.ExerciseEditActivity"
+            android:label="@string/title_activity_exercise_edit" >
+        </activity>
     </application>
 
 </manifest>

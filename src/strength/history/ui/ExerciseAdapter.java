@@ -1,5 +1,6 @@
 package strength.history.ui;
 
+import strength.history.R;
 import strength.history.data.SortedList;
 import strength.history.data.structure.Exercise;
 import android.content.Context;
@@ -26,8 +27,8 @@ public class ExerciseAdapter extends SortedAdapter<Exercise> {
 		TextView text1;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					android.R.layout.simple_list_item_1, parent, false);
-			text1 = (TextView) convertView.findViewById(android.R.id.text1);
+					R.layout.list_item_exercise, parent, false);
+			text1 = (TextView) convertView.findViewById(R.id.text1);
 			convertView.setTag(new ViewHolder(text1));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
