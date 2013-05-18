@@ -10,15 +10,20 @@ import strength.history.ui.ExerciseListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ExercisesActivity extends FragmentActivity implements
-		ExerciseListFragment.Listener, ExerciseEditFragment.Creator {
+		ExerciseListFragment.Listener, ExerciseEditFragment.Listener {
 	private static final int REQUEST_CODE = 1;
 
 	private SortedList<Exercise> exerciseList;
 	private ExerciseAdapter exerciseAdapter;
 	private ExerciseEditFragment exerciseEditFragment;
+	private TextView textSelectExerciseToEdit;
+	private FrameLayout frameLayoutExerciseEditFragment;
 	private ListView listViewExercises;
 	private boolean mDualPane = false;
 
@@ -28,7 +33,11 @@ public class ExercisesActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_exercises);
 		exerciseEditFragment = (ExerciseEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentExerciseEdit);
-		mDualPane = exerciseEditFragment != null;
+		mDualPane = findViewById(R.id.fragmentExerciseEdit) != null;
+		if (mDualPane) {
+			textSelectExerciseToEdit = (TextView) findViewById(R.id.textSelectExerciseToEdit);
+			frameLayoutExerciseEditFragment = (FrameLayout) findViewById(R.id.frameLayoutExerciseEditFragment);
+		}
 		exerciseList = new SortedList<Exercise>(new Comparator<Exercise>() {
 			@Override
 			public int compare(Exercise lhs, Exercise rhs) {
@@ -47,19 +56,16 @@ public class ExercisesActivity extends FragmentActivity implements
 		exerciseAdapter = new ExerciseAdapter(this, exerciseList);
 		listViewExercises = (ListView) findViewById(R.id.listViewExercises);
 		listViewExercises.setAdapter(exerciseAdapter);
-		starteEditExercise(ExerciseEditFragment.editExercise);
 	}
 
 	private void starteEditExercise(Exercise e) {
 		if (e != null) {
-			e.backup();
-			// TODO Cancel previous
-			ExerciseEditFragment.editExercise = e;
+			// TODO Copy
 			// listViewExercises.setItemChecked(position, true);
 			if (mDualPane) {
-				ExerciseEditFragment f = (ExerciseEditFragment) getSupportFragmentManager()
-						.findFragmentById(R.id.fragmentExerciseEdit);
-				f.update();
+				textSelectExerciseToEdit.setVisibility(View.GONE);
+				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
+				exerciseEditFragment.setExercise(e);
 			} else {
 				Intent intent = new Intent(this, ExerciseEditActivity.class);
 				startActivityForResult(intent, REQUEST_CODE);
@@ -71,12 +77,12 @@ public class ExercisesActivity extends FragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				saveCallback();
+				// TODO
+				// saveCallback();
 			} else if (resultCode == RESULT_CANCELED) {
 				cancelCallback();
 			} else if (resultCode == ExerciseEditActivity.RESULT_ORIENTATION) {
-				starteEditExercise(ExerciseEditFragment.editExercise);
-				// TODO Select?
+				// TODO
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -84,39 +90,28 @@ public class ExercisesActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void saveCallback() {
-		Exercise e = ExerciseEditFragment.editExercise;
-		if (e != null) {
-			if (exerciseList.remove(e)) {
-				e.commit();
-				exerciseList.add(e);
-				exerciseAdapter.notifyDataSetChanged();
-			}
-			listViewExercises.clearChoices();
-		}
-		ExerciseEditFragment.editExercise = null;
-		if (exerciseEditFragment != null) {
-			exerciseEditFragment.update();
+	public void saveCallback(Exercise e) {
+		// TODO
+		if (mDualPane) {
+			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
+			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
 		}
 	}
 
 	@Override
 	public void cancelCallback() {
-		Exercise e = ExerciseEditFragment.editExercise;
-		if (e != null) {
-			e.revert();
-		}
 		listViewExercises.clearChoices();
-		ExerciseEditFragment.editExercise = null;
-		if (exerciseEditFragment != null) {
-			exerciseEditFragment.update();
+		exerciseAdapter.notifyDataSetChanged();
+
+		if (mDualPane) {
+			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
+			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
 		}
 	}
 
 	@Override
 	public void onExerciseItemClick(int position) {
-		Exercise e = exerciseList.get(position);
-		starteEditExercise(e);
+		starteEditExercise(exerciseList.get(position));
 	}
 
 	@Override

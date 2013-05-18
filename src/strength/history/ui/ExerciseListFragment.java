@@ -28,9 +28,9 @@ public class ExerciseListFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		FragmentActivity f = getActivity();
-		if (f instanceof Listener) {
-			final Listener l = (Listener) f;
+		FragmentActivity fa = getActivity();
+		if (fa instanceof Listener) {
+			final Listener l = (Listener) fa;
 			listViewExercises.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
