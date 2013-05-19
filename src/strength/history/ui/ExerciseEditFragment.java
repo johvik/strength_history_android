@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 public class ExerciseEditFragment extends Fragment {
 	public interface Listener {
@@ -25,7 +26,7 @@ public class ExerciseEditFragment extends Fragment {
 
 	private Button saveButton;
 	private Button cancelButton;
-	private Button deleteButton;
+	private ImageButton deleteButton;
 	private EditText editTextName;
 	private Exercise mExercise = null;
 	private AlertDialog alertDialogDeleteConfirm = null;
@@ -94,11 +95,6 @@ public class ExerciseEditFragment extends Fragment {
 		mExercise = e;
 		if (mExercise != null) {
 			editTextName.setText(mExercise.getName());
-			if (mExercise.getId() == -1) { // new
-				deleteButton.setVisibility(View.GONE);
-			} else {
-				deleteButton.setVisibility(View.VISIBLE);
-			}
 		}
 	}
 
@@ -110,7 +106,7 @@ public class ExerciseEditFragment extends Fragment {
 		editTextName = (EditText) view.findViewById(R.id.editTextName);
 		cancelButton = (Button) view.findViewById(R.id.buttonCancel);
 		saveButton = (Button) view.findViewById(R.id.buttonSave);
-		deleteButton = (Button) view.findViewById(R.id.buttonDelete);
+		deleteButton = (ImageButton) view.findViewById(R.id.imageButtonDelete);
 		return view;
 	}
 }
