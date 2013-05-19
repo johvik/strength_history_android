@@ -19,7 +19,7 @@ public class WeightProvider extends Provider<Weight> {
 
 		public void weightQueryCallback(Collection<Weight> e, boolean done);
 
-		public void updateCallback(Weight e, boolean ok);
+		public void updateCallback(Weight old, Weight e, boolean ok);
 	}
 
 	public interface Provides {
@@ -84,9 +84,9 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	@Override
-	protected void updateCallback(Weight e, boolean ok) {
+	protected void updateCallback(Weight old, Weight e, boolean ok) {
 		for (Events t : listeners) {
-			t.updateCallback(e, ok);
+			t.updateCallback(old, e, ok);
 		}
 	}
 }

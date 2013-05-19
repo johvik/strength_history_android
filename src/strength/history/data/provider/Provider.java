@@ -88,14 +88,15 @@ public abstract class Provider<E extends SyncBase<E>> {
 			}
 			if (ok) {
 				if (old != null) {
-					old.updateFrom(e);
+					data.remove(old);
+					data.add(e);
 				}
 			} else {
 				Log.e("Provider", "failed to update " + e);
 			}
 			// return the old one if failed
 			// but if old is null return e
-			updateCallback(ok || old == null ? e : old, ok);
+			updateCallback(old, e, ok);
 			break;
 		}
 		}
@@ -185,7 +186,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 
 	protected abstract void queryCallback(Collection<E> e, boolean done);
 
-	protected abstract void updateCallback(E e, boolean ok);
+	protected abstract void updateCallback(E old, E e, boolean ok);
 
 	private void runLocalService(E e, Context context, Messenger messenger,
 			Request request) {

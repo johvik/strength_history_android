@@ -16,7 +16,7 @@ public class WorkoutProvider extends Provider<Workout> {
 
 		public void workoutQueryCallback(Collection<Workout> e, boolean done);
 
-		public void updateCallback(Workout e, boolean ok);
+		public void updateCallback(Workout old, Workout e, boolean ok);
 	}
 
 	public interface Provides {
@@ -81,9 +81,9 @@ public class WorkoutProvider extends Provider<Workout> {
 	}
 
 	@Override
-	protected void updateCallback(Workout e, boolean ok) {
+	protected void updateCallback(Workout old, Workout e, boolean ok) {
 		for (Events t : listeners) {
-			t.updateCallback(e, ok);
+			t.updateCallback(old, e, ok);
 		}
 	}
 }

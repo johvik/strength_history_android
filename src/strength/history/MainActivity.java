@@ -260,7 +260,7 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 	}
 
 	@Override
-	public void updateCallback(Exercise e, boolean ok) {
+	public void updateCallback(Exercise old, Exercise e, boolean ok) {
 		// TODO Auto-generated method stub
 		mExercises.clear();
 	}
@@ -285,7 +285,7 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 	}
 
 	@Override
-	public void updateCallback(WorkoutData e, boolean ok) {
+	public void updateCallback(WorkoutData old, WorkoutData e, boolean ok) {
 		// TODO Auto-generated method stub
 		mWorkoutData.clear();
 	}
@@ -310,7 +310,7 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 	}
 
 	@Override
-	public void updateCallback(Workout e, boolean ok) {
+	public void updateCallback(Workout old, Workout e, boolean ok) {
 		// TODO Auto-generated method stub
 		mWorkouts.clear();
 	}
@@ -335,7 +335,7 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 	}
 
 	@Override
-	public void updateCallback(Weight e, boolean ok) {
+	public void updateCallback(Weight old, Weight e, boolean ok) {
 		// TODO Auto-generated method stub
 		mWeights.clear();
 	}

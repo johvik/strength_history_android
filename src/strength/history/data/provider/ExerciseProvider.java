@@ -19,7 +19,7 @@ public class ExerciseProvider extends Provider<Exercise> {
 
 		public void exerciseQueryCallback(Collection<Exercise> e, boolean done);
 
-		public void updateCallback(Exercise e, boolean ok);
+		public void updateCallback(Exercise old, Exercise e, boolean ok);
 	}
 
 	public interface Provides {
@@ -84,9 +84,9 @@ public class ExerciseProvider extends Provider<Exercise> {
 	}
 
 	@Override
-	protected void updateCallback(Exercise e, boolean ok) {
+	protected void updateCallback(Exercise old, Exercise e, boolean ok) {
 		for (Events t : listeners) {
-			t.updateCallback(e, ok);
+			t.updateCallback(old, e, ok);
 		}
 	}
 }

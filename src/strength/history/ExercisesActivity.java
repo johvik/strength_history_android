@@ -1,8 +1,12 @@
 package strength.history;
 
+import java.util.Collection;
 import java.util.Comparator;
 
+import strength.history.data.DataListener;
+import strength.history.data.DataProvider;
 import strength.history.data.SortedList;
+import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.ui.ExerciseAdapter;
 import strength.history.ui.ExerciseEditFragment;
@@ -16,13 +20,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExercisesActivity extends FragmentActivity implements
-		ExerciseListFragment.Listener, ExerciseEditFragment.Listener {
+		ExerciseListFragment.Listener, ExerciseEditFragment.Listener,
+		ExerciseProvider.Events {
 	private static final int REQUEST_CODE = 1;
 	private static final String CUR_CHOICE = "curChoice";
 	private static final String CUR_EXERCISE = "curExer";
 
-	private SortedList<Exercise> exerciseList;
-	private ExerciseAdapter exerciseAdapter;
+	private SortedList<Exercise> exerciseList = new SortedList<Exercise>(
+			new Comparator<Exercise>() {
+				@Override
+				public int compare(Exercise lhs, Exercise rhs) {
+					int c = lhs.getName().compareTo(rhs.getName());
+					if (c == 0) {
+						c = lhs.compareTo(rhs);
+					}
+					return c;
+				}
+			}, true);
+	private ExerciseAdapter exerciseAdapter = new ExerciseAdapter(this,
+			exerciseList);
 	private ExerciseEditFragment exerciseEditFragment;
 	private TextView textSelectExerciseToEdit;
 	private FrameLayout frameLayoutExerciseEditFragment;
@@ -30,10 +46,12 @@ public class ExercisesActivity extends FragmentActivity implements
 	private boolean mDualPane = false;
 	private int mCurCheckPosition = -1;
 	private Exercise mExercise = null;
+	private DataProvider dataProvider = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		dataProvider = DataListener.add(this);
 		setContentView(R.layout.activity_exercises);
 		exerciseEditFragment = (ExerciseEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentExerciseEdit);
@@ -42,22 +60,6 @@ public class ExercisesActivity extends FragmentActivity implements
 			textSelectExerciseToEdit = (TextView) findViewById(R.id.textSelectExerciseToEdit);
 			frameLayoutExerciseEditFragment = (FrameLayout) findViewById(R.id.frameLayoutExerciseEditFragment);
 		}
-		exerciseList = new SortedList<Exercise>(new Comparator<Exercise>() {
-			@Override
-			public int compare(Exercise lhs, Exercise rhs) {
-				int c = lhs.getName().compareTo(rhs.getName());
-				if (c == 0) {
-					c = lhs.compareTo(rhs);
-				}
-				return c;
-			}
-		});
-		exerciseList.add(new Exercise("a"));
-		exerciseList.add(new Exercise("aasd"));
-		exerciseList.add(new Exercise("aqwe"));
-		exerciseList.add(new Exercise("aqweqwe"));
-		exerciseList.add(new Exercise("wewa"));
-		exerciseAdapter = new ExerciseAdapter(this, exerciseList);
 		listViewExercises = (ListView) findViewById(R.id.listViewExercises);
 		listViewExercises.setAdapter(exerciseAdapter);
 
@@ -68,6 +70,14 @@ public class ExercisesActivity extends FragmentActivity implements
 		if (mDualPane) {
 			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
+		// get exercises
+		dataProvider.query((Exercise) null, getApplicationContext());
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		DataListener.remove(this);
 	}
 
 	@Override
@@ -130,11 +140,22 @@ public class ExercisesActivity extends FragmentActivity implements
 
 	@Override
 	public void saveCallback(Exercise e) {
-		// TODO Handle new
-		exerciseList.remove(mCurCheckPosition);
-		exerciseList.add(e);
-		exerciseAdapter.notifyDataSetChanged();
-		// TODO Save for real
+		if (e != null) {
+			if (mCurCheckPosition != -1) {
+				exerciseList.remove(mCurCheckPosition);
+			}
+			if (e.getName().trim().length() == 0) {
+				e.setName("Name");
+			}
+			exerciseList.add(e);
+			exerciseAdapter.notifyDataSetChanged();
+			long id = e.getId();
+			if (id == -1) {
+				dataProvider.insert(e, getApplicationContext());
+			} else {
+				dataProvider.update(e, getApplicationContext());
+			}
+		}
 		if (mDualPane) {
 			listViewExercises.setItemChecked(mCurCheckPosition, false);
 			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
@@ -163,6 +184,45 @@ public class ExercisesActivity extends FragmentActivity implements
 
 	@Override
 	public void onExerciseCreateClick() {
+		listViewExercises.setItemChecked(mCurCheckPosition, false);
+		mCurCheckPosition = -1;
 		starteEditExercise(new Exercise(""));
+	}
+
+	@Override
+	public void deleteCallback(Exercise e, boolean ok) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void insertCallback(Exercise e, boolean ok) {
+		if (!ok) {
+			exerciseList.remove(e);
+			exerciseAdapter.notifyDataSetChanged();
+		} else {
+			// to update the id...
+			long id = e.getId();
+			e.setId(-1);
+			exerciseList.remove(e);
+			e.setId(id);
+			exerciseList.add(e);
+		}
+	}
+
+	@Override
+	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
+		exerciseList.addAll(e);
+		exerciseAdapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void updateCallback(Exercise old, Exercise e, boolean ok) {
+		if (!ok) {
+			if (old != null) {
+				exerciseList.remove(e);
+				exerciseList.add(old);
+				exerciseAdapter.notifyDataSetChanged();
+			}
+		}
 	}
 }

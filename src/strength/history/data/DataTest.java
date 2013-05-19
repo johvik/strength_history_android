@@ -78,7 +78,7 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 	}
 
 	@Override
-	public void updateCallback(Exercise e, boolean ok) {
+	public void updateCallback(Exercise old, Exercise e, boolean ok) {
 		Assert.assertFalse(e.getId() == -1);
 		Assert.assertEquals("abc", e.getName());
 		Assert.assertTrue(ok);
