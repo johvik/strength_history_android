@@ -76,9 +76,7 @@ public class SortedList<E> implements List<E> {
 
 	@Override
 	public boolean contains(Object object) {
-		@SuppressWarnings("unchecked")
-		int index = Collections.binarySearch(list, (E) object, comparator);
-		return index >= 0;
+		return indexOf(object) != -1;
 	}
 
 	@Override
@@ -152,9 +150,8 @@ public class SortedList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object object) {
-		@SuppressWarnings("unchecked")
-		int index = Collections.binarySearch(list, (E) object, comparator);
-		if (index >= 0) {
+		int index = indexOf(object);
+		if (index != -1) {
 			list.remove(index);
 			return true;
 		}

@@ -130,6 +130,7 @@ public class ExercisesActivity extends FragmentActivity implements
 
 	@Override
 	public void saveCallback(Exercise e) {
+		// TODO Handle new
 		exerciseList.remove(mCurCheckPosition);
 		exerciseList.add(e);
 		exerciseAdapter.notifyDataSetChanged();
