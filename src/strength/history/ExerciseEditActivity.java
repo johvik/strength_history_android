@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 public class ExerciseEditActivity extends FragmentActivity implements
 		ExerciseEditFragment.Listener {
 	public static final int RESULT_ORIENTATION = RESULT_FIRST_USER + 1;
+	public static final int RESULT_DELETE = RESULT_FIRST_USER + 2;
 	public static final String EXERCISE = "exer";
 
 	private ExerciseEditFragment exerciseEditFragment;
@@ -59,6 +60,12 @@ public class ExerciseEditActivity extends FragmentActivity implements
 	@Override
 	public void cancelCallback() {
 		setResult(RESULT_CANCELED);
+		finish();
+	}
+
+	@Override
+	public void deleteCallback() {
+		setResult(RESULT_DELETE);
 		finish();
 	}
 }

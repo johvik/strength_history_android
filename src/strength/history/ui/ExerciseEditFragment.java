@@ -17,10 +17,13 @@ public class ExerciseEditFragment extends Fragment {
 		public void saveCallback(Exercise e);
 
 		public void cancelCallback();
+
+		public void deleteCallback();
 	}
 
 	private Button saveButton;
 	private Button cancelButton;
+	private Button deleteButton;
 	private EditText editTextName;
 	private Exercise mExercise = null;
 
@@ -41,6 +44,13 @@ public class ExerciseEditFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					l.cancelCallback();
+				}
+			});
+			deleteButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					// TODO Confirm
+					l.deleteCallback();
 				}
 			});
 		} else {
@@ -69,6 +79,11 @@ public class ExerciseEditFragment extends Fragment {
 		mExercise = e;
 		if (mExercise != null) {
 			editTextName.setText(mExercise.getName());
+			if (mExercise.getId() == -1) { // new
+				deleteButton.setVisibility(View.GONE);
+			} else {
+				deleteButton.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -80,6 +95,7 @@ public class ExerciseEditFragment extends Fragment {
 		editTextName = (EditText) view.findViewById(R.id.editTextName);
 		cancelButton = (Button) view.findViewById(R.id.buttonCancel);
 		saveButton = (Button) view.findViewById(R.id.buttonSave);
+		deleteButton = (Button) view.findViewById(R.id.buttonDelete);
 		return view;
 	}
 }

@@ -87,7 +87,7 @@ public class ExercisesActivity extends FragmentActivity implements
 			listViewExercises.setItemChecked(mCurCheckPosition, true);
 		}
 		listViewExercises.setSelection(mCurCheckPosition);
-		if (mCurCheckPosition != -1) {
+		if (mExercise != null) {
 			continueEditExercise();
 		}
 	}
@@ -132,10 +132,22 @@ public class ExercisesActivity extends FragmentActivity implements
 				mExercise = data
 						.getParcelableExtra(ExerciseEditActivity.EXERCISE);
 				continueEditExercise();
+			} else if (resultCode == ExerciseEditActivity.RESULT_DELETE) {
+				deleteCallback();
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
+	}
+
+	private void reset() {
+		if (mDualPane) {
+			listViewExercises.setItemChecked(mCurCheckPosition, false);
+			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
+			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
+		}
+		mCurCheckPosition = -1;
+		mExercise = null;
 	}
 
 	@Override
@@ -150,30 +162,28 @@ public class ExercisesActivity extends FragmentActivity implements
 			exerciseList.add(e);
 			exerciseAdapter.notifyDataSetChanged();
 			long id = e.getId();
-			if (id == -1) {
+			if (id == -1) { // new
 				dataProvider.insert(e, getApplicationContext());
 			} else {
 				dataProvider.update(e, getApplicationContext());
 			}
 		}
-		if (mDualPane) {
-			listViewExercises.setItemChecked(mCurCheckPosition, false);
-			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
-			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
-		}
-		mCurCheckPosition = -1;
-		mExercise = null;
+		reset();
 	}
 
 	@Override
 	public void cancelCallback() {
-		if (mDualPane) {
-			listViewExercises.setItemChecked(mCurCheckPosition, false);
-			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
-			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
+		reset();
+	}
+
+	@Override
+	public void deleteCallback() {
+		if (mCurCheckPosition != -1) {
+			Exercise e = exerciseList.remove(mCurCheckPosition);
+			exerciseAdapter.notifyDataSetChanged();
+			dataProvider.delete(e, getApplicationContext());
 		}
-		mCurCheckPosition = -1;
-		mExercise = null;
+		reset();
 	}
 
 	@Override
@@ -191,7 +201,10 @@ public class ExercisesActivity extends FragmentActivity implements
 
 	@Override
 	public void deleteCallback(Exercise e, boolean ok) {
-		// TODO Auto-generated method stub
+		if (!ok) {
+			exerciseList.add(e);
+			exerciseAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
@@ -200,7 +213,7 @@ public class ExercisesActivity extends FragmentActivity implements
 			exerciseList.remove(e);
 			exerciseAdapter.notifyDataSetChanged();
 		} else {
-			// to update the id...
+			// update the id...
 			long id = e.getId();
 			e.setId(-1);
 			exerciseList.remove(e);

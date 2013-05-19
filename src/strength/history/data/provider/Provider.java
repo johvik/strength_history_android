@@ -64,7 +64,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 				Log.d("Provider", "query nothing changed");
 			}
 			if (ok) {
-				loaded = true; // TODO Verify that this works...
+				loaded = true;
 				Log.d("Provider", "query done");
 			}
 			queryCallback(e, ok);
@@ -139,7 +139,6 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 */
 	public final void query(E e, Context context, Messenger messenger) {
 		if (!loaded) {
-			// TODO Take advantage of that some may have been loaded?
 			runLocalService(e, context, messenger, Request.QUERY);
 		} else {
 			queryCallback(data, true);

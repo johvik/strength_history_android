@@ -17,6 +17,7 @@
     <string name="button_create_exercise">Create exercise</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_delete">Delete</string>
     <string name="title_activity_exercise_edit">ExerciseEditActivity</string>
     <string name="hint_name">Name</string>
     <string name="text_edit_exercise">Edit exercise</string>
