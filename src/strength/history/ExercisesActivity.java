@@ -18,6 +18,8 @@ import android.widget.TextView;
 public class ExercisesActivity extends FragmentActivity implements
 		ExerciseListFragment.Listener, ExerciseEditFragment.Listener {
 	private static final int REQUEST_CODE = 1;
+	private static final String CUR_CHOICE = "curChoice";
+	private static final String CUR_EXERCISE = "curExer";
 
 	private SortedList<Exercise> exerciseList;
 	private ExerciseAdapter exerciseAdapter;
@@ -26,6 +28,8 @@ public class ExercisesActivity extends FragmentActivity implements
 	private FrameLayout frameLayoutExerciseEditFragment;
 	private ListView listViewExercises;
 	private boolean mDualPane = false;
+	private int mCurCheckPosition = -1;
+	private Exercise mExercise = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +60,53 @@ public class ExercisesActivity extends FragmentActivity implements
 		exerciseAdapter = new ExerciseAdapter(this, exerciseList);
 		listViewExercises = (ListView) findViewById(R.id.listViewExercises);
 		listViewExercises.setAdapter(exerciseAdapter);
+
+		if (savedInstanceState != null) {
+			mCurCheckPosition = savedInstanceState.getInt(CUR_CHOICE);
+			mExercise = savedInstanceState.getParcelable(CUR_EXERCISE);
+		}
+		if (mDualPane) {
+			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (mDualPane) {
+			listViewExercises.setItemChecked(mCurCheckPosition, true);
+		}
+		listViewExercises.setSelection(mCurCheckPosition);
+		if (mCurCheckPosition != -1) {
+			continueEditExercise();
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(CUR_CHOICE, mCurCheckPosition);
+		outState.putParcelable(CUR_EXERCISE, mExercise);
+	}
+
+	private void continueEditExercise() {
+		if (mExercise != null) {
+			if (mDualPane) {
+				textSelectExerciseToEdit.setVisibility(View.GONE);
+				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
+				exerciseEditFragment.setExercise(mExercise);
+			} else {
+				Intent intent = new Intent(this, ExerciseEditActivity.class);
+				intent.putExtra(ExerciseEditActivity.EXERCISE, mExercise);
+				startActivityForResult(intent, REQUEST_CODE);
+			}
+		}
 	}
 
 	private void starteEditExercise(Exercise e) {
 		if (e != null) {
-			// TODO Copy
-			// listViewExercises.setItemChecked(position, true);
-			if (mDualPane) {
-				textSelectExerciseToEdit.setVisibility(View.GONE);
-				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
-				exerciseEditFragment.setExercise(e);
-			} else {
-				Intent intent = new Intent(this, ExerciseEditActivity.class);
-				startActivityForResult(intent, REQUEST_CODE);
-			}
+			mExercise = e.copy();
+			continueEditExercise();
 		}
 	}
 
@@ -77,12 +114,14 @@ public class ExercisesActivity extends FragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				// TODO
-				// saveCallback();
+				saveCallback((Exercise) data
+						.getParcelableExtra(ExerciseEditActivity.EXERCISE));
 			} else if (resultCode == RESULT_CANCELED) {
 				cancelCallback();
 			} else if (resultCode == ExerciseEditActivity.RESULT_ORIENTATION) {
-				// TODO
+				mExercise = data
+						.getParcelableExtra(ExerciseEditActivity.EXERCISE);
+				continueEditExercise();
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -91,26 +130,33 @@ public class ExercisesActivity extends FragmentActivity implements
 
 	@Override
 	public void saveCallback(Exercise e) {
-		// TODO
+		exerciseList.remove(mCurCheckPosition);
+		exerciseList.add(e);
+		exerciseAdapter.notifyDataSetChanged();
+		// TODO Save for real
 		if (mDualPane) {
+			listViewExercises.setItemChecked(mCurCheckPosition, false);
 			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
 			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
 		}
+		mCurCheckPosition = -1;
+		mExercise = null;
 	}
 
 	@Override
 	public void cancelCallback() {
-		listViewExercises.clearChoices();
-		exerciseAdapter.notifyDataSetChanged();
-
 		if (mDualPane) {
+			listViewExercises.setItemChecked(mCurCheckPosition, false);
 			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
 			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
 		}
+		mCurCheckPosition = -1;
+		mExercise = null;
 	}
 
 	@Override
 	public void onExerciseItemClick(int position) {
+		mCurCheckPosition = position;
 		starteEditExercise(exerciseList.get(position));
 	}
 

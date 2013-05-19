@@ -1,5 +1,6 @@
 package strength.history.data.structure;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,6 +9,7 @@ import android.os.Parcelable;
  * 
  * @param <T>
  */
+@SuppressLint("ParcelCreator")
 public abstract class Base<T extends Base<?>> implements Comparable<T>,
 		Parcelable {
 	private long id;
@@ -63,6 +65,10 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	@Override
 	public int describeContents() {
 		return 0;
+	}
+
+	public final T copy() {
+		return _copy();
 	}
 
 	/**

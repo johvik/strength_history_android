@@ -1,7 +1,6 @@
 package strength.history.ui;
 
 import strength.history.R;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -44,12 +43,6 @@ public class ExerciseListFragment extends Fragment {
 					l.onExerciseCreateClick();
 				}
 			});
-			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-				// TODO Move to other class
-			} else {
-				listViewExercises.setChoiceMode(ListView.CHOICE_MODE_NONE);
-			}
 		} else {
 			throw new ClassCastException();
 		}

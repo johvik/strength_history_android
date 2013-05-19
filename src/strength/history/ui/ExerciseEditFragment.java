@@ -5,7 +5,6 @@ import strength.history.data.structure.Exercise;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +22,7 @@ public class ExerciseEditFragment extends Fragment {
 	private Button saveButton;
 	private Button cancelButton;
 	private EditText editTextName;
-	private Exercise e = null;
+	private Exercise mExercise = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -34,11 +33,8 @@ public class ExerciseEditFragment extends Fragment {
 			saveButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					String name = editTextName.getText().toString();
-					if (e != null) {
-						e.setName(name);
-					}
-					l.saveCallback(e);
+					save();
+					l.saveCallback(mExercise);
 				}
 			});
 			cancelButton.setOnClickListener(new OnClickListener() {
@@ -50,14 +46,29 @@ public class ExerciseEditFragment extends Fragment {
 		} else {
 			throw new ClassCastException();
 		}
-		Log.d("ExerciseEditFragment", "" + savedInstanceState);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		save();
+	}
+
+	private void save() {
+		if (mExercise != null) {
+			mExercise.setName(editTextName.getText().toString());
+		}
+	}
+
+	public Exercise getExercise() {
+		save();
+		return mExercise;
 	}
 
 	public void setExercise(Exercise e) {
-		this.e = e;
-		if (e != null) {
-			editTextName.setText(e.getName());
-			// TODO Focus and stuff?
+		mExercise = e;
+		if (mExercise != null) {
+			editTextName.setText(mExercise.getName());
 		}
 	}
 
