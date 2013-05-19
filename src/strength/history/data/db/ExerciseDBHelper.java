@@ -79,6 +79,20 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	}
 
 	@Override
+	public void purge() {
+		SQLiteDatabase db = instance.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			db.execSQL("DROP TABLE IF EXISTS " + Entry.TABLE_NAME);
+			onCreate(db);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.close();
+	}
+
+	@Override
 	public ArrayList<Exercise> query(int offset, int limit) {
 		ArrayList<Exercise> res = new ArrayList<Exercise>();
 		SQLiteDatabase db = instance.getReadableDatabase();

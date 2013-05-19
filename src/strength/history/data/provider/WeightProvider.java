@@ -27,7 +27,7 @@ public class WeightProvider extends Provider<Weight> {
 
 		public void insert(Weight e, Context context);
 
-		public void query(Weight e, Context context);
+		public void queryWeight(Context context);
 
 		public void stop(Weight e, Context context);
 

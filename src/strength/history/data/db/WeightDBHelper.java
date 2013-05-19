@@ -83,6 +83,20 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	}
 
 	@Override
+	public void purge() {
+		SQLiteDatabase db = instance.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			db.execSQL("DROP TABLE IF EXISTS " + Entry.TABLE_NAME);
+			onCreate(db);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.close();
+	}
+
+	@Override
 	public ArrayList<Weight> query(int offset, int limit) {
 		ArrayList<Weight> res = new ArrayList<Weight>();
 		SQLiteDatabase db = instance.getReadableDatabase();

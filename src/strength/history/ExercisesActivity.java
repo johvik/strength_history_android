@@ -71,7 +71,7 @@ public class ExercisesActivity extends FragmentActivity implements
 			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
 		// get exercises
-		dataProvider.query((Exercise) null, getApplicationContext());
+		dataProvider.queryExercise(getApplicationContext());
 	}
 
 	@Override

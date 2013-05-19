@@ -80,6 +80,12 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 	}
 
 	@Override
+	protected final void purge(Messenger messenger) {
+		D db = getDB();
+		db.purge();
+	}
+
+	@Override
 	protected final void query(Messenger messenger) {
 		// Divide into smaller queries
 		for (int offset = 0; !query_interrupt; offset += QUERY_LIMIT) {
@@ -144,6 +150,9 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			case INSERT:
 				insert((E) intent.getParcelableExtra(getIntentName()),
 						messenger);
+				break;
+			case PURGE:
+				purge(messenger);
 				break;
 			case QUERY:
 				query(messenger);

@@ -78,16 +78,16 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 
 		switch (s) {
 		case EXERCISE:
-			mDataProvider.query((Exercise) null, getApplicationContext());
+			mDataProvider.queryExercise(getApplicationContext());
 			break;
 		case WEIGHT:
-			mDataProvider.query((Weight) null, getApplicationContext());
+			mDataProvider.queryWeight(getApplicationContext());
 			break;
 		case WORKOUT:
-			mDataProvider.query((Workout) null, getApplicationContext());
+			mDataProvider.queryWorkout(getApplicationContext());
 			break;
 		case WORKOUT_DATA:
-			mDataProvider.query((WorkoutData) null, getApplicationContext());
+			mDataProvider.queryWorkoutData(getApplicationContext());
 			break;
 		}
 	}

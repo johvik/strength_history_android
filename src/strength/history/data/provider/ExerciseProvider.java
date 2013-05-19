@@ -27,7 +27,7 @@ public class ExerciseProvider extends Provider<Exercise> {
 
 		public void insert(Exercise e, Context context);
 
-		public void query(Exercise e, Context context);
+		public void queryExercise(Context context);
 
 		public void stop(Exercise e, Context context);
 

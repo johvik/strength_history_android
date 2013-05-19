@@ -20,15 +20,16 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 			@Override
 			public void run() {
 				try {
-					// TODO Clear DB and provider
+					// Remove all data
+					dataProvider.purge(getApplicationContext());
+					Thread.sleep(500);
 					dataProvider.insert(new Exercise("abc"),
 							getApplicationContext());
 					dataProvider.delete(e, getApplicationContext());
 					dataProvider.insert(new Exercise("abc"),
 							getApplicationContext());
 					dataProvider.update(e, getApplicationContext());
-					dataProvider
-							.query((Exercise) null, getApplicationContext());
+					dataProvider.queryExercise(getApplicationContext());
 					// TODO Add more tests
 					Thread.sleep(100);
 					finish();

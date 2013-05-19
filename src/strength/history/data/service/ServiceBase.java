@@ -19,6 +19,8 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 
 	protected abstract void insert(E e, Messenger messenger);
 
+	protected abstract void purge(Messenger messenger);
+
 	protected abstract void query(Messenger messenger);
 
 	protected abstract void update(E e, Messenger messenger);
@@ -35,6 +37,10 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 		 * Insert the provided item
 		 */
 		INSERT,
+		/**
+		 * Recreates the DB, all data is lost
+		 */
+		PURGE,
 		/**
 		 * Get all items
 		 */

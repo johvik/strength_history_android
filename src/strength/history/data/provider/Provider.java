@@ -56,6 +56,10 @@ public abstract class Provider<E extends SyncBase<E>> {
 			insertCallback(e, ok);
 			break;
 		}
+		case PURGE: {
+			// Should never happen
+			break;
+		}
 		case QUERY: {
 			@SuppressWarnings("unchecked")
 			ArrayList<E> e = (ArrayList<E>) object;
@@ -102,6 +106,12 @@ public abstract class Provider<E extends SyncBase<E>> {
 		}
 	}
 
+	public final void purge(Context context, Messenger messenger) {
+		data.clear();
+		loaded = false;
+		runLocalService(null, context, messenger, Request.PURGE);
+	}
+
 	/**
 	 * Deletes item
 	 * 
@@ -131,15 +141,13 @@ public abstract class Provider<E extends SyncBase<E>> {
 	/**
 	 * Gets all items
 	 * 
-	 * @param e
-	 *            Not used, pass null
 	 * @param context
 	 * @param messenger
 	 *            Messenger for callback
 	 */
-	public final void query(E e, Context context, Messenger messenger) {
+	public final void query(Context context, Messenger messenger) {
 		if (!loaded) {
-			runLocalService(e, context, messenger, Request.QUERY);
+			runLocalService(null, context, messenger, Request.QUERY);
 		} else {
 			queryCallback(data, true);
 		}

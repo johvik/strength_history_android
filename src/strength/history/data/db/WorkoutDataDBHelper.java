@@ -152,6 +152,23 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	}
 
 	@Override
+	public void purge() {
+		SQLiteDatabase db = instance.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			db.execSQL("DROP TABLE IF EXISTS " + Entry.TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + Entry.ExerciseData.TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ Entry.ExerciseData.SetData.TABLE_NAME);
+			onCreate(db);
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+		db.close();
+	}
+
+	@Override
 	public ArrayList<WorkoutData> query(int offset, int limit) {
 		ArrayList<WorkoutData> res = new ArrayList<WorkoutData>();
 		SQLiteDatabase db = instance.getReadableDatabase();

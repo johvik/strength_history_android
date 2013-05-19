@@ -29,6 +29,18 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	private WorkoutProvider mWorkoutProvider = new WorkoutProvider();
 	private WorkoutDataProvider mWorkoutDataProvider = new WorkoutDataProvider();
 
+	/**
+	 * Warning deletes everything!
+	 * 
+	 * @param context
+	 */
+	public void purge(Context context) {
+		mExerciseProvider.purge(context, mMessenger);
+		mWeightProvider.purge(context, mMessenger);
+		mWorkoutProvider.purge(context, mMessenger);
+		mWorkoutDataProvider.purge(context, mMessenger);
+	}
+
 	public void addListeners(Object object) {
 		mExerciseProvider.tryAddListener(object);
 		mWeightProvider.tryAddListener(object);
@@ -78,8 +90,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void query(Exercise e, Context context) {
-		mExerciseProvider.query(e, context, mMessenger);
+	public void queryExercise(Context context) {
+		mExerciseProvider.query(context, mMessenger);
 	}
 
 	@Override
@@ -103,8 +115,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void query(Weight e, Context context) {
-		mWeightProvider.query(e, context, mMessenger);
+	public void queryWeight(Context context) {
+		mWeightProvider.query(context, mMessenger);
 	}
 
 	@Override
@@ -128,8 +140,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void query(Workout e, Context context) {
-		mWorkoutProvider.query(e, context, mMessenger);
+	public void queryWorkout(Context context) {
+		mWorkoutProvider.query(context, mMessenger);
 	}
 
 	@Override
@@ -153,8 +165,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void query(WorkoutData e, Context context) {
-		mWorkoutDataProvider.query(e, context, mMessenger);
+	public void queryWorkoutData(Context context) {
+		mWorkoutDataProvider.query(context, mMessenger);
 	}
 
 	@Override

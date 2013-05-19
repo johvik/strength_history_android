@@ -59,6 +59,8 @@ public abstract class DBHelperBase<E extends SyncBase<E>> extends
 	 */
 	public abstract boolean insert(E e);
 
+	public abstract void purge();
+
 	/**
 	 * Makes a query to the DB
 	 * 

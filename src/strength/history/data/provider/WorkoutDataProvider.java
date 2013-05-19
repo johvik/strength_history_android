@@ -25,7 +25,7 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 		public void insert(WorkoutData e, Context context);
 
-		public void query(WorkoutData e, Context context);
+		public void queryWorkoutData(Context context);
 
 		public void stop(WorkoutData e, Context context);
 
