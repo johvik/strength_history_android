@@ -5,24 +5,30 @@ import java.util.Collection;
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
 import junit.framework.Assert;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class DataTest extends DataListener implements ExerciseProvider.Events {
+public class DataTest extends Activity implements ExerciseProvider.Events {
 	private Exercise e = null;
+	private DataProvider dataProvider = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		dataProvider = DataListener.add(this);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					// TODO Clear DB and provider
-					data.insert(new Exercise("abc"), getApplicationContext());
-					data.delete(e, getApplicationContext());
-					data.insert(new Exercise("abc"), getApplicationContext());
-					data.update(e, getApplicationContext());
-					data.query((Exercise) null, getApplicationContext());
+					dataProvider.insert(new Exercise("abc"),
+							getApplicationContext());
+					dataProvider.delete(e, getApplicationContext());
+					dataProvider.insert(new Exercise("abc"),
+							getApplicationContext());
+					dataProvider.update(e, getApplicationContext());
+					dataProvider
+							.query((Exercise) null, getApplicationContext());
 					// TODO Add more tests
 					Thread.sleep(100);
 					finish();
@@ -31,6 +37,12 @@ public class DataTest extends DataListener implements ExerciseProvider.Events {
 				}
 			}
 		}).start();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		DataListener.remove(this);
 	}
 
 	@Override

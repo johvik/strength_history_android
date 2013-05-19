@@ -1,28 +1,31 @@
 package strength.history.data;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-
 /**
  * Base Activity that acts as a listener
  */
-public abstract class DataListener extends Activity {
-	/**
-	 * Data provider object
-	 */
-	protected static final DataProvider data = new DataProvider();
+public final class DataListener {
+	private static final DataProvider dataProvider = new DataProvider();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		data.addListeners(this);
-		super.onCreate(savedInstanceState);
+	private DataListener() {
 	}
 
-	@Override
-	protected void onDestroy() {
-		Log.d("DataListener", "onDestroy");
-		data.removeListeners(this);
-		super.onDestroy();
+	/**
+	 * Should be called in onCreate
+	 * 
+	 * @param object
+	 * @return The data provider object
+	 */
+	public static DataProvider add(Object object) {
+		dataProvider.addListeners(object);
+		return dataProvider;
+	}
+
+	/**
+	 * Should be called in onDestroy
+	 * 
+	 * @param object
+	 */
+	public static void remove(Object object) {
+		dataProvider.removeListeners(object);
 	}
 }

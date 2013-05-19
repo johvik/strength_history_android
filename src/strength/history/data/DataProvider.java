@@ -22,25 +22,25 @@ import android.util.Log;
 public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		WeightProvider.Provides, WorkoutProvider.Provides,
 		WorkoutDataProvider.Provides {
-	private Messenger messenger = new Messenger(this);
+	private Messenger mMessenger = new Messenger(this);
 
-	private ExerciseProvider exerciseProvider = new ExerciseProvider();
-	private WeightProvider weightProvider = new WeightProvider();
-	private WorkoutProvider workoutProvider = new WorkoutProvider();
-	private WorkoutDataProvider workoutDataProvider = new WorkoutDataProvider();
+	private ExerciseProvider mExerciseProvider = new ExerciseProvider();
+	private WeightProvider mWeightProvider = new WeightProvider();
+	private WorkoutProvider mWorkoutProvider = new WorkoutProvider();
+	private WorkoutDataProvider mWorkoutDataProvider = new WorkoutDataProvider();
 
-	public void addListeners(DataListener dataListener) {
-		exerciseProvider.tryAddListener(dataListener);
-		weightProvider.tryAddListener(dataListener);
-		workoutProvider.tryAddListener(dataListener);
-		workoutDataProvider.tryAddListener(dataListener);
+	public void addListeners(Object object) {
+		mExerciseProvider.tryAddListener(object);
+		mWeightProvider.tryAddListener(object);
+		mWorkoutProvider.tryAddListener(object);
+		mWorkoutDataProvider.tryAddListener(object);
 	}
 
-	public void removeListeners(DataListener dataListener) {
-		exerciseProvider.tryRemoveListener(dataListener);
-		weightProvider.tryRemoveListener(dataListener);
-		workoutProvider.tryRemoveListener(dataListener);
-		workoutDataProvider.tryRemoveListener(dataListener);
+	public void removeListeners(Object object) {
+		mExerciseProvider.tryRemoveListener(object);
+		mWeightProvider.tryRemoveListener(object);
+		mWorkoutProvider.tryRemoveListener(object);
+		mWorkoutDataProvider.tryRemoveListener(object);
 	}
 
 	@Override
@@ -53,117 +53,117 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 
 		switch (service) {
 		case EXERCISE:
-			exerciseProvider.handleMessage(request, msg.obj, ok);
+			mExerciseProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WEIGHT:
-			weightProvider.handleMessage(request, msg.obj, ok);
+			mWeightProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WORKOUT:
-			workoutProvider.handleMessage(request, msg.obj, ok);
+			mWorkoutProvider.handleMessage(request, msg.obj, ok);
 			break;
 		case WORKOUT_DATA:
-			workoutDataProvider.handleMessage(request, msg.obj, ok);
+			mWorkoutDataProvider.handleMessage(request, msg.obj, ok);
 			break;
 		}
 	}
 
 	@Override
 	public void delete(Exercise e, Context context) {
-		exerciseProvider.delete(e, context, messenger);
+		mExerciseProvider.delete(e, context, mMessenger);
 	}
 
 	@Override
 	public void insert(Exercise e, Context context) {
-		exerciseProvider.insert(e, context, messenger);
+		mExerciseProvider.insert(e, context, mMessenger);
 	}
 
 	@Override
 	public void query(Exercise e, Context context) {
-		exerciseProvider.query(e, context, messenger);
+		mExerciseProvider.query(e, context, mMessenger);
 	}
 
 	@Override
 	public void stop(Exercise e, Context context) {
-		exerciseProvider.stop(e, context, messenger);
+		mExerciseProvider.stop(e, context, mMessenger);
 	}
 
 	@Override
 	public void update(Exercise e, Context context) {
-		exerciseProvider.update(e, context, messenger);
+		mExerciseProvider.update(e, context, mMessenger);
 	}
 
 	@Override
 	public void delete(Weight e, Context context) {
-		weightProvider.delete(e, context, messenger);
+		mWeightProvider.delete(e, context, mMessenger);
 	}
 
 	@Override
 	public void insert(Weight e, Context context) {
-		weightProvider.insert(e, context, messenger);
+		mWeightProvider.insert(e, context, mMessenger);
 	}
 
 	@Override
 	public void query(Weight e, Context context) {
-		weightProvider.query(e, context, messenger);
+		mWeightProvider.query(e, context, mMessenger);
 	}
 
 	@Override
 	public void stop(Weight e, Context context) {
-		weightProvider.stop(e, context, messenger);
+		mWeightProvider.stop(e, context, mMessenger);
 	}
 
 	@Override
 	public void update(Weight e, Context context) {
-		weightProvider.update(e, context, messenger);
+		mWeightProvider.update(e, context, mMessenger);
 	}
 
 	@Override
 	public void delete(Workout e, Context context) {
-		workoutProvider.delete(e, context, messenger);
+		mWorkoutProvider.delete(e, context, mMessenger);
 	}
 
 	@Override
 	public void insert(Workout e, Context context) {
-		workoutProvider.insert(e, context, messenger);
+		mWorkoutProvider.insert(e, context, mMessenger);
 	}
 
 	@Override
 	public void query(Workout e, Context context) {
-		workoutProvider.query(e, context, messenger);
+		mWorkoutProvider.query(e, context, mMessenger);
 	}
 
 	@Override
 	public void stop(Workout e, Context context) {
-		workoutProvider.stop(e, context, messenger);
+		mWorkoutProvider.stop(e, context, mMessenger);
 	}
 
 	@Override
 	public void update(Workout e, Context context) {
-		workoutProvider.update(e, context, messenger);
+		mWorkoutProvider.update(e, context, mMessenger);
 	}
 
 	@Override
 	public void delete(WorkoutData e, Context context) {
-		workoutDataProvider.delete(e, context, messenger);
+		mWorkoutDataProvider.delete(e, context, mMessenger);
 	}
 
 	@Override
 	public void insert(WorkoutData e, Context context) {
-		workoutDataProvider.insert(e, context, messenger);
+		mWorkoutDataProvider.insert(e, context, mMessenger);
 	}
 
 	@Override
 	public void query(WorkoutData e, Context context) {
-		workoutDataProvider.query(e, context, messenger);
+		mWorkoutDataProvider.query(e, context, mMessenger);
 	}
 
 	@Override
 	public void stop(WorkoutData e, Context context) {
-		workoutDataProvider.stop(e, context, messenger);
+		mWorkoutDataProvider.stop(e, context, mMessenger);
 	}
 
 	@Override
 	public void update(WorkoutData e, Context context) {
-		workoutDataProvider.update(e, context, messenger);
+		mWorkoutDataProvider.update(e, context, mMessenger);
 	}
 }

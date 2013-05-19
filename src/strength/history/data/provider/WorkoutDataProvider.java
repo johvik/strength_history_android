@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 
 import android.content.Context;
 
-import strength.history.data.DataListener;
 import strength.history.data.service.local.LocalWorkoutDataService;
 import strength.history.data.structure.WorkoutData;
 
@@ -36,18 +35,18 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	private LinkedHashSet<Events> listeners = new LinkedHashSet<Events>();
 
 	@Override
-	public void tryAddListener(DataListener dataListener) {
-		if (dataListener instanceof Events) {
-			Events e = (Events) dataListener;
+	public void tryAddListener(Object object) {
+		if (object instanceof Events) {
+			Events e = (Events) object;
 			e.workoutDataQueryCallback(data, false); // Initial values
 			listeners.add(e);
 		}
 	}
 
 	@Override
-	public void tryRemoveListener(DataListener dataListener) {
-		if (dataListener instanceof Events) {
-			listeners.remove((Events) dataListener);
+	public void tryRemoveListener(Object object) {
+		if (object instanceof Events) {
+			listeners.remove((Events) object);
 		}
 	}
 
