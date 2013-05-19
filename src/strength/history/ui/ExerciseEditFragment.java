@@ -2,6 +2,8 @@ package strength.history.ui;
 
 import strength.history.R;
 import strength.history.data.structure.Exercise;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +28,7 @@ public class ExerciseEditFragment extends Fragment {
 	private Button deleteButton;
 	private EditText editTextName;
 	private Exercise mExercise = null;
+	private AlertDialog alertDialogDeleteConfirm = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -33,6 +36,18 @@ public class ExerciseEditFragment extends Fragment {
 		FragmentActivity fa = getActivity();
 		if (fa instanceof Listener) {
 			final Listener l = (Listener) fa;
+			// TODO Show dialog again after rotation?
+			alertDialogDeleteConfirm = new AlertDialog.Builder(fa)
+					.setMessage(R.string.dialog_exercise_delete)
+					.setPositiveButton(R.string.button_ok,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									l.deleteCallback();
+								}
+							}).setNegativeButton(R.string.button_cancel, null)
+					.create();
 			saveButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -49,8 +64,7 @@ public class ExerciseEditFragment extends Fragment {
 			deleteButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					// TODO Confirm
-					l.deleteCallback();
+					alertDialogDeleteConfirm.show();
 				}
 			});
 		} else {
@@ -61,6 +75,7 @@ public class ExerciseEditFragment extends Fragment {
 	@Override
 	public void onPause() {
 		super.onPause();
+		alertDialogDeleteConfirm.dismiss();
 		save();
 	}
 
