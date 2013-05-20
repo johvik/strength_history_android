@@ -17,8 +17,8 @@ import strength.history.data.structure.SetData;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
+import strength.history.ui.custom.CustomTitleActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,8 +29,8 @@ import android.widget.RadioGroup;
 /**
  * Main Activity
  */
-public class MainActivity extends Activity implements ExerciseProvider.Events,
-		WeightProvider.Events, WorkoutProvider.Events,
+public class MainActivity extends CustomTitleActivity implements
+		ExerciseProvider.Events, WeightProvider.Events, WorkoutProvider.Events,
 		WorkoutDataProvider.Events {
 	private DataProvider mDataProvider = null;
 	private TreeSet<Exercise> mExercises = new TreeSet<Exercise>();
@@ -44,11 +44,16 @@ public class MainActivity extends Activity implements ExerciseProvider.Events,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDataProvider = DataListener.add(this);
-		setContentView(R.layout.activity_main);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 
 		Intent i = new Intent(this, ExercisesActivity.class);
 		startActivity(i);
+		setTitle(R.string.app_name);
+	}
+
+	@Override
+	protected int getLayoutResID() {
+		return R.layout.activity_main;
 	}
 
 	@Override

@@ -11,15 +11,15 @@ import strength.history.data.structure.Exercise;
 import strength.history.ui.ExerciseAdapter;
 import strength.history.ui.ExerciseEditFragment;
 import strength.history.ui.ExerciseListFragment;
+import strength.history.ui.custom.CustomTitleFragmentActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ExercisesActivity extends FragmentActivity implements
+public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		ExerciseListFragment.Listener, ExerciseEditFragment.Listener,
 		ExerciseProvider.Events {
 	private static final int REQUEST_CODE = 1;
@@ -52,7 +52,6 @@ public class ExercisesActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataProvider = DataListener.add(this);
-		setContentView(R.layout.activity_exercises);
 		exerciseEditFragment = (ExerciseEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentExerciseEdit);
 		mDualPane = findViewById(R.id.fragmentExerciseEdit) != null;
@@ -72,6 +71,13 @@ public class ExercisesActivity extends FragmentActivity implements
 		}
 		// get exercises
 		dataProvider.queryExercise(getApplicationContext());
+
+		setTitle("Exercises");
+	}
+
+	@Override
+	protected int getLayoutResID() {
+		return R.layout.activity_exercises;
 	}
 
 	@Override

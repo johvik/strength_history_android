@@ -3,7 +3,6 @@
 
     <string name="app_name">Strength History</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="query">Query</string>
     <string name="insert">Insert</string>
     <string name="delete">Delete</string>
@@ -13,13 +12,10 @@
     <string name="weight">Weight</string>
     <string name="workout">Workout</string>
     <string name="workout_data">Workout data</string>
-    <string name="title_activity_exercises">Exercises</string>
     <string name="button_create_exercise">Create exercise</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_ok">OK</string>
-    <string name="button_delete">Delete</string>
-    <string name="title_activity_exercise_edit">ExerciseEditActivity</string>
     <string name="hint_name">Name</string>
     <string name="text_edit_exercise">Edit exercise</string>
     <string name="text_select_exercise_to_edit">Select exercise to edit</string>

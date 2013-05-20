@@ -2,12 +2,12 @@ package strength.history;
 
 import strength.history.data.structure.Exercise;
 import strength.history.ui.ExerciseEditFragment;
+import strength.history.ui.custom.CustomTitleFragmentActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.v4.app.FragmentActivity;
 
-public class ExerciseEditActivity extends FragmentActivity implements
+public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 		ExerciseEditFragment.Listener {
 	public static final int RESULT_ORIENTATION = RESULT_FIRST_USER + 1;
 	public static final int RESULT_DELETE = RESULT_FIRST_USER + 2;
@@ -28,7 +28,6 @@ public class ExerciseEditActivity extends FragmentActivity implements
 			finish();
 			return;
 		}
-		setContentView(R.layout.activity_exercise_edit);
 		exerciseEditFragment = (ExerciseEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentExerciseEdit);
 
@@ -39,6 +38,13 @@ public class ExerciseEditActivity extends FragmentActivity implements
 			exerciseEditFragment.setExercise((Exercise) savedInstanceState
 					.getParcelable(EXERCISE));
 		}
+
+		setTitle("Edit exercise");
+	}
+
+	@Override
+	protected int getLayoutResID() {
+		return R.layout.activity_exercise_edit;
 	}
 
 	@Override

@@ -13,16 +13,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name="strength.history.MainActivity"
-            android:label="@string/app_name" >
+        <activity android:name="strength.history.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="strength.history.settings.ExerciseActivity" >
         </activity>
 
         <service
@@ -38,14 +34,8 @@
             android:name="strength.history.data.service.local.LocalWorkoutDataService"
             android:exported="false" />
 
-        <activity
-            android:name="strength.history.ExercisesActivity"
-            android:label="@string/title_activity_exercises" >
-        </activity>
-        <activity
-            android:name="strength.history.ExerciseEditActivity"
-            android:label="@string/title_activity_exercise_edit" >
-        </activity>
+        <activity android:name="strength.history.ExercisesActivity" />
+        <activity android:name="strength.history.ExerciseEditActivity" />
     </application>
 
 </manifest>
