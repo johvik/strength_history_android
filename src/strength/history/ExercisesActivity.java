@@ -69,6 +69,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		if (mDualPane) {
 			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
+		setCustomProgressBarVisibility(true);
 		// get exercises
 		dataProvider.queryExercise(getApplicationContext());
 
@@ -232,6 +233,9 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
 		exerciseList.addAll(e);
 		exerciseAdapter.notifyDataSetChanged();
+		if (done) {
+			setCustomProgressBarVisibility(false);
+		}
 	}
 
 	@Override
