@@ -4,6 +4,10 @@ import strength.history.data.structure.Exercise;
 import strength.history.ui.ExerciseEditFragment;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 
@@ -14,6 +18,7 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 	public static final String EXERCISE = "exer";
 
 	private ExerciseEditFragment exerciseEditFragment;
+	private AlertDialog alertDialogDeleteConfirm = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,17 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 			finish();
 			return;
 		}
+		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
+				.setMessage(R.string.dialog_exercise_delete)
+				.setPositiveButton(R.string.button_ok,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								deleteCallback();
+							}
+						}).setNegativeButton(R.string.button_cancel, null)
+				.create();
 		exerciseEditFragment = (ExerciseEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentExerciseEdit);
 
@@ -39,12 +55,27 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 					.getParcelable(EXERCISE));
 		}
 
-		setTitle("Edit exercise");
+		setTitle(R.string.edit_exercise);
+		addMenuItem(createMenuItem(R.drawable.ic_action_delete,
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						alertDialogDeleteConfirm.show();
+					}
+				}));
 	}
 
 	@Override
 	protected int getLayoutResID() {
 		return R.layout.activity_exercise_edit;
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (alertDialogDeleteConfirm != null) {
+			alertDialogDeleteConfirm.dismiss();
+		}
 	}
 
 	@Override

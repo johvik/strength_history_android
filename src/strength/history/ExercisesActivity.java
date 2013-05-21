@@ -12,9 +12,12 @@ import strength.history.ui.ExerciseAdapter;
 import strength.history.ui.ExerciseEditFragment;
 import strength.history.ui.ExerciseListFragment;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,6 +50,8 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	private int mCurCheckPosition = -1;
 	private Exercise mExercise = null;
 	private DataProvider dataProvider = null;
+	private AlertDialog alertDialogDeleteConfirm = null;
+	private View viewMenuDelete = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +74,40 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		if (mDualPane) {
 			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
+		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
+				.setMessage(R.string.dialog_exercise_delete)
+				.setPositiveButton(R.string.button_ok,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								deleteCallback();
+							}
+						}).setNegativeButton(R.string.button_cancel, null)
+				.create();
+		viewMenuDelete = createMenuItem(R.drawable.ic_action_delete,
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						alertDialogDeleteConfirm.show();
+					}
+				});
 		setCustomProgressBarVisibility(true);
 		// get exercises
 		dataProvider.queryExercise(getApplicationContext());
 
-		setTitle("Exercises");
+		setTitle(R.string.exercises);
 	}
 
 	@Override
 	protected int getLayoutResID() {
 		return R.layout.activity_exercises;
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		alertDialogDeleteConfirm.dismiss();
 	}
 
 	@Override
@@ -112,6 +141,9 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				textSelectExerciseToEdit.setVisibility(View.GONE);
 				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
 				exerciseEditFragment.setExercise(mExercise);
+				removeMenuItem(viewMenuDelete);
+				addMenuItem(viewMenuDelete);
+				setTitle(R.string.edit_exercise);
 			} else {
 				Intent intent = new Intent(this, ExerciseEditActivity.class);
 				intent.putExtra(ExerciseEditActivity.EXERCISE, mExercise);
@@ -152,6 +184,8 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 			listViewExercises.setItemChecked(mCurCheckPosition, false);
 			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
 			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
+			removeMenuItem(viewMenuDelete);
+			setTitle(R.string.exercises);
 		}
 		mCurCheckPosition = -1;
 		mExercise = null;

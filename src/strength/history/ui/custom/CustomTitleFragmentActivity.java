@@ -4,7 +4,9 @@ import strength.history.R;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -56,9 +58,23 @@ public abstract class CustomTitleFragmentActivity extends FragmentActivity {
 		}
 	}
 
-	public void addMenuItem(View view) {
+	public View createMenuItem(int resId, OnClickListener l) {
+		ImageButton b = (ImageButton) getLayoutInflater().inflate(
+				R.layout.menu_item, linearLayoutTitleRight, false);
+		b.setImageResource(resId);
+		b.setOnClickListener(l);
+		return b;
+	}
+
+	public void addMenuItem(View v) {
 		if (linearLayoutTitleRight != null) {
-			linearLayoutTitleRight.addView(view);
+			linearLayoutTitleRight.addView(v);
+		}
+	}
+
+	public void removeMenuItem(View v) {
+		if (linearLayoutTitleRight != null) {
+			linearLayoutTitleRight.removeView(v);
 		}
 	}
 }

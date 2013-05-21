@@ -30,13 +30,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/ui_space" >
+        android:layout_marginRight="@dimen/ui_half_space"
+        android:gravity="center_vertical" >
 
         <ProgressBar
             android:id="@+id/progressBarTitle"
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/ui_half_space"
             android:visibility="gone" />
     </LinearLayout>
 
