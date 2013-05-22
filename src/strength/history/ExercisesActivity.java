@@ -85,6 +85,13 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 							}
 						}).setNegativeButton(R.string.button_cancel, null)
 				.create();
+		addMenuItem(createMenuItem(R.drawable.ic_action_plus,
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						onExerciseCreateClick();
+					}
+				}));
 		viewMenuDelete = createMenuItem(R.drawable.ic_action_delete,
 				new OnClickListener() {
 					@Override
@@ -142,7 +149,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
 				exerciseEditFragment.setExercise(mExercise);
 				removeMenuItem(viewMenuDelete);
-				addMenuItem(viewMenuDelete);
+				addMenuItem(viewMenuDelete, 0);
 				setTitle(R.string.edit_exercise);
 			} else {
 				Intent intent = new Intent(this, ExerciseEditActivity.class);
@@ -198,7 +205,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				exerciseList.remove(mCurCheckPosition);
 			}
 			if (e.getName().trim().length() == 0) {
-				e.setName("Name");
+				e.setName(getString(R.string.default_name));
 			}
 			exerciseList.add(e);
 			exerciseAdapter.notifyDataSetChanged();
