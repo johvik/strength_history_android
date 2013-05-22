@@ -69,6 +69,12 @@ public abstract class CustomTitleActivity extends Activity {
 		}
 	}
 
+	public void addMenuItem(View v, int index) {
+		if (linearLayoutTitleRight != null) {
+			linearLayoutTitleRight.addView(v, index);
+		}
+	}
+
 	public void removeMenuItem(View v) {
 		if (linearLayoutTitleRight != null) {
 			linearLayoutTitleRight.removeView(v);
