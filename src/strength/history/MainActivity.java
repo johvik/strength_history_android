@@ -17,6 +17,7 @@ import strength.history.data.structure.SetData;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
+import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleActivity;
 
 import android.content.Intent;
@@ -106,8 +107,8 @@ public class MainActivity extends CustomTitleActivity implements
 
 		switch (s) {
 		case EXERCISE:
-			mDataProvider
-					.insert(new Exercise("Test1"), getApplicationContext());
+			mDataProvider.insert(new Exercise("Test1", MuscleGroup.ARMS),
+					getApplicationContext());
 			break;
 		case WEIGHT:
 			mDataProvider.insert(new Weight(new Date().getTime(), 75.5),
@@ -176,7 +177,8 @@ public class MainActivity extends CustomTitleActivity implements
 		switch (s) {
 		case EXERCISE:
 			for (Exercise e : mExercises) {
-				Exercise tmp = new Exercise(e.getId(), e.getSync(), "Updated");
+				Exercise tmp = new Exercise(e.getId(), e.getSync(), "Updated",
+						MuscleGroup.LEGS);
 				e.updateFrom(tmp);
 				mDataProvider.update(e, getApplicationContext());
 				break;

@@ -15,7 +15,7 @@
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_ok">OK</string>
-    <string name="hint_name">Name</string>
+    <string name="name">Name</string>
     <string name="default_name">Name</string>
     <string name="exercises">Exercises</string>
     <string name="edit_exercise">Edit exercise</string>
@@ -24,5 +24,6 @@
     <string name="empty_str"></string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="muscle_group">Muscle group</string>
 
 </resources>

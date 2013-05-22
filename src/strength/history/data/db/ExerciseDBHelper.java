@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.Exercise.MuscleGroup;
 
 /**
  * DB helper for Exercise
@@ -17,7 +18,9 @@ import strength.history.data.structure.Exercise;
 public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
 		static final String TABLE_NAME = "exercise";
-		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME };
+		static final String MUSCLE_GROUP = "muscle_group";
+		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME,
+				MUSCLE_GROUP };
 	}
 
 	private static final String DATABASE_NAME = "exercise.db";
@@ -55,6 +58,7 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		ContentValues values = new ContentValues();
 		values.put(Entry.SYNC, e.getSync());
 		values.put(Entry.NAME, e.getName());
+		values.put(Entry.MUSCLE_GROUP, e.getMuscleGroup().ordinal());
 
 		return values;
 	}
@@ -104,7 +108,8 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 			long id = cursor.getLong(0);
 			int sync = cursor.getInt(1);
 			String name = cursor.getString(2);
-			res.add(new Exercise(id, sync, name));
+			MuscleGroup muscleGroup = MuscleGroup.parse(cursor.getInt(3));
+			res.add(new Exercise(id, sync, name, muscleGroup));
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -125,6 +130,7 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
-				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL);");
+				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL, "
+				+ Entry.MUSCLE_GROUP + " INTEGER NOT NULL);");
 	}
 }

@@ -2,6 +2,7 @@ package strength.history.ui;
 
 import strength.history.R;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.Exercise.MuscleGroup;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 public class ExerciseEditFragment extends Fragment {
 	public interface Listener {
@@ -24,6 +26,7 @@ public class ExerciseEditFragment extends Fragment {
 	private Button saveButton;
 	private Button cancelButton;
 	private EditText editTextName;
+	private Spinner spinnerMuscleGroup;
 	private Exercise mExercise = null;
 
 	@Override
@@ -59,6 +62,8 @@ public class ExerciseEditFragment extends Fragment {
 	private void save() {
 		if (mExercise != null) {
 			mExercise.setName(editTextName.getText().toString());
+			mExercise.setMuscleGroup(MuscleGroup.parse(spinnerMuscleGroup
+					.getSelectedItemPosition()));
 		}
 	}
 
@@ -71,6 +76,8 @@ public class ExerciseEditFragment extends Fragment {
 		mExercise = e;
 		if (mExercise != null) {
 			editTextName.setText(mExercise.getName());
+			spinnerMuscleGroup.setSelection(mExercise.getMuscleGroup()
+					.ordinal());
 		}
 	}
 
@@ -80,6 +87,8 @@ public class ExerciseEditFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_exercise_edit,
 				container, false);
 		editTextName = (EditText) view.findViewById(R.id.editTextName);
+		spinnerMuscleGroup = (Spinner) view
+				.findViewById(R.id.spinnerMuscleGroup);
 		cancelButton = (Button) view.findViewById(R.id.buttonCancel);
 		saveButton = (Button) view.findViewById(R.id.buttonSave);
 		return view;

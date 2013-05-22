@@ -8,6 +8,7 @@ import strength.history.data.DataProvider;
 import strength.history.data.SortedList;
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.ExerciseAdapter;
 import strength.history.ui.ExerciseEditFragment;
 import strength.history.ui.ExerciseListFragment;
@@ -244,7 +245,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	public void onExerciseCreateClick() {
 		listViewExercises.setItemChecked(mCurCheckPosition, false);
 		mCurCheckPosition = -1;
-		starteEditExercise(new Exercise(""));
+		starteEditExercise(new Exercise("", MuscleGroup.ARMS));
 	}
 
 	@Override

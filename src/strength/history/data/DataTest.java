@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.Exercise.MuscleGroup;
 import junit.framework.Assert;
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,10 +24,10 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 					// Remove all data
 					dataProvider.purge(getApplicationContext());
 					Thread.sleep(500);
-					dataProvider.insert(new Exercise("abc"),
+					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS),
 							getApplicationContext());
 					dataProvider.delete(e, getApplicationContext());
-					dataProvider.insert(new Exercise("abc"),
+					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS),
 							getApplicationContext());
 					dataProvider.update(e, getApplicationContext());
 					dataProvider.queryExercise(getApplicationContext());
