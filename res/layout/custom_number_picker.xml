@@ -5,31 +5,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/imageButtonMinus"
+        <Button
+            android:id="@+id/buttonMinus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/empty_str"
-            android:src="@drawable/ic_action_minus" />
+            android:text="@string/minus" />
 
-        <ImageButton
-            android:id="@+id/imageButtonPlus"
+        <Button
+            android:id="@+id/buttonPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/empty_str"
-            android:src="@drawable/ic_action_plus" />
+            android:text="@string/plus" />
 
         <EditText
             android:id="@+id/editText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imageButtonPlus"
-            android:layout_toRightOf="@+id/imageButtonMinus"
+            android:layout_toLeftOf="@+id/buttonPlus"
+            android:layout_toRightOf="@+id/buttonMinus"
             android:gravity="center"
             android:inputType="numberSigned" />
     </RelativeLayout>

@@ -2,5 +2,6 @@
 <resources>
 
     <color name="list_item_checked">#CCCCCC</color>
+    <color name="background_orange">#FF8800</color>
 
 </resources>

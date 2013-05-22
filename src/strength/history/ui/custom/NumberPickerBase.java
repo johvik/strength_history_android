@@ -6,15 +6,15 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 public abstract class NumberPickerBase<T extends Number> extends FrameLayout {
 	protected int repeatDelay = 75;
 	protected EditText editText1;
-	private ImageButton buttonMinus;
-	private ImageButton buttonPlus;
+	private Button buttonMinus;
+	private Button buttonPlus;
 	private final Handler repeatHandler = new Handler();
 
 	public NumberPickerBase(Context context, AttributeSet attrs, int defStyle) {
@@ -37,8 +37,8 @@ public abstract class NumberPickerBase<T extends Number> extends FrameLayout {
 				this, true);
 
 		editText1 = (EditText) findViewById(R.id.editText1);
-		buttonMinus = (ImageButton) findViewById(R.id.imageButtonMinus);
-		buttonPlus = (ImageButton) findViewById(R.id.imageButtonPlus);
+		buttonMinus = (Button) findViewById(R.id.buttonMinus);
+		buttonPlus = (Button) findViewById(R.id.buttonPlus);
 
 		buttonMinus.setOnClickListener(new OnClickListener() {
 			@Override

@@ -13,10 +13,10 @@
     </style>
     
     <style name="CustomWindowTitleBackground">
-        <item name="android:background">#FF8800</item>
+        <item name="android:background">@color/background_orange</item>
     </style>
     <style name="CustomWindowTitle">
-        <item name="android:textColor">#FF8800</item>
+        <item name="android:textColor">@color/background_orange</item>
     </style>
 
     <!-- Application theme. -->
