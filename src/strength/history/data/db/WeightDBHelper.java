@@ -82,6 +82,30 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		return id != -1;
 	}
 
+	/**
+	 * 
+	 * @return null if nothing was found
+	 */
+	@SuppressWarnings("static-method")
+	public Weight previous() {
+		Weight res = null;
+		SQLiteDatabase db = instance.getReadableDatabase();
+
+		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, null,
+				null, null, null, Entry.TIME + " desc", "1");
+
+		if (cursor.moveToFirst()) {
+			long id = cursor.getLong(0);
+			int sync = cursor.getInt(1);
+			long time = cursor.getLong(2);
+			double weight = cursor.getDouble(3);
+			res = new Weight(id, sync, time, weight);
+		}
+		cursor.close();
+		db.close();
+		return res;
+	}
+
 	@Override
 	public void purge() {
 		SQLiteDatabase db = instance.getWritableDatabase();

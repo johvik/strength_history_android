@@ -80,6 +80,10 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 	}
 
 	@Override
+	protected void previous(E e, Messenger messenger) {
+	}
+
+	@Override
 	protected final void purge(Messenger messenger) {
 		D db = getDB();
 		db.purge();
@@ -149,6 +153,10 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 				break;
 			case INSERT:
 				insert((E) intent.getParcelableExtra(getIntentName()),
+						messenger);
+				break;
+			case PREVIOUS:
+				previous((E) intent.getParcelableExtra(getIntentName()),
 						messenger);
 				break;
 			case PURGE:

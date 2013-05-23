@@ -115,6 +115,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
+	public void previousWeight(Context context) {
+		mWeightProvider.previous(null, context, mMessenger);
+	}
+
+	@Override
 	public void queryWeight(Context context) {
 		mWeightProvider.query(context, mMessenger);
 	}
@@ -162,6 +167,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void insert(WorkoutData e, Context context) {
 		mWorkoutDataProvider.insert(e, context, mMessenger);
+	}
+
+	@Override
+	public void previousWorkoutData(WorkoutData e, Context context) {
+		mWorkoutDataProvider.previous(e, context, mMessenger);
 	}
 
 	@Override

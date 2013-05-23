@@ -56,6 +56,12 @@ public abstract class Provider<E extends SyncBase<E>> {
 			insertCallback(e, ok);
 			break;
 		}
+		case PREVIOUS: {
+			@SuppressWarnings("unchecked")
+			E e = (E) object;
+			previousCallback(e, ok);
+			break;
+		}
 		case PURGE: {
 			// Should never happen
 			break;
@@ -138,6 +144,11 @@ public abstract class Provider<E extends SyncBase<E>> {
 		runLocalService(e, context, messenger, Request.INSERT);
 	}
 
+	public final void previous(E e, Context context, Messenger messenger) {
+		// TODO if (loaded)? Maybe change to tree structure?
+		runLocalService(e, context, messenger, Request.PREVIOUS);
+	}
+
 	/**
 	 * Gets all items
 	 * 
@@ -190,6 +201,9 @@ public abstract class Provider<E extends SyncBase<E>> {
 	protected abstract void deleteCallback(E e, boolean ok);
 
 	protected abstract void insertCallback(E e, boolean ok);
+
+	protected void previousCallback(E e, boolean ok) {
+	}
 
 	protected abstract void queryCallback(Collection<E> e, boolean done);
 

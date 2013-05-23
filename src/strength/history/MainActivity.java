@@ -346,4 +346,16 @@ public class MainActivity extends CustomTitleActivity implements
 		// TODO Auto-generated method stub
 		mWeights.clear();
 	}
+
+	@Override
+	public void previousCallback(WorkoutData e, boolean ok) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void previousCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+
+	}
 }

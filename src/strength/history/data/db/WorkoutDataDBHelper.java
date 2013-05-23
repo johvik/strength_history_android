@@ -1,6 +1,7 @@
 package strength.history.data.db;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -166,6 +167,26 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			db.endTransaction();
 		}
 		db.close();
+	}
+
+	/**
+	 * 
+	 * @param e
+	 *            Should contain exercise IDs to lookup
+	 * @return null if nothing was found
+	 */
+	@SuppressWarnings("static-method")
+	public WorkoutData previous(WorkoutData e) {
+		HashSet<Long> lookFor = new HashSet<Long>();
+		for (ExerciseData d : e) {
+			long exerciseId = d.getExerciseId();
+			lookFor.add(exerciseId);
+		}
+		// TODO Query on time and remove one by one
+
+		WorkoutData res = null;
+		// TODO Fix this!
+		return res;
 	}
 
 	@Override

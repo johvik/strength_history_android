@@ -14,6 +14,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 		public void insertCallback(WorkoutData e, boolean ok);
 
+		public void previousCallback(WorkoutData e, boolean ok);
+
 		public void workoutDataQueryCallback(Collection<WorkoutData> e,
 				boolean done);
 
@@ -24,6 +26,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		public void delete(WorkoutData e, Context context);
 
 		public void insert(WorkoutData e, Context context);
+
+		public void previousWorkoutData(WorkoutData e, Context context);
 
 		public void queryWorkoutData(Context context);
 
@@ -71,6 +75,13 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	protected void insertCallback(WorkoutData e, boolean ok) {
 		for (Events t : listeners) {
 			t.insertCallback(e, ok);
+		}
+	}
+
+	@Override
+	protected void previousCallback(WorkoutData e, boolean ok) {
+		for (Events t : listeners) {
+			t.previousCallback(e, ok);
 		}
 	}
 
