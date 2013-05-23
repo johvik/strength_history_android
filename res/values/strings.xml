@@ -19,11 +19,12 @@
     <string name="default_name">Name</string>
     <string name="exercises">Exercises</string>
     <string name="edit_exercise">Edit exercise</string>
-    <string name="text_select_exercise_to_edit">Select exercise to edit</string>
+    <string name="text_select_exercise_to_edit">Select exercise to edit.</string>
     <string name="dialog_exercise_delete">Delete exercise?</string>
     <string name="empty_str"></string>
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="muscle_group">Muscle group</string>
+    <string name="empty_listview">Nothing here! Try to create something.</string>
 
 </resources>

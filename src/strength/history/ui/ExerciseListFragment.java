@@ -34,6 +34,8 @@ public class ExerciseListFragment extends Fragment {
 					l.onExerciseItemClick(position);
 				}
 			});
+			listViewExercises.setEmptyView(getView().findViewById(
+					R.id.textViewEmptyList));
 		} else {
 			throw new ClassCastException();
 		}
