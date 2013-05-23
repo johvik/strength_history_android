@@ -7,14 +7,18 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public abstract class CustomTitleActivity extends Activity {
 	private TextView textViewWindowTitle = null;
 	private ProgressBar progressBarTitle = null;
 	private LinearLayout linearLayoutTitleRight = null;
+	private ImageView imageViewTitleBack = null;
+	private RelativeLayout relativeLayoutTitleIcon = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,8 @@ public abstract class CustomTitleActivity extends Activity {
 		textViewWindowTitle = (TextView) findViewById(R.id.textViewWindowTitle);
 		progressBarTitle = (ProgressBar) findViewById(R.id.progressBarTitle);
 		linearLayoutTitleRight = (LinearLayout) findViewById(R.id.linearLayoutTitleRight);
+		imageViewTitleBack = (ImageView) findViewById(R.id.imageViewTitleBack);
+		relativeLayoutTitleIcon = (RelativeLayout) findViewById(R.id.relativeLayoutTitleIcon);
 	}
 
 	/**
@@ -34,6 +40,22 @@ public abstract class CustomTitleActivity extends Activity {
 	 * @return
 	 */
 	protected abstract int getLayoutResID();
+
+	public void setCustomBackButton(OnClickListener l) {
+		if (relativeLayoutTitleIcon != null && imageViewTitleBack != null) {
+			if (l != null) {
+				relativeLayoutTitleIcon.setFocusable(true);
+				relativeLayoutTitleIcon.setClickable(true);
+				relativeLayoutTitleIcon.setOnClickListener(l);
+				imageViewTitleBack.setVisibility(View.VISIBLE);
+			} else {
+				relativeLayoutTitleIcon.setFocusable(false);
+				relativeLayoutTitleIcon.setClickable(false);
+				relativeLayoutTitleIcon.setOnClickListener(l);
+				imageViewTitleBack.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
 
 	@Override
 	public void setTitle(CharSequence title) {

@@ -3,24 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="48dp" >
 
-    <ImageView
-        android:id="@+id/imageViewTitleIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutTitleIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/ui_space"
-        android:contentDescription="@string/empty_str"
-        android:src="@drawable/ic_title_icon" />
+        android:background="@drawable/menu_item"
+        android:clickable="false"
+        android:focusable="false" >
+
+        <ImageView
+            android:id="@+id/imageViewTitleBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="-8dp"
+            android:contentDescription="@string/empty_str"
+            android:src="@drawable/ic_action_back"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/empty_str"
+            android:src="@drawable/ic_title_icon" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textViewWindowTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/ui_space"
-        android:layout_toRightOf="@id/imageViewTitleIcon"
-        android:text="@dimen/ui_space"
+        android:layout_toRightOf="@id/relativeLayoutTitleIcon"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white" />
 

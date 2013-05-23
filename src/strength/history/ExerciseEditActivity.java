@@ -63,6 +63,12 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 						alertDialogDeleteConfirm.show();
 					}
 				}));
+		setCustomBackButton(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 
 	@Override

@@ -105,6 +105,12 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		dataProvider.queryExercise(getApplicationContext());
 
 		setTitle(R.string.exercises);
+		setCustomBackButton(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 
 	@Override
