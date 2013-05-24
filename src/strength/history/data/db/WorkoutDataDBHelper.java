@@ -181,9 +181,10 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 		}
 		SQLiteDatabase db = instance.getReadableDatabase();
 
-		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, Entry._ID
-				+ "=?", new String[] { Long.toString(workoutQueryId) }, null,
-				null, Entry.TIME + " desc", "1");
+		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS,
+				Entry.WORKOUT_ID + "=?",
+				new String[] { Long.toString(workoutQueryId) }, null, null,
+				Entry.TIME + " desc", "1");
 
 		if (cursor.moveToFirst()) {
 			long id = cursor.getLong(0);
