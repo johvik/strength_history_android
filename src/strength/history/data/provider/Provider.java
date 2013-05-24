@@ -14,25 +14,57 @@ import strength.history.data.service.ServiceBase.Request;
 import strength.history.data.structure.SyncBase;
 
 /**
- * Base class for providers
+ * Base class for providers. Remember to override getXXXArg and handleMessage if
+ * adding more request types!
  * 
  * @param <E>
  */
 public abstract class Provider<E extends SyncBase<E>> {
 	protected final HashSet<E> data = new HashSet<E>();
-	private boolean loaded = false;
+	protected boolean loaded = false;
+
+	@SuppressWarnings("static-method")
+	protected int getDeleteArg() {
+		return Request.DELETE.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getInsertArg() {
+		return Request.INSERT.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getPurgeArg() {
+		return Request.PURGE.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getQueryArg() {
+		return Request.QUERY.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getStopArg() {
+		return Request.STOP.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getUpdateArg() {
+		return Request.UPDATE.ordinal();
+	}
 
 	/**
 	 * Handles a request
 	 * 
-	 * @param request
+	 * @param requestId
 	 *            Type of request
 	 * @param object
 	 *            Object from the message
 	 * @param ok
 	 *            True if successful
 	 */
-	public void handleMessage(Request request, Object object, boolean ok) {
+	public void handleMessage(int requestId, Object object, boolean ok) {
+		Request request = Request.parse(requestId);
 		switch (request) {
 		case DELETE: {
 			@SuppressWarnings("unchecked")
@@ -54,12 +86,6 @@ public abstract class Provider<E extends SyncBase<E>> {
 				Log.e("Provider", "failed to insert " + e);
 			}
 			insertCallback(e, ok);
-			break;
-		}
-		case PREVIOUS: {
-			@SuppressWarnings("unchecked")
-			E e = (E) object;
-			previousCallback(e, ok);
 			break;
 		}
 		case PURGE: {
@@ -115,7 +141,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	public final void purge(Context context, Messenger messenger) {
 		data.clear();
 		loaded = false;
-		runLocalService(null, context, messenger, Request.PURGE);
+		runLocalService(null, context, messenger, getPurgeArg());
 	}
 
 	/**
@@ -128,7 +154,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void delete(E e, Context context, Messenger messenger) {
-		runLocalService(e, context, messenger, Request.DELETE);
+		runLocalService(e, context, messenger, getDeleteArg());
 	}
 
 	/**
@@ -141,12 +167,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void insert(E e, Context context, Messenger messenger) {
-		runLocalService(e, context, messenger, Request.INSERT);
-	}
-
-	public final void previous(E e, Context context, Messenger messenger) {
-		// TODO if (loaded)? Maybe change to tree structure?
-		runLocalService(e, context, messenger, Request.PREVIOUS);
+		runLocalService(e, context, messenger, getInsertArg());
 	}
 
 	/**
@@ -158,7 +179,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 */
 	public final void query(Context context, Messenger messenger) {
 		if (!loaded) {
-			runLocalService(null, context, messenger, Request.QUERY);
+			runLocalService(null, context, messenger, getQueryArg());
 		} else {
 			queryCallback(data, true);
 		}
@@ -174,7 +195,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void stop(E e, Context context, Messenger messenger) {
-		runLocalService(e, context, messenger, Request.STOP);
+		runLocalService(e, context, messenger, getStopArg());
 	}
 
 	/**
@@ -187,7 +208,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void update(E e, Context context, Messenger messenger) {
-		runLocalService(e, context, messenger, Request.UPDATE);
+		runLocalService(e, context, messenger, getUpdateArg());
 	}
 
 	public abstract void tryAddListener(Object object);
@@ -202,15 +223,12 @@ public abstract class Provider<E extends SyncBase<E>> {
 
 	protected abstract void insertCallback(E e, boolean ok);
 
-	protected void previousCallback(E e, boolean ok) {
-	}
-
 	protected abstract void queryCallback(Collection<E> e, boolean done);
 
 	protected abstract void updateCallback(E old, E e, boolean ok);
 
-	private void runLocalService(E e, Context context, Messenger messenger,
-			Request request) {
+	protected final void runLocalService(E e, Context context,
+			Messenger messenger, int request) {
 		if (context != null) {
 			// Local
 			Intent intent = new Intent(context, getLocalServiceClass());

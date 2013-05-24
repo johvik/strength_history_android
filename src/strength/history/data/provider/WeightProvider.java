@@ -1,11 +1,18 @@
 package strength.history.data.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import android.content.Context;
+import android.os.Messenger;
+import android.util.Log;
 
+import strength.history.data.provider.WeightProvider.Events.Edit;
+import strength.history.data.provider.WeightProvider.Events.Latest;
+import strength.history.data.provider.WeightProvider.Events.Query;
 import strength.history.data.service.local.LocalWeightService;
+import strength.history.data.service.local.LocalWeightService.Request;
 import strength.history.data.structure.Weight;
 
 /**
@@ -13,15 +20,21 @@ import strength.history.data.structure.Weight;
  */
 public class WeightProvider extends Provider<Weight> {
 	public interface Events {
-		public void deleteCallback(Weight e, boolean ok);
+		public interface Edit {
+			public void deleteCallback(Weight e, boolean ok);
 
-		public void insertCallback(Weight e, boolean ok);
+			public void insertCallback(Weight e, boolean ok);
 
-		public void previousCallback(Weight e, boolean ok);
+			public void updateCallback(Weight old, Weight e, boolean ok);
+		}
 
-		public void weightQueryCallback(Collection<Weight> e, boolean done);
+		public interface Latest {
+			public void latestCallback(Weight e, boolean ok);
+		}
 
-		public void updateCallback(Weight old, Weight e, boolean ok);
+		public interface Query {
+			public void weightQueryCallback(Collection<Weight> e, boolean done);
+		}
 	}
 
 	public interface Provides {
@@ -29,7 +42,7 @@ public class WeightProvider extends Provider<Weight> {
 
 		public void insert(Weight e, Context context);
 
-		public void previousWeight(Context context);
+		public void latestWeight(Context context);
 
 		public void queryWeight(Context context);
 
@@ -38,21 +51,35 @@ public class WeightProvider extends Provider<Weight> {
 		public void update(Weight e, Context context);
 	}
 
-	private LinkedHashSet<Events> listeners = new LinkedHashSet<Events>();
+	private LinkedHashSet<Edit> editListeners = new LinkedHashSet<Edit>();
+	private LinkedHashSet<Latest> latestListeners = new LinkedHashSet<Latest>();
+	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
 	@Override
 	public void tryAddListener(Object object) {
-		if (object instanceof Events) {
-			Events e = (Events) object;
+		if (object instanceof Edit) {
+			editListeners.add((Edit) object);
+		}
+		if (object instanceof Latest) {
+			latestListeners.add((Latest) object);
+		}
+		if (object instanceof Query) {
+			Query e = (Query) object;
 			e.weightQueryCallback(data, false); // Initial values
-			listeners.add(e);
+			queryListeners.add(e);
 		}
 	}
 
 	@Override
 	public void tryRemoveListener(Object object) {
-		if (object instanceof Events) {
-			listeners.remove((Events) object);
+		if (object instanceof Edit) {
+			editListeners.remove(object);
+		}
+		if (object instanceof Latest) {
+			latestListeners.remove(object);
+		}
+		if (object instanceof Query) {
+			queryListeners.remove(object);
 		}
 	}
 
@@ -68,36 +95,161 @@ public class WeightProvider extends Provider<Weight> {
 
 	@Override
 	protected void deleteCallback(Weight e, boolean ok) {
-		for (Events t : listeners) {
+		for (Edit t : editListeners) {
 			t.deleteCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void insertCallback(Weight e, boolean ok) {
-		for (Events t : listeners) {
+		for (Edit t : editListeners) {
 			t.insertCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void queryCallback(Collection<Weight> e, boolean done) {
-		for (Events t : listeners) {
+		for (Query t : queryListeners) {
 			t.weightQueryCallback(e, done);
 		}
 	}
 
 	@Override
-	protected void previousCallback(Weight e, boolean ok) {
-		for (Events t : listeners) {
-			t.previousCallback(e, ok);
+	protected void updateCallback(Weight old, Weight e, boolean ok) {
+		for (Edit t : editListeners) {
+			t.updateCallback(old, e, ok);
 		}
 	}
 
+	private void latestCallback(Weight e, boolean ok) {
+		for (Latest t : latestListeners) {
+			t.latestCallback(e, ok);
+		}
+	}
+
+	public final void latest(Context context, Messenger messenger) {
+		// TODO Cache?
+		runLocalService(null, context, messenger, Request.LATEST.ordinal());
+	}
+
 	@Override
-	protected void updateCallback(Weight old, Weight e, boolean ok) {
-		for (Events t : listeners) {
-			t.updateCallback(old, e, ok);
+	protected int getDeleteArg() {
+		return Request.DELETE.ordinal();
+	}
+
+	@Override
+	protected int getInsertArg() {
+		return Request.INSERT.ordinal();
+	}
+
+	@Override
+	protected int getPurgeArg() {
+		return Request.PURGE.ordinal();
+	}
+
+	@Override
+	protected int getQueryArg() {
+		return Request.QUERY.ordinal();
+	}
+
+	@Override
+	protected int getStopArg() {
+		return Request.STOP.ordinal();
+	}
+
+	@Override
+	protected int getUpdateArg() {
+		return Request.UPDATE.ordinal();
+	}
+
+	/**
+	 * Handles a request
+	 * 
+	 * @param requestId
+	 *            Type of request
+	 * @param object
+	 *            Object from the message
+	 * @param ok
+	 *            True if successful
+	 */
+	@Override
+	public void handleMessage(int requestId, Object object, boolean ok) {
+		Request request = Request.parse(requestId);
+		switch (request) {
+		case DELETE: {
+			Weight e = (Weight) object;
+			if (ok) {
+				data.remove(e);
+			} else {
+				Log.e("WeightProvider", "failed to delete " + e);
+			}
+			deleteCallback(e, ok);
+			break;
+		}
+		case INSERT: {
+			Weight e = (Weight) object;
+			if (ok) {
+				data.add(e);
+			} else {
+				Log.e("WeightProvider", "failed to insert " + e);
+			}
+			insertCallback(e, ok);
+			break;
+		}
+		case LATEST: {
+			Weight e = (Weight) object;
+			if (!ok) {
+				Log.e("WeightProvider", "failed to get latest " + e);
+			}
+			latestCallback(e, ok);
+			break;
+		}
+		case PURGE: {
+			// Should never happen
+			break;
+		}
+		case QUERY: {
+			@SuppressWarnings("unchecked")
+			ArrayList<Weight> e = (ArrayList<Weight>) object;
+			boolean added = data.addAll(e);
+			if (!added) {
+				Log.d("WeightProvider", "query nothing changed");
+			}
+			if (ok) {
+				loaded = true;
+				Log.d("WeightProvider", "query done");
+			}
+			queryCallback(e, ok);
+			break;
+		}
+		case STOP: {
+			// Do nothing (see ServiceBase.onStartCommand)
+			break;
+		}
+		case UPDATE: {
+			Weight e = (Weight) object;
+			Weight old = null;
+			long id = e.getId();
+			// Search by id
+			for (Weight d : data) {
+				if (d.getId() == id) {
+					old = d;
+					break;
+				}
+			}
+			if (ok) {
+				if (old != null) {
+					data.remove(old);
+					data.add(e);
+				}
+			} else {
+				Log.e("WeightProvider", "failed to update " + e);
+			}
+			// return the old one if failed
+			// but if old is null return e
+			updateCallback(old, e, ok);
+			break;
+		}
 		}
 	}
 }

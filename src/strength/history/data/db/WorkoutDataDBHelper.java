@@ -1,7 +1,6 @@
 package strength.history.data.db;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -171,21 +170,62 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 
 	/**
 	 * 
-	 * @param e
-	 *            Should contain exercise IDs to lookup
+	 * @param workoutQueryId
 	 * @return null if nothing was found
 	 */
 	@SuppressWarnings("static-method")
-	public WorkoutData previous(WorkoutData e) {
-		HashSet<Long> lookFor = new HashSet<Long>();
-		for (ExerciseData d : e) {
-			long exerciseId = d.getExerciseId();
-			lookFor.add(exerciseId);
-		}
-		// TODO Query on time and remove one by one
-
+	public WorkoutData latest(long workoutQueryId) {
 		WorkoutData res = null;
-		// TODO Fix this!
+		if (workoutQueryId == -1) {
+			return res;
+		}
+		SQLiteDatabase db = instance.getReadableDatabase();
+
+		Cursor cursor = db.query(Entry.TABLE_NAME, Entry.ALL_COLUMNS, Entry._ID
+				+ "=?", new String[] { Long.toString(workoutQueryId) }, null,
+				null, Entry.TIME + " desc", "1");
+
+		if (cursor.moveToFirst()) {
+			long id = cursor.getLong(0);
+			int sync = cursor.getInt(1);
+			long time = cursor.getLong(2);
+			long workout_id = cursor.getLong(3);
+			res = new WorkoutData(id, sync, time, workout_id);
+			// Load data
+			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,
+					Entry.ExerciseData.ALL_COLUMNS,
+					Entry.ExerciseData.WORKOUT_DATA_ID + "=?",
+					new String[] { Long.toString(id) }, null, null, null);
+
+			c2.moveToFirst();
+			while (!c2.isAfterLast()) {
+				long id2 = c2.getLong(0);
+				long exercise_id = c2.getLong(1);
+				ExerciseData e = new ExerciseData(id2, exercise_id);
+				// Load sets
+				Cursor c3 = db.query(Entry.ExerciseData.SetData.TABLE_NAME,
+						Entry.ExerciseData.SetData.ALL_COLUMNS,
+						Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
+						new String[] { Long.toString(id2) }, null, null, null);
+
+				c3.moveToFirst();
+				while (!c3.isAfterLast()) {
+					long id3 = c3.getLong(0);
+					double weight = c3.getDouble(1);
+					int repetitions = c3.getInt(2);
+
+					e.add(new SetData(id3, weight, repetitions));
+					c3.moveToNext();
+				}
+				c3.close();
+
+				res.add(e);
+				c2.moveToNext();
+			}
+			c2.close();
+		}
+		cursor.close();
+		db.close();
 		return res;
 	}
 

@@ -58,23 +58,22 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public final void handleMessage(Message msg) {
 		ServiceBase.Service service = ServiceBase.Service.parse(msg.arg1);
-		ServiceBase.Request request = ServiceBase.Request.parse(msg.arg2);
 		boolean ok = msg.what == 1;
-		Log.d("MessageHandler", "service=" + service + " request=" + request
+		Log.d("MessageHandler", "service=" + service + " request=" + msg.arg2
 				+ " ok=" + ok);
 
 		switch (service) {
 		case EXERCISE:
-			mExerciseProvider.handleMessage(request, msg.obj, ok);
+			mExerciseProvider.handleMessage(msg.arg2, msg.obj, ok);
 			break;
 		case WEIGHT:
-			mWeightProvider.handleMessage(request, msg.obj, ok);
+			mWeightProvider.handleMessage(msg.arg2, msg.obj, ok);
 			break;
 		case WORKOUT:
-			mWorkoutProvider.handleMessage(request, msg.obj, ok);
+			mWorkoutProvider.handleMessage(msg.arg2, msg.obj, ok);
 			break;
 		case WORKOUT_DATA:
-			mWorkoutDataProvider.handleMessage(request, msg.obj, ok);
+			mWorkoutDataProvider.handleMessage(msg.arg2, msg.obj, ok);
 			break;
 		}
 	}
@@ -115,8 +114,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void previousWeight(Context context) {
-		mWeightProvider.previous(null, context, mMessenger);
+	public void latestWeight(Context context) {
+		mWeightProvider.latest(context, mMessenger);
 	}
 
 	@Override
@@ -170,8 +169,8 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
-	public void previousWorkoutData(WorkoutData e, Context context) {
-		mWorkoutDataProvider.previous(e, context, mMessenger);
+	public void latestWorkoutData(long workoutId, Context context) {
+		mWorkoutDataProvider.latest(workoutId, context, mMessenger);
 	}
 
 	@Override

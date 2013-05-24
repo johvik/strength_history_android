@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.os.Messenger;
 
 /**
- * Base class for the service framework
+ * Base class for the service framework. Remember to override getXXXArg and
+ * onHandleIntent if adding more request types!
  * 
  * @param <E>
  *            Structure type it provides
@@ -15,11 +16,34 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 
 	protected abstract int getArg1();
 
+	@SuppressWarnings("static-method")
+	protected int getDeleteArg() {
+		return Request.DELETE.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getInsertArg() {
+		return Request.INSERT.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getQueryArg() {
+		return Request.QUERY.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getStopArg() {
+		return Request.STOP.ordinal();
+	}
+
+	@SuppressWarnings("static-method")
+	protected int getUpdateArg() {
+		return Request.UPDATE.ordinal();
+	}
+
 	protected abstract void delete(E e, Messenger messenger);
 
 	protected abstract void insert(E e, Messenger messenger);
-
-	protected abstract void previous(E e, Messenger messenger);
 
 	protected abstract void purge(Messenger messenger);
 
@@ -39,10 +63,6 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 		 * Insert the provided item
 		 */
 		INSERT,
-		/**
-		 * Gets previous data if applicable, may do nothing
-		 */
-		PREVIOUS,
 		/**
 		 * Recreates the DB, all data is lost
 		 */
@@ -141,17 +161,14 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		Request request = (Request) intent.getSerializableExtra(REQUEST);
-		switch (request) {
-		case QUERY:
-			query_interrupt = false;
-			break;
-		case STOP:
-			query_interrupt = true;
-			break;
-		default:
-			break;
+	public final int onStartCommand(Intent intent, int flags, int startId) {
+		int id = intent.getIntExtra(REQUEST, -1);
+		if (id != -1) {
+			if (id == getQueryArg()) {
+				query_interrupt = false;
+			} else if (id == getStopArg()) {
+				query_interrupt = true;
+			}
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}

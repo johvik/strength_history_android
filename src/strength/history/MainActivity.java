@@ -31,8 +31,11 @@ import android.widget.RadioGroup;
  * Main Activity
  */
 public class MainActivity extends CustomTitleActivity implements
-		ExerciseProvider.Events, WeightProvider.Events, WorkoutProvider.Events,
-		WorkoutDataProvider.Events {
+		ExerciseProvider.Events.Edit, ExerciseProvider.Events.Query,
+		WeightProvider.Events.Edit, WeightProvider.Events.Latest,
+		WeightProvider.Events.Query, WorkoutProvider.Events.Edit,
+		WorkoutProvider.Events.Query, WorkoutDataProvider.Events.Edit,
+		WorkoutDataProvider.Events.Latest, WorkoutDataProvider.Events.Query {
 	private DataProvider mDataProvider = null;
 	private TreeSet<Exercise> mExercises = new TreeSet<Exercise>();
 	private TreeSet<Weight> mWeights = new TreeSet<Weight>();
@@ -50,6 +53,8 @@ public class MainActivity extends CustomTitleActivity implements
 		Intent i = new Intent(this, ExercisesActivity.class);
 		startActivity(i);
 		setTitle(R.string.app_name);
+		mDataProvider.latestWeight(getApplicationContext());
+		mDataProvider.latestWorkoutData(1, getApplicationContext());
 	}
 
 	@Override
@@ -348,14 +353,20 @@ public class MainActivity extends CustomTitleActivity implements
 	}
 
 	@Override
-	public void previousCallback(WorkoutData e, boolean ok) {
+	public void latestCallback(WorkoutData e, boolean ok) {
 		// TODO Auto-generated method stub
-
+		Log.d("MainActivity", "workoutdata latest=" + ok);
+		if (e != null) {
+			Log.d("MainActivity", e.toString());
+		}
 	}
 
 	@Override
-	public void previousCallback(Weight e, boolean ok) {
+	public void latestCallback(Weight e, boolean ok) {
 		// TODO Auto-generated method stub
-
+		Log.d("MainActivity", "weight latest=" + ok);
+		if (e != null) {
+			Log.d("MainActivity", e.toString());
+		}
 	}
 }

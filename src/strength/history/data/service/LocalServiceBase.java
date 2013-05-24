@@ -39,7 +39,7 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			D db = getDB();
 			Message msg = Message.obtain();
 			msg.arg1 = getArg1();
-			msg.arg2 = Request.DELETE.ordinal();
+			msg.arg2 = getDeleteArg();
 
 			boolean deleted = db.delete(e);
 			for (int i = 0; i < DB_TRIES && !deleted; i++) {
@@ -62,7 +62,7 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			D db = getDB();
 			Message msg = Message.obtain();
 			msg.arg1 = getArg1();
-			msg.arg2 = Request.INSERT.ordinal();
+			msg.arg2 = getInsertArg();
 
 			boolean inserted = db.insert(e);
 			for (int i = 0; i < DB_TRIES && !inserted; i++) {
@@ -80,10 +80,6 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 	}
 
 	@Override
-	protected void previous(E e, Messenger messenger) {
-	}
-
-	@Override
 	protected final void purge(Messenger messenger) {
 		D db = getDB();
 		db.purge();
@@ -96,7 +92,7 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			D db = getDB();
 			Message msg = Message.obtain();
 			msg.arg1 = getArg1();
-			msg.arg2 = Request.QUERY.ordinal();
+			msg.arg2 = getQueryArg();
 
 			ArrayList<E> res = db.query(offset, QUERY_LIMIT);
 			boolean doBreak = res.size() < QUERY_LIMIT;
@@ -121,7 +117,7 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 			D db = getDB();
 			Message msg = Message.obtain();
 			msg.arg1 = getArg1();
-			msg.arg2 = Request.UPDATE.ordinal();
+			msg.arg2 = getUpdateArg();
 
 			boolean updated = db.update(e);
 			for (int i = 0; i < DB_TRIES && !updated; i++) {
@@ -140,38 +136,38 @@ public abstract class LocalServiceBase<E extends SyncBase<E>, D extends DBHelper
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected final void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		Log.d("LocalServiceBase", "onHandleIntent");
 
-		Request request = (Request) intent.getSerializableExtra(REQUEST);
-		Messenger messenger = intent.getParcelableExtra(MESSENGER);
-		if (request != null && messenger != null) {
-			switch (request) {
-			case DELETE:
-				delete((E) intent.getParcelableExtra(getIntentName()),
-						messenger);
-				break;
-			case INSERT:
-				insert((E) intent.getParcelableExtra(getIntentName()),
-						messenger);
-				break;
-			case PREVIOUS:
-				previous((E) intent.getParcelableExtra(getIntentName()),
-						messenger);
-				break;
-			case PURGE:
-				purge(messenger);
-				break;
-			case QUERY:
-				query(messenger);
-				break;
-			case STOP:
-				// Do nothing (see ServiceBase.onStartCommand)
-				break;
-			case UPDATE:
-				update((E) intent.getParcelableExtra(getIntentName()),
-						messenger);
-				break;
+		int id = intent.getIntExtra(REQUEST, -1);
+		if (id != -1) {
+			Request request = Request.parse(id);
+			Log.d("LocalServiceBase", "request=" + request);
+			Messenger messenger = intent.getParcelableExtra(MESSENGER);
+			if (messenger != null) {
+				switch (request) {
+				case DELETE:
+					delete((E) intent.getParcelableExtra(getIntentName()),
+							messenger);
+					break;
+				case INSERT:
+					insert((E) intent.getParcelableExtra(getIntentName()),
+							messenger);
+					break;
+				case PURGE:
+					purge(messenger);
+					break;
+				case QUERY:
+					query(messenger);
+					break;
+				case STOP:
+					// Do nothing (see ServiceBase.onStartCommand)
+					break;
+				case UPDATE:
+					update((E) intent.getParcelableExtra(getIntentName()),
+							messenger);
+					break;
+				}
 			}
 		}
 	}

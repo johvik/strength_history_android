@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 
 import android.content.Context;
 
+import strength.history.data.provider.ExerciseProvider.Events.Edit;
+import strength.history.data.provider.ExerciseProvider.Events.Query;
 import strength.history.data.service.local.LocalExerciseService;
 import strength.history.data.structure.Exercise;
 
@@ -13,13 +15,18 @@ import strength.history.data.structure.Exercise;
  */
 public class ExerciseProvider extends Provider<Exercise> {
 	public interface Events {
-		public void deleteCallback(Exercise e, boolean ok);
+		public interface Edit {
+			public void deleteCallback(Exercise e, boolean ok);
 
-		public void insertCallback(Exercise e, boolean ok);
+			public void insertCallback(Exercise e, boolean ok);
 
-		public void exerciseQueryCallback(Collection<Exercise> e, boolean done);
+			public void updateCallback(Exercise old, Exercise e, boolean ok);
+		}
 
-		public void updateCallback(Exercise old, Exercise e, boolean ok);
+		public interface Query {
+			public void exerciseQueryCallback(Collection<Exercise> e,
+					boolean done);
+		}
 	}
 
 	public interface Provides {
@@ -34,21 +41,28 @@ public class ExerciseProvider extends Provider<Exercise> {
 		public void update(Exercise e, Context context);
 	}
 
-	private LinkedHashSet<Events> listeners = new LinkedHashSet<Events>();
+	private LinkedHashSet<Edit> editListeners = new LinkedHashSet<Edit>();
+	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
 	@Override
 	public void tryAddListener(Object object) {
-		if (object instanceof Events) {
-			Events e = (Events) object;
+		if (object instanceof Edit) {
+			editListeners.add((Edit) object);
+		}
+		if (object instanceof Query) {
+			Query e = (Query) object;
 			e.exerciseQueryCallback(data, false); // Initial values
-			listeners.add(e);
+			queryListeners.add(e);
 		}
 	}
 
 	@Override
 	public void tryRemoveListener(Object object) {
-		if (object instanceof Events) {
-			listeners.remove((Events) object);
+		if (object instanceof Edit) {
+			editListeners.remove(object);
+		}
+		if (object instanceof Query) {
+			queryListeners.remove(object);
 		}
 	}
 
@@ -64,28 +78,28 @@ public class ExerciseProvider extends Provider<Exercise> {
 
 	@Override
 	protected void deleteCallback(Exercise e, boolean ok) {
-		for (Events t : listeners) {
+		for (Edit t : editListeners) {
 			t.deleteCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void insertCallback(Exercise e, boolean ok) {
-		for (Events t : listeners) {
+		for (Edit t : editListeners) {
 			t.insertCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void queryCallback(Collection<Exercise> e, boolean done) {
-		for (Events t : listeners) {
+		for (Query t : queryListeners) {
 			t.exerciseQueryCallback(e, done);
 		}
 	}
 
 	@Override
 	protected void updateCallback(Exercise old, Exercise e, boolean ok) {
-		for (Events t : listeners) {
+		for (Edit t : editListeners) {
 			t.updateCallback(old, e, ok);
 		}
 	}

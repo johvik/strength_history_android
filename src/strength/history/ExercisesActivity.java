@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		ExerciseListFragment.Listener, ExerciseEditFragment.Listener,
-		ExerciseProvider.Events {
+		ExerciseProvider.Events.Edit, ExerciseProvider.Events.Query {
 	private static final int REQUEST_CODE = 1;
 	private static final String CUR_CHOICE = "curChoice";
 	private static final String CUR_EXERCISE = "curExer";
