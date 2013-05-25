@@ -176,12 +176,63 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	 */
 	@SuppressWarnings("static-method")
 	public ExerciseData latestExerciseData(long exerciseQueryId) {
-		ExerciseData res = null;
 		if (exerciseQueryId == -1) {
-			return res;
+			return null;
 		}
-		// TODO Fix!
-		return res;
+		// TODO Make the query smarter
+		SQLiteDatabase db = instance.getReadableDatabase();
+		Cursor cursor = db.query(Entry.TABLE_NAME, new String[] { Entry._ID },
+				null, null, null, null, Entry.TIME + " desc", null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			long id = cursor.getLong(0);
+			// Load data
+			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,
+					Entry.ExerciseData.ALL_COLUMNS,
+					Entry.ExerciseData.WORKOUT_DATA_ID + "=?",
+					new String[] { Long.toString(id) }, null, null, null);
+
+			c2.moveToFirst();
+			while (!c2.isAfterLast()) {
+				long id2 = c2.getLong(0);
+				long exercise_id = c2.getLong(1);
+				if (exercise_id == exerciseQueryId) {
+					ExerciseData e = new ExerciseData(id2, exercise_id);
+					// Load sets
+					Cursor c3 = db.query(Entry.ExerciseData.SetData.TABLE_NAME,
+							Entry.ExerciseData.SetData.ALL_COLUMNS,
+							Entry.ExerciseData.SetData.EXERCISE_DATA_ID + "=?",
+							new String[] { Long.toString(id2) }, null, null,
+							null);
+
+					c3.moveToFirst();
+					while (!c3.isAfterLast()) {
+						long id3 = c3.getLong(0);
+						double weight = c3.getDouble(1);
+						int repetitions = c3.getInt(2);
+
+						e.add(new SetData(id3, weight, repetitions));
+						c3.moveToNext();
+					}
+					c3.close();
+
+					if (!e.isEmpty()) {
+						// done!
+						c2.close();
+						cursor.close();
+						db.close();
+						return e;
+					}
+				}
+				c2.moveToNext();
+			}
+			c2.close();
+			cursor.moveToNext();
+		}
+		cursor.close();
+		db.close();
+		return null;
 	}
 
 	/**
