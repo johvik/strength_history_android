@@ -55,6 +55,8 @@ public class WeightProvider extends Provider<Weight> {
 	private LinkedHashSet<Latest> latestListeners = new LinkedHashSet<Latest>();
 	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
+	private Weight latestCache = null;
+
 	@Override
 	public void tryAddListener(Object object) {
 		if (object instanceof Edit) {
@@ -128,8 +130,17 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	public final void latest(Context context, Messenger messenger) {
-		// TODO Cache?
-		runLocalService(null, context, messenger, Request.LATEST.ordinal());
+		if (latestCache == null) {
+			runLocalService(null, context, messenger, Request.LATEST.ordinal());
+		} else {
+			latestCallback(latestCache, true);
+		}
+	}
+
+	@Override
+	protected void onPurge() {
+		super.onPurge();
+		latestCache = null;
 	}
 
 	@Override
@@ -180,6 +191,11 @@ public class WeightProvider extends Provider<Weight> {
 			Weight e = (Weight) object;
 			if (ok) {
 				data.remove(e);
+				if (latestCache != null) {
+					if (latestCache.getId() == e.getId()) {
+						latestCache = null;
+					}
+				}
 			} else {
 				Log.e("WeightProvider", "failed to delete " + e);
 			}
@@ -190,6 +206,13 @@ public class WeightProvider extends Provider<Weight> {
 			Weight e = (Weight) object;
 			if (ok) {
 				data.add(e);
+				if (latestCache != null) {
+					if (latestCache.getTime() <= e.getTime()) {
+						latestCache = e;
+					}
+				} else {
+					latestCache = e;
+				}
 			} else {
 				Log.e("WeightProvider", "failed to insert " + e);
 			}
@@ -201,6 +224,7 @@ public class WeightProvider extends Provider<Weight> {
 			if (!ok) {
 				Log.e("WeightProvider", "failed to get latest " + e);
 			}
+			latestCache = e;
 			latestCallback(e, ok);
 			break;
 		}
@@ -241,6 +265,19 @@ public class WeightProvider extends Provider<Weight> {
 				if (old != null) {
 					data.remove(old);
 					data.add(e);
+				}
+				if (latestCache != null) {
+					if (latestCache.getId() == e.getId()) {
+						if (latestCache.getTime() > e.getTime()) {
+							latestCache = null;
+						} else {
+							latestCache = e;
+						}
+					} else if (latestCache.getTime() <= e.getTime()) {
+						latestCache = e;
+					}
+				} else {
+					latestCache = e;
 				}
 			} else {
 				Log.e("WeightProvider", "failed to update " + e);

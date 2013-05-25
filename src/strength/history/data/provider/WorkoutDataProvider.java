@@ -2,6 +2,7 @@ package strength.history.data.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import android.content.Context;
@@ -62,6 +63,9 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	private LinkedHashSet<LatestExerciseData> latestExerciseDataListeners = new LinkedHashSet<LatestExerciseData>();
 	private LinkedHashSet<LatestWorkoutData> latestWorkoutDataListeners = new LinkedHashSet<LatestWorkoutData>();
 	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
+
+	private HashMap<Long, ExerciseData> latestExerciseDataCache = new HashMap<Long, ExerciseData>();
+	private HashMap<Long, WorkoutData> latestWorkoutDataCache = new HashMap<Long, WorkoutData>();
 
 	@Override
 	public void tryAddListener(Object object) {
@@ -149,16 +153,31 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 	public final void latestExerciseData(long exerciseId, Context context,
 			Messenger messenger) {
-		// TODO Cache?
-		runLocalService(exerciseId, context, messenger,
-				Request.LATEST_EXERCISE_DATA.ordinal());
+		ExerciseData e = latestExerciseDataCache.get(exerciseId);
+		if (e == null) {
+			runLocalService(exerciseId, context, messenger,
+					Request.LATEST_EXERCISE_DATA.ordinal());
+		} else {
+			latestCallback(e, true);
+		}
 	}
 
 	public final void latestWorkoutData(long workoutId, Context context,
 			Messenger messenger) {
-		// TODO Cache?
-		runLocalService(workoutId, context, messenger,
-				Request.LATEST_WORKOUT_DATA.ordinal());
+		WorkoutData e = latestWorkoutDataCache.get(workoutId);
+		if (e == null) {
+			runLocalService(workoutId, context, messenger,
+					Request.LATEST_WORKOUT_DATA.ordinal());
+		} else {
+			latestCallback(e, true);
+		}
+	}
+
+	@Override
+	protected void onPurge() {
+		super.onPurge();
+		latestExerciseDataCache.clear();
+		latestWorkoutDataCache.clear();
 	}
 
 	@Override
@@ -209,6 +228,14 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			WorkoutData e = (WorkoutData) object;
 			if (ok) {
 				data.remove(e);
+				latestExerciseDataCache.clear();
+				long workoutId = e.getWorkoutId();
+				WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+				if (cache != null) {
+					if (cache.getId() == e.getId()) {
+						latestWorkoutDataCache.remove(workoutId);
+					}
+				}
 			} else {
 				Log.e("WorkoutDataProvider", "failed to delete " + e);
 			}
@@ -219,6 +246,16 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			WorkoutData e = (WorkoutData) object;
 			if (ok) {
 				data.add(e);
+				latestExerciseDataCache.clear();
+				long workoutId = e.getWorkoutId();
+				WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+				if (cache != null) {
+					if (cache.getTime() <= e.getTime()) {
+						latestWorkoutDataCache.put(workoutId, e);
+					}
+				} else {
+					latestWorkoutDataCache.put(workoutId, e);
+				}
 			} else {
 				Log.e("WorkoutDataProvider", "failed to insert " + e);
 			}
@@ -230,6 +267,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			if (!ok) {
 				Log.e("WorkoutDataProvider",
 						"failed to get latest exercisedata " + e);
+			} else {
+				latestExerciseDataCache.put(e.getExerciseId(), e);
 			}
 			latestCallback(e, ok);
 			break;
@@ -239,6 +278,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			if (!ok) {
 				Log.e("WorkoutDataProvider",
 						"failed to get latest workoutdata " + e);
+			} else {
+				latestWorkoutDataCache.put(e.getWorkoutId(), e);
 			}
 			latestCallback(e, ok);
 			break;
@@ -280,6 +321,22 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 				if (old != null) {
 					data.remove(old);
 					data.add(e);
+				}
+				latestExerciseDataCache.clear();
+				long workoutId = e.getWorkoutId();
+				WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+				if (cache != null) {
+					if (cache.getId() == e.getId()) {
+						if (cache.getTime() > e.getTime()) {
+							latestWorkoutDataCache.remove(cache);
+						} else {
+							latestWorkoutDataCache.put(workoutId, e);
+						}
+					} else if (cache.getTime() <= e.getTime()) {
+						latestWorkoutDataCache.put(workoutId, e);
+					}
+				} else {
+					latestWorkoutDataCache.put(workoutId, e);
 				}
 			} else {
 				Log.e("WorkoutDataProvider", "failed to update " + e);

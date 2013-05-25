@@ -138,9 +138,16 @@ public abstract class Provider<E extends SyncBase<E>> {
 		}
 	}
 
-	public final void purge(Context context, Messenger messenger) {
+	/**
+	 * Called when the provider is being purged
+	 */
+	protected void onPurge() {
 		data.clear();
 		loaded = false;
+	}
+
+	public final void purge(Context context, Messenger messenger) {
+		onPurge();
 		runLocalService(null, context, messenger, getPurgeArg());
 	}
 
