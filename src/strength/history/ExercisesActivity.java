@@ -87,14 +87,14 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 						}).setNegativeButton(R.string.button_cancel, null)
 				.create();
 		addMenuItem(createMenuItem(R.drawable.ic_action_plus,
-				new OnClickListener() {
+				R.string.create_exercise, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						onExerciseCreateClick();
 					}
 				}));
 		viewMenuDelete = createMenuItem(R.drawable.ic_action_delete,
-				new OnClickListener() {
+				R.string.delete_exercise, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						alertDialogDeleteConfirm.show();

@@ -26,5 +26,7 @@
     <string name="minus">-</string>
     <string name="muscle_group">Muscle group</string>
     <string name="empty_listview">Nothing here! Try to create something.</string>
+    <string name="create_exercise">Create exercise</string>
+    <string name="delete_exercise">Delete exercise</string>
 
 </resources>

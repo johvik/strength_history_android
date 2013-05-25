@@ -57,7 +57,7 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 
 		setTitle(R.string.edit_exercise);
 		addMenuItem(createMenuItem(R.drawable.ic_action_delete,
-				new OnClickListener() {
+				R.string.delete_exercise, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						alertDialogDeleteConfirm.show();
