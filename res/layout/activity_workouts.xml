@@ -8,29 +8,29 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ui.exercise.ExercisesActivity" >
+    tools:context=".ui.workout.WorkoutsActivity" >
 
     <fragment
-        android:id="@+id/fragmentExerciseList"
-        android:name="strength.history.ui.exercise.ExerciseListFragment"
+        android:id="@+id/fragmentWorkoutList"
+        android:name="strength.history.ui.workout.WorkoutListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/ui_half_space"
         android:layout_weight="1"
-        tools:layout="@layout/fragment_exercise_list" />
+        tools:layout="@layout/fragment_workout_list" />
 
     <TextView
-        android:id="@+id/textSelectExerciseToEdit"
+        android:id="@+id/textSelectWorkoutToEdit"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/ui_half_space"
         android:layout_weight="2"
         android:gravity="center"
-        android:text="@string/text_select_exercise_to_edit"
+        android:text="@string/text_select_workout_to_edit"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <FrameLayout
-        android:id="@+id/frameLayoutExerciseEditFragment"
+        android:id="@+id/frameLayoutWorkoutEditFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/ui_half_space"
@@ -38,11 +38,11 @@
         android:visibility="gone" >
 
         <fragment
-            android:id="@+id/fragmentExerciseEdit"
-            android:name="strength.history.ui.exercise.ExerciseEditFragment"
+            android:id="@+id/fragmentWorkoutEdit"
+            android:name="strength.history.ui.workout.WorkoutEditFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_exercise_edit" />
+            tools:layout="@layout/fragment_workout_edit" />
     </FrameLayout>
 
 </LinearLayout>

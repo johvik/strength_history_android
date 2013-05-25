@@ -91,6 +91,10 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/*
 	 * *************************************************************
 	 * 

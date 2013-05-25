@@ -6,8 +6,9 @@ import strength.history.ui.SortedAdapter;
 import android.content.Context;
 
 public class ExerciseAdapter extends SortedAdapter<Exercise> {
-	public ExerciseAdapter(Context context, SortedList<Exercise> list) {
-		super(context, list);
+	public ExerciseAdapter(Context context, SortedList<Exercise> list,
+			boolean spinner) {
+		super(context, list, spinner);
 	}
 
 	@Override

@@ -6,8 +6,9 @@ import strength.history.data.structure.Workout;
 import strength.history.ui.SortedAdapter;
 
 public class WorkoutAdapter extends SortedAdapter<Workout> {
-	public WorkoutAdapter(Context context, SortedList<Workout> list) {
-		super(context, list);
+	public WorkoutAdapter(Context context, SortedList<Workout> list,
+			boolean spinner) {
+		super(context, list, spinner);
 	}
 
 	@Override

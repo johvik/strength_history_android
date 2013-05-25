@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.exercise.ExerciseListFragment" >
+    tools:context=".ui.workout.WorkoutListFragment" >
 
     <ListView
-        android:id="@+id/listViewExercises"
+        android:id="@+id/listViewWorkouts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/list_item_single" >

@@ -28,5 +28,13 @@
     <string name="empty_listview">Nothing here! Try to create something.</string>
     <string name="create_exercise">Create exercise</string>
     <string name="delete_exercise">Delete exercise</string>
+    <string name="add">Add</string>
+    <string name="text_select_workout_to_edit">Select workout to edit.</string>
+    <string name="dialog_workout_delete">Delete workout?</string>
+    <string name="edit_workout">Edit workout</string>
+    <string name="create_workout">Create workout</string>
+    <string name="delete_workout">Delete workout</string>
+    <string name="workouts">Workouts</string>
+    <string name="x">X</string>
 
 </resources>

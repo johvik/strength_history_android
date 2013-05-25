@@ -40,7 +40,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				}
 			}, true);
 	private ExerciseAdapter exerciseAdapter = new ExerciseAdapter(this,
-			exerciseList);
+			exerciseList, false);
 	private ExerciseEditFragment exerciseEditFragment;
 	private TextView textSelectExerciseToEdit;
 	private FrameLayout frameLayoutExerciseEditFragment;
@@ -249,6 +249,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	public void onExerciseCreateClick() {
 		listViewExercises.setItemChecked(mCurCheckPosition, false);
 		mCurCheckPosition = -1;
+		// TODO Default muscle group
 		starteEditExercise(new Exercise("", MuscleGroup.ARMS));
 	}
 

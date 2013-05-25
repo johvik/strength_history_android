@@ -1,4 +1,4 @@
-package strength.history.ui.exercise;
+package strength.history.ui.workout;
 
 import strength.history.R;
 import android.os.Bundle;
@@ -8,17 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class ExerciseListFragment extends Fragment {
+public class WorkoutListFragment extends Fragment {
 	public interface Listener {
-		public void onExerciseItemClick(int position);
+		public void onWorkoutItemClick(int position);
 
-		public void onExerciseCreateClick();
+		public void onWorkoutCreateClick();
 	}
 
-	private ListView listViewExercises;
+	private ListView listViewWorkouts;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -27,11 +27,11 @@ public class ExerciseListFragment extends Fragment {
 		FragmentActivity fa = getActivity();
 		if (fa instanceof Listener) {
 			final Listener l = (Listener) fa;
-			listViewExercises.setOnItemClickListener(new OnItemClickListener() {
+			listViewWorkouts.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					l.onExerciseItemClick(position);
+					l.onWorkoutItemClick(position);
 				}
 			});
 		} else {
@@ -42,12 +42,11 @@ public class ExerciseListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_exercise_list,
-				container, false);
-		listViewExercises = (ListView) view
-				.findViewById(R.id.listViewExercises);
-		listViewExercises.setEmptyView(view
-				.findViewById(R.id.textViewEmptyList));
+		View view = inflater.inflate(R.layout.fragment_workout_list, container,
+				false);
+		listViewWorkouts = (ListView) view.findViewById(R.id.listViewWorkouts);
+		listViewWorkouts
+				.setEmptyView(view.findViewById(R.id.textViewEmptyList));
 		return view;
 	}
 }

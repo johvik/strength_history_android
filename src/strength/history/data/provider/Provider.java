@@ -23,6 +23,8 @@ public abstract class Provider<E extends SyncBase<E>> {
 	protected final HashSet<E> data = new HashSet<E>();
 	protected boolean loaded = false;
 
+	// TODO Set query and edit in the same interface again
+
 	@SuppressWarnings("static-method")
 	protected int getDeleteArg() {
 		return Request.DELETE.ordinal();

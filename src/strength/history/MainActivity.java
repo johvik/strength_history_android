@@ -19,7 +19,7 @@ import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleActivity;
-import strength.history.ui.exercise.ExercisesActivity;
+import strength.history.ui.workout.WorkoutsActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +53,7 @@ public class MainActivity extends CustomTitleActivity implements
 		mDataProvider = DataListener.add(this);
 		radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);
 
-		Intent i = new Intent(this, ExercisesActivity.class);
+		Intent i = new Intent(this, WorkoutsActivity.class);
 		startActivity(i);
 		setTitle(R.string.app_name);
 		mDataProvider.latestWeight(getApplicationContext());

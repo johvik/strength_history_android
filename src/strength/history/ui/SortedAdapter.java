@@ -13,10 +13,12 @@ import android.widget.TextView;
 public abstract class SortedAdapter<E> extends BaseAdapter {
 	protected final Context context;
 	protected final SortedList<E> list;
+	protected boolean spinner;
 
-	public SortedAdapter(Context context, SortedList<E> list) {
+	public SortedAdapter(Context context, SortedList<E> list, boolean spinner) {
 		this.context = context;
 		this.list = list;
+		this.spinner = spinner;
 	}
 
 	@Override
@@ -59,9 +61,34 @@ public abstract class SortedAdapter<E> extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TextView text1;
 		if (convertView == null) {
+			if (spinner) {
+				convertView = LayoutInflater.from(context).inflate(
+						android.R.layout.simple_spinner_item, parent, false);
+				text1 = (TextView) convertView.findViewById(android.R.id.text1);
+			} else {
+				convertView = LayoutInflater.from(context).inflate(
+						R.layout.list_item_single, parent, false);
+				text1 = (TextView) convertView.findViewById(R.id.text1);
+			}
+			convertView.setTag(new ViewHolder(text1));
+		} else {
+			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+			text1 = viewHolder.text1;
+		}
+
+		E e = list.get(position);
+		text1.setText(toString(e));
+		return convertView;
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		TextView text1;
+		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.list_item_single, parent, false);
-			text1 = (TextView) convertView.findViewById(R.id.text1);
+					android.R.layout.simple_spinner_dropdown_item, parent,
+					false);
+			text1 = (TextView) convertView.findViewById(android.R.id.text1);
 			convertView.setTag(new ViewHolder(text1));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
