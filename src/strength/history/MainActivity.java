@@ -19,6 +19,7 @@ import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleActivity;
+import strength.history.ui.exercise.ExercisesActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

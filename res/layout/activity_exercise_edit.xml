@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/fragmentExerciseEdit"
-        android:name="strength.history.ui.ExerciseEditFragment"
+        android:name="strength.history.ui.exercise.ExerciseEditFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_exercise_edit" />

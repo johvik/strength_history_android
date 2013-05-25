@@ -1,17 +1,15 @@
-package strength.history;
+package strength.history.ui.exercise;
 
 import java.util.Collection;
 import java.util.Comparator;
 
+import strength.history.R;
 import strength.history.data.DataListener;
 import strength.history.data.DataProvider;
 import strength.history.data.SortedList;
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Exercise.MuscleGroup;
-import strength.history.ui.ExerciseAdapter;
-import strength.history.ui.ExerciseEditFragment;
-import strength.history.ui.ExerciseListFragment;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

@@ -1,4 +1,4 @@
-package strength.history.ui;
+package strength.history.ui.exercise;
 
 import strength.history.R;
 import strength.history.data.structure.Exercise;

@@ -1,7 +1,7 @@
-package strength.history;
+package strength.history.ui.exercise;
 
+import strength.history.R;
 import strength.history.data.structure.Exercise;
-import strength.history.ui.ExerciseEditFragment;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import android.os.Bundle;
 import android.view.View;

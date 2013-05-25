@@ -34,8 +34,8 @@
             android:name="strength.history.data.service.local.LocalWorkoutDataService"
             android:exported="false" />
 
-        <activity android:name="strength.history.ExercisesActivity" />
-        <activity android:name="strength.history.ExerciseEditActivity" />
+        <activity android:name="strength.history.ui.exercise.ExercisesActivity" />
+        <activity android:name="strength.history.ui.exercise.ExerciseEditActivity" />
     </application>
 
 </manifest>

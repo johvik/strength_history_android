@@ -1,8 +1,9 @@
-package strength.history.ui;
+package strength.history.ui.exercise;
 
 import strength.history.R;
 import strength.history.data.SortedList;
 import strength.history.data.structure.Exercise;
+import strength.history.ui.SortedAdapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

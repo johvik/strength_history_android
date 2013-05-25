@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/fragmentExerciseList"
-        android:name="strength.history.ui.ExerciseListFragment"
+        android:name="strength.history.ui.exercise.ExerciseListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/ui_half_space"
@@ -39,7 +39,7 @@
 
         <fragment
             android:id="@+id/fragmentExerciseEdit"
-            android:name="strength.history.ui.ExerciseEditFragment"
+            android:name="strength.history.ui.exercise.ExerciseEditFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_exercise_edit" />
