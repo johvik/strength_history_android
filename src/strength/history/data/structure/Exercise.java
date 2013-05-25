@@ -1,5 +1,8 @@
 package strength.history.data.structure;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,10 +11,20 @@ import android.os.Parcelable;
  */
 public class Exercise extends SyncBase<Exercise> {
 	public enum MuscleGroup {
-		// important order, must be the same as the spinner in UI
+		// important order
+		// a change will change the type of all existing exercises
 		ARMS, CHEST, BACK, SHOULDERS, ABS, LEGS;
 
+		public static final MuscleGroup[] SORTED_VALUES = MuscleGroup.values();
 		private static final MuscleGroup[] VALUES = MuscleGroup.values();
+		static {
+			Arrays.sort(SORTED_VALUES, new Comparator<MuscleGroup>() {
+				@Override
+				public int compare(MuscleGroup lhs, MuscleGroup rhs) {
+					return lhs.toString().compareTo(rhs.toString());
+				}
+			});
+		}
 
 		/**
 		 * Converts a number to a enum
@@ -22,6 +35,26 @@ public class Exercise extends SyncBase<Exercise> {
 		 */
 		public static MuscleGroup parse(int i) {
 			return VALUES[i % VALUES.length];
+		}
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case ABS:
+				return "Abs";
+			case ARMS:
+				return "Arms";
+			case BACK:
+				return "Back";
+			case CHEST:
+				return "Chest";
+			case LEGS:
+				return "Legs";
+			case SHOULDERS:
+				return "Shoulders";
+			default:
+				return super.toString();
+			}
 		}
 	}
 

@@ -64,7 +64,6 @@
             android:id="@+id/spinnerMuscleGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/muscle_groups"
             android:prompt="@string/muscle_group"
             tools:listitem="@android:layout/simple_spinner_item" />
     </LinearLayout>
