@@ -169,12 +169,28 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	}
 
 	/**
+	 * Gets the latest non empty exercise data
+	 * 
+	 * @param exerciseQueryId
+	 * @return null if nothing was found
+	 */
+	@SuppressWarnings("static-method")
+	public ExerciseData latestExerciseData(long exerciseQueryId) {
+		ExerciseData res = null;
+		if (exerciseQueryId == -1) {
+			return res;
+		}
+		// TODO Fix!
+		return res;
+	}
+
+	/**
 	 * 
 	 * @param workoutQueryId
 	 * @return null if nothing was found
 	 */
 	@SuppressWarnings("static-method")
-	public WorkoutData latest(long workoutQueryId) {
+	public WorkoutData latestWorkoutData(long workoutQueryId) {
 		WorkoutData res = null;
 		if (workoutQueryId == -1) {
 			return res;
@@ -362,5 +378,4 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 				+ " REAL NOT NULL, " + Entry.ExerciseData.SetData.REPETITIONS
 				+ " INTEGER NOT NULL);");
 	}
-
 }

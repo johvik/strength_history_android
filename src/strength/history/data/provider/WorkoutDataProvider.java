@@ -5,16 +5,16 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Messenger;
 import android.util.Log;
 
 import strength.history.data.provider.WorkoutDataProvider.Events.Edit;
-import strength.history.data.provider.WorkoutDataProvider.Events.Latest;
+import strength.history.data.provider.WorkoutDataProvider.Events.LatestExerciseData;
+import strength.history.data.provider.WorkoutDataProvider.Events.LatestWorkoutData;
 import strength.history.data.provider.WorkoutDataProvider.Events.Query;
-import strength.history.data.service.ServiceBase;
 import strength.history.data.service.local.LocalWorkoutDataService;
-import strength.history.data.service.local.LocalWeightService.Request;
+import strength.history.data.service.local.LocalWorkoutDataService.Request;
+import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.WorkoutData;
 
 public class WorkoutDataProvider extends Provider<WorkoutData> {
@@ -28,7 +28,11 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 					boolean ok);
 		}
 
-		public interface Latest {
+		public interface LatestExerciseData {
+			public void latestCallback(ExerciseData e, boolean ok);
+		}
+
+		public interface LatestWorkoutData {
 			public void latestCallback(WorkoutData e, boolean ok);
 		}
 
@@ -43,6 +47,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 		public void insert(WorkoutData e, Context context);
 
+		public void latestExerciseData(long exerciseId, Context context);
+
 		public void latestWorkoutData(long workoutId, Context context);
 
 		public void queryWorkoutData(Context context);
@@ -53,7 +59,8 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	}
 
 	private LinkedHashSet<Edit> editListeners = new LinkedHashSet<Edit>();
-	private LinkedHashSet<Latest> latestListeners = new LinkedHashSet<Latest>();
+	private LinkedHashSet<LatestExerciseData> latestExerciseDataListeners = new LinkedHashSet<LatestExerciseData>();
+	private LinkedHashSet<LatestWorkoutData> latestWorkoutDataListeners = new LinkedHashSet<LatestWorkoutData>();
 	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
 	@Override
@@ -61,8 +68,11 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		if (object instanceof Edit) {
 			editListeners.add((Edit) object);
 		}
-		if (object instanceof Latest) {
-			latestListeners.add((Latest) object);
+		if (object instanceof LatestExerciseData) {
+			latestExerciseDataListeners.add((LatestExerciseData) object);
+		}
+		if (object instanceof LatestWorkoutData) {
+			latestWorkoutDataListeners.add((LatestWorkoutData) object);
 		}
 		if (object instanceof Query) {
 			Query e = (Query) object;
@@ -76,8 +86,11 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		if (object instanceof Edit) {
 			editListeners.remove(object);
 		}
-		if (object instanceof Latest) {
-			latestListeners.remove(object);
+		if (object instanceof LatestExerciseData) {
+			latestExerciseDataListeners.remove(object);
+		}
+		if (object instanceof LatestWorkoutData) {
+			latestWorkoutDataListeners.remove(object);
 		}
 		if (object instanceof Query) {
 			queryListeners.remove(object);
@@ -122,23 +135,30 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		}
 	}
 
-	private void latestCallback(WorkoutData e, boolean ok) {
-		for (Latest t : latestListeners) {
+	private void latestCallback(ExerciseData e, boolean ok) {
+		for (LatestExerciseData t : latestExerciseDataListeners) {
 			t.latestCallback(e, ok);
 		}
 	}
 
-	public final void latest(long workoutId, Context context,
+	private void latestCallback(WorkoutData e, boolean ok) {
+		for (LatestWorkoutData t : latestWorkoutDataListeners) {
+			t.latestCallback(e, ok);
+		}
+	}
+
+	public final void latestExerciseData(long exerciseId, Context context,
 			Messenger messenger) {
 		// TODO Cache?
-		if (context != null) {
-			// Local
-			Intent intent = new Intent(context, getLocalServiceClass());
-			intent.putExtra(ServiceBase.REQUEST, Request.LATEST.ordinal());
-			intent.putExtra(ServiceBase.MESSENGER, messenger);
-			intent.putExtra(getDataFieldName(), workoutId);
-			context.startService(intent);
-		}
+		runLocalService(exerciseId, context, messenger,
+				Request.LATEST_EXERCISE_DATA.ordinal());
+	}
+
+	public final void latestWorkoutData(long workoutId, Context context,
+			Messenger messenger) {
+		// TODO Cache?
+		runLocalService(workoutId, context, messenger,
+				Request.LATEST_WORKOUT_DATA.ordinal());
 	}
 
 	@Override
@@ -205,10 +225,20 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			insertCallback(e, ok);
 			break;
 		}
-		case LATEST: {
+		case LATEST_EXERCISE_DATA: {
+			ExerciseData e = (ExerciseData) object;
+			if (!ok) {
+				Log.e("WorkoutDataProvider",
+						"failed to get latest exercisedata " + e);
+			}
+			latestCallback(e, ok);
+			break;
+		}
+		case LATEST_WORKOUT_DATA: {
 			WorkoutData e = (WorkoutData) object;
 			if (!ok) {
-				Log.e("WorkoutDataProvider", "failed to get latest " + e);
+				Log.e("WorkoutDataProvider",
+						"failed to get latest workoutdata " + e);
 			}
 			latestCallback(e, ok);
 			break;

@@ -169,8 +169,14 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
+	public void latestExerciseData(long exerciseId, Context context) {
+		mWorkoutDataProvider
+				.latestExerciseData(exerciseId, context, mMessenger);
+	}
+
+	@Override
 	public void latestWorkoutData(long workoutId, Context context) {
-		mWorkoutDataProvider.latest(workoutId, context, mMessenger);
+		mWorkoutDataProvider.latestWorkoutData(workoutId, context, mMessenger);
 	}
 
 	@Override

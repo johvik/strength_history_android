@@ -240,4 +240,16 @@ public abstract class Provider<E extends SyncBase<E>> {
 			context.startService(intent);
 		}
 	}
+
+	protected final void runLocalService(long queryId, Context context,
+			Messenger messenger, int request) {
+		if (context != null) {
+			// Local
+			Intent intent = new Intent(context, getLocalServiceClass());
+			intent.putExtra(ServiceBase.REQUEST, request);
+			intent.putExtra(ServiceBase.MESSENGER, messenger);
+			intent.putExtra(getDataFieldName(), queryId);
+			context.startService(intent);
+		}
+	}
 }

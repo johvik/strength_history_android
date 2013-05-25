@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import strength.history.data.db.WorkoutDataDBHelper;
 import strength.history.data.service.LocalServiceBase;
+import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.WorkoutData;
 
 public class LocalWorkoutDataService extends
@@ -24,9 +25,13 @@ public class LocalWorkoutDataService extends
 		 */
 		INSERT,
 		/**
-		 * Gets the latest entry
+		 * Gets the latest non empty exercise data entry
 		 */
-		LATEST,
+		LATEST_EXERCISE_DATA,
+		/**
+		 * Gets the latest workout data entry
+		 */
+		LATEST_WORKOUT_DATA,
 		/**
 		 * Recreates the DB, all data is lost
 		 */
@@ -107,13 +112,30 @@ public class LocalWorkoutDataService extends
 		return Request.UPDATE.ordinal();
 	}
 
-	protected void latest(long workoutId, Messenger messenger) {
+	protected void latestExerciseData(long exerciseId, Messenger messenger) {
 		WorkoutDataDBHelper db = getDB();
 		Message msg = Message.obtain();
 		msg.arg1 = getArg1();
-		msg.arg2 = Request.LATEST.ordinal();
+		msg.arg2 = Request.LATEST_EXERCISE_DATA.ordinal();
 
-		WorkoutData w = db.latest(workoutId);
+		ExerciseData e = db.latestExerciseData(exerciseId);
+		msg.what = e != null ? 1 : 0;
+		msg.obj = e;
+
+		try {
+			messenger.send(msg);
+		} catch (RemoteException ex) {
+			Log.e("LocalWorkoutDataService", "Failed to send message");
+		}
+	}
+
+	protected void latestWorkoutData(long workoutId, Messenger messenger) {
+		WorkoutDataDBHelper db = getDB();
+		Message msg = Message.obtain();
+		msg.arg1 = getArg1();
+		msg.arg2 = Request.LATEST_WORKOUT_DATA.ordinal();
+
+		WorkoutData w = db.latestWorkoutData(workoutId);
 		msg.what = w != null ? 1 : 0;
 		msg.obj = w;
 
@@ -145,8 +167,13 @@ public class LocalWorkoutDataService extends
 							.getParcelableExtra(getIntentName()),
 							messenger);
 					break;
-				case LATEST:
-					latest(intent.getLongExtra(getIntentName(), -1), messenger);
+				case LATEST_EXERCISE_DATA:
+					latestExerciseData(
+							intent.getLongExtra(getIntentName(), -1), messenger);
+					break;
+				case LATEST_WORKOUT_DATA:
+					latestWorkoutData(intent.getLongExtra(getIntentName(), -1),
+							messenger);
 					break;
 				case PURGE:
 					purge(messenger);

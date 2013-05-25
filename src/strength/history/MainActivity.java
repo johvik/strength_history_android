@@ -35,7 +35,9 @@ public class MainActivity extends CustomTitleActivity implements
 		WeightProvider.Events.Edit, WeightProvider.Events.Latest,
 		WeightProvider.Events.Query, WorkoutProvider.Events.Edit,
 		WorkoutProvider.Events.Query, WorkoutDataProvider.Events.Edit,
-		WorkoutDataProvider.Events.Latest, WorkoutDataProvider.Events.Query {
+		WorkoutDataProvider.Events.LatestExerciseData,
+		WorkoutDataProvider.Events.LatestWorkoutData,
+		WorkoutDataProvider.Events.Query {
 	private DataProvider mDataProvider = null;
 	private TreeSet<Exercise> mExercises = new TreeSet<Exercise>();
 	private TreeSet<Weight> mWeights = new TreeSet<Weight>();
@@ -55,6 +57,7 @@ public class MainActivity extends CustomTitleActivity implements
 		setTitle(R.string.app_name);
 		mDataProvider.latestWeight(getApplicationContext());
 		mDataProvider.latestWorkoutData(1, getApplicationContext());
+		mDataProvider.latestExerciseData(1, getApplicationContext());
 	}
 
 	@Override
@@ -266,7 +269,7 @@ public class MainActivity extends CustomTitleActivity implements
 
 	@Override
 	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
-		Log.d("MainActivity", "exercise data update=" + done);
+		Log.d("MainActivity", "exercise data query=" + done);
 		Log.d("MainActivity", e.toString());
 		mExercises.addAll(e);
 	}
@@ -291,7 +294,7 @@ public class MainActivity extends CustomTitleActivity implements
 
 	@Override
 	public void workoutDataQueryCallback(Collection<WorkoutData> e, boolean done) {
-		Log.d("MainActivity", "workoutdata data update=" + done);
+		Log.d("MainActivity", "workoutdata data query=" + done);
 		Log.d("MainActivity", e.toString());
 		mWorkoutData.addAll(e);
 	}
@@ -316,7 +319,7 @@ public class MainActivity extends CustomTitleActivity implements
 
 	@Override
 	public void workoutQueryCallback(Collection<Workout> e, boolean done) {
-		Log.d("MainActivity", "workout data update=" + done);
+		Log.d("MainActivity", "workout data query=" + done);
 		Log.d("MainActivity", e.toString());
 		mWorkouts.addAll(e);
 	}
@@ -341,7 +344,7 @@ public class MainActivity extends CustomTitleActivity implements
 
 	@Override
 	public void weightQueryCallback(Collection<Weight> e, boolean done) {
-		Log.d("MainActivity", "weight data update=" + done);
+		Log.d("MainActivity", "weight data query=" + done);
 		Log.d("MainActivity", e.toString());
 		mWeights.addAll(e);
 	}
@@ -350,6 +353,15 @@ public class MainActivity extends CustomTitleActivity implements
 	public void updateCallback(Weight old, Weight e, boolean ok) {
 		// TODO Auto-generated method stub
 		mWeights.clear();
+	}
+
+	@Override
+	public void latestCallback(ExerciseData e, boolean ok) {
+		// TODO Auto-generated method stub
+		Log.d("MainActivity", "exercisedata latest=" + ok);
+		if (e != null) {
+			Log.d("MainActivity", e.toString());
+		}
 	}
 
 	@Override
