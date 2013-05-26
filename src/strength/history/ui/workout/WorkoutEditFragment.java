@@ -51,6 +51,7 @@ public class WorkoutEditFragment extends Fragment implements
 				}
 			}, true);
 	private Listener masterActivity;
+	private boolean loaded = false;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -67,7 +68,8 @@ public class WorkoutEditFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataProvider = DataListener.add(this);
-		masterActivity.setLoaded(false);
+		loaded = false;
+		masterActivity.setLoaded(loaded);
 		dataProvider.queryExercise(getActivity().getApplicationContext());
 	}
 
@@ -122,16 +124,30 @@ public class WorkoutEditFragment extends Fragment implements
 		if (mWorkout != null) {
 			editTextName.setText(mWorkout.getName());
 			linearLayoutSpinners.removeAllViews();
-			for (Long l : mWorkout) {
+			for (int i = 0, j = mWorkout.size(); i < j; i++) {
 				ExercisePicker p = new ExercisePicker(getActivity());
 				p.setAdapter(exerciseAdapter);
+				linearLayoutSpinners.addView(p);
+			}
+			if (loaded) {
+				updateSelection();
+			}
+		}
+	}
+
+	private void updateSelection() {
+		if (mWorkout != null) {
+			for (int i = 0, j = mWorkout.size(); i < j; i++) {
+				long id = mWorkout.get(i);
+				ExercisePicker p = (ExercisePicker) linearLayoutSpinners
+						.getChildAt(i);
+				p.setSelection(-1);
 				for (Exercise ex : exerciseList) {
-					if (ex.getId() == l) {
+					if (ex.getId() == id) {
 						p.setSelection(exerciseList.indexOf(ex));
 						break;
 					}
 				}
-				linearLayoutSpinners.addView(p);
 			}
 		}
 	}
@@ -150,24 +166,19 @@ public class WorkoutEditFragment extends Fragment implements
 
 	@Override
 	public void deleteCallback(Exercise e, boolean ok) {
-		if (!ok) {
-			exerciseList.add(e);
+		if (ok) {
+			exerciseList.remove(e);
 			exerciseAdapter.notifyDataSetChanged();
+			updateSelection();
 		}
 	}
 
 	@Override
 	public void insertCallback(Exercise e, boolean ok) {
-		if (!ok) {
-			exerciseList.remove(e);
-			exerciseAdapter.notifyDataSetChanged();
-		} else {
-			// update the id...
-			long id = e.getId();
-			e.setId(-1);
-			exerciseList.remove(e);
-			e.setId(id);
+		if (ok) {
 			exerciseList.add(e);
+			exerciseAdapter.notifyDataSetChanged();
+			updateSelection();
 		}
 	}
 
@@ -176,18 +187,21 @@ public class WorkoutEditFragment extends Fragment implements
 		exerciseList.addAll(e);
 		exerciseAdapter.notifyDataSetChanged();
 		if (done) {
-			masterActivity.setLoaded(true);
+			loaded = true;
+			masterActivity.setLoaded(loaded);
+			updateSelection();
 		}
 	}
 
 	@Override
 	public void updateCallback(Exercise old, Exercise e, boolean ok) {
-		if (!ok) {
+		if (ok) {
 			if (old != null) {
-				exerciseList.remove(e);
-				exerciseList.add(old);
-				exerciseAdapter.notifyDataSetChanged();
+				exerciseList.remove(old);
 			}
+			exerciseList.add(e);
+			exerciseAdapter.notifyDataSetChanged();
+			updateSelection();
 		}
 	}
 }
