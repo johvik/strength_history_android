@@ -98,7 +98,6 @@ public abstract class CustomTitleFragmentActivity extends FragmentActivity {
 		ImageButton b = (ImageButton) getLayoutInflater().inflate(
 				R.layout.menu_item, linearLayoutTitleRight, false);
 		b.setImageResource(resId);
-		b.setBackgroundResource(R.drawable.menu_item);
 		b.setOnClickListener(l);
 		b.setOnLongClickListener(new OnLongClickListener() {
 			@Override

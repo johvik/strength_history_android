@@ -3,7 +3,7 @@
 
     <color name="list_item_checked">#CCCCCC</color>
     <color name="background_orange">#FF8800</color>
-    <color name="menu_item_focused">#FFD199</color>
-    <color name="menu_item_pressed">#FFBB33</color>
+    <color name="menu_item_focused">#FFBB33</color>
+    <color name="menu_item_pressed">#FFD199</color>
 
 </resources>
