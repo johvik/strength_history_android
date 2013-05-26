@@ -1,6 +1,7 @@
 package strength.history.ui.custom;
 
 import strength.history.R;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
@@ -25,7 +26,9 @@ public abstract class CustomTitleFragmentActivity extends FragmentActivity {
 	private LinearLayout linearLayoutTitleRight = null;
 	private ImageView imageViewTitleBack = null;
 	private RelativeLayout relativeLayoutTitleIcon = null;
+	private Toast toast = null;
 
+	@SuppressLint("ShowToast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +41,14 @@ public abstract class CustomTitleFragmentActivity extends FragmentActivity {
 		linearLayoutTitleRight = (LinearLayout) findViewById(R.id.linearLayoutTitleRight);
 		imageViewTitleBack = (ImageView) findViewById(R.id.imageViewTitleBack);
 		relativeLayoutTitleIcon = (RelativeLayout) findViewById(R.id.relativeLayoutTitleIcon);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (toast != null) {
+			toast.cancel();
+		}
 	}
 
 	/**
@@ -92,15 +103,18 @@ public abstract class CustomTitleFragmentActivity extends FragmentActivity {
 		b.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Toast t = Toast.makeText(CustomTitleFragmentActivity.this,
+				if (toast != null) {
+					toast.cancel();
+				}
+				toast = Toast.makeText(CustomTitleFragmentActivity.this,
 						textResId, Toast.LENGTH_SHORT);
 				int[] location = new int[2];
 				v.getLocationOnScreen(location);
 				int x = getWindowManager().getDefaultDisplay().getWidth()
 						- location[0] - v.getWidth() / 2;
 				int y = location[1] + v.getHeight() / 2;
-				t.setGravity(Gravity.RIGHT | Gravity.TOP, x, y);
-				t.show();
+				toast.setGravity(Gravity.RIGHT | Gravity.TOP, x, y);
+				toast.show();
 				return true;
 			}
 		});

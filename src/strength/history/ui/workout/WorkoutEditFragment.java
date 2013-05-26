@@ -12,6 +12,7 @@ import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Workout;
 import strength.history.ui.custom.ExercisePicker;
 import strength.history.ui.exercise.ExerciseAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class WorkoutEditFragment extends Fragment implements
 		ExerciseProvider.Events.Edit, ExerciseProvider.Events.Query {
@@ -52,7 +54,9 @@ public class WorkoutEditFragment extends Fragment implements
 			}, true);
 	private Listener masterActivity;
 	private boolean loaded = false;
+	private Toast toast;
 
+	@SuppressLint("ShowToast")
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -62,6 +66,8 @@ public class WorkoutEditFragment extends Fragment implements
 			throw new ClassCastException();
 		}
 		exerciseAdapter = new ExerciseAdapter(activity, exerciseList, true);
+		toast = Toast.makeText(getActivity(), R.string.no_exercises_found,
+				Toast.LENGTH_SHORT);
 	}
 
 	@Override
@@ -85,9 +91,13 @@ public class WorkoutEditFragment extends Fragment implements
 		addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ExercisePicker p = new ExercisePicker(getActivity());
-				p.setAdapter(exerciseAdapter);
-				linearLayoutSpinners.addView(p);
+				if (exerciseList.isEmpty()) {
+					toast.show();
+				} else {
+					ExercisePicker p = new ExercisePicker(getActivity());
+					p.setAdapter(exerciseAdapter);
+					linearLayoutSpinners.addView(p);
+				}
 			}
 		});
 	}
@@ -96,6 +106,7 @@ public class WorkoutEditFragment extends Fragment implements
 	public void onPause() {
 		super.onPause();
 		save();
+		toast.cancel();
 	}
 
 	private void save() {
