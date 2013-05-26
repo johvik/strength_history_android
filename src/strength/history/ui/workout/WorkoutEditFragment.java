@@ -96,6 +96,7 @@ public class WorkoutEditFragment extends Fragment implements
 				} else {
 					ExercisePicker p = new ExercisePicker(getActivity());
 					p.setAdapter(exerciseAdapter);
+					p.performClick();
 					linearLayoutSpinners.addView(p);
 				}
 			}

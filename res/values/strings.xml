@@ -39,5 +39,7 @@
     <string name="save_exercise">Save exercise</string>
     <string name="save_workout">Save workout</string>
     <string name="no_exercises_found">No exercises found.</string>
+    <string name="select_exercise">Select exercise</string>
+    <string name="select_muscle_group">Select muscle group</string>
 
 </resources>

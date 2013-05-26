@@ -19,6 +19,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/buttonDelete"
+        android:prompt="@string/select_exercise"
         tools:listitem="@android:layout/simple_spinner_item" />
 
 </RelativeLayout>

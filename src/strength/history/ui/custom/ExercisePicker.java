@@ -53,4 +53,9 @@ public class ExercisePicker extends FrameLayout {
 	public int getSelectedItemPosition() {
 		return spinner.getSelectedItemPosition();
 	}
+
+	@Override
+	public boolean performClick() {
+		return spinner.performClick();
+	}
 }
