@@ -49,6 +49,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 	private Workout mWorkout = null;
 	private DataProvider dataProvider = null;
 	private AlertDialog alertDialogDeleteConfirm = null;
+	private View viewMenuSave = null;
 	private View viewMenuDelete = null;
 	private boolean fragmentLoaded = false;
 	private boolean workoutsLoaded = false;
@@ -92,6 +93,13 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 						onWorkoutCreateClick();
 					}
 				}));
+		viewMenuSave = createMenuItem(R.drawable.ic_action_save,
+				R.string.save_workout, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						saveCallback(workoutEditFragment.getWorkout());
+					}
+				});
 		viewMenuDelete = createMenuItem(R.drawable.ic_action_delete,
 				R.string.delete_workout, new OnClickListener() {
 					@Override
@@ -155,7 +163,9 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 				frameLayoutWorkoutEditFragment.setVisibility(View.VISIBLE);
 				workoutEditFragment.setWorkout(mWorkout);
 				removeMenuItem(viewMenuDelete);
+				removeMenuItem(viewMenuSave);
 				addMenuItem(viewMenuDelete, 0);
+				addMenuItem(viewMenuSave, 0);
 				setTitle(R.string.edit_workout);
 			} else {
 				Intent intent = new Intent(this, WorkoutEditActivity.class);
@@ -179,7 +189,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 				saveCallback((Workout) data
 						.getParcelableExtra(WorkoutEditActivity.WORKOUT));
 			} else if (resultCode == RESULT_CANCELED) {
-				cancelCallback();
+				reset();
 			} else if (resultCode == WorkoutEditActivity.RESULT_ORIENTATION) {
 				mWorkout = data.getParcelableExtra(WorkoutEditActivity.WORKOUT);
 				continueEditWorkout();
@@ -197,6 +207,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 			textSelectWorkoutToEdit.setVisibility(View.VISIBLE);
 			frameLayoutWorkoutEditFragment.setVisibility(View.GONE);
 			removeMenuItem(viewMenuDelete);
+			removeMenuItem(viewMenuSave);
 			setTitle(R.string.workouts);
 		}
 		mCurCheckPosition = -1;
@@ -221,11 +232,6 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 				dataProvider.update(e, getApplicationContext());
 			}
 		}
-		reset();
-	}
-
-	@Override
-	public void cancelCallback() {
 		reset();
 	}
 

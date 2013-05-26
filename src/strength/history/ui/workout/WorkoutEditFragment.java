@@ -28,15 +28,11 @@ public class WorkoutEditFragment extends Fragment implements
 	public interface Listener {
 		public void saveCallback(Workout e);
 
-		public void cancelCallback();
-
 		public void deleteCallback();
 
 		public void setLoaded(boolean loaded);
 	}
 
-	private Button saveButton;
-	private Button cancelButton;
 	private Button addButton;
 	private EditText editTextName;
 	private LinearLayout linearLayoutSpinners;
@@ -84,19 +80,6 @@ public class WorkoutEditFragment extends Fragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		saveButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				save();
-				masterActivity.saveCallback(mWorkout);
-			}
-		});
-		cancelButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				masterActivity.cancelCallback();
-			}
-		});
 		addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -159,8 +142,6 @@ public class WorkoutEditFragment extends Fragment implements
 		View view = inflater.inflate(R.layout.fragment_workout_edit, container,
 				false);
 		editTextName = (EditText) view.findViewById(R.id.editTextName);
-		cancelButton = (Button) view.findViewById(R.id.buttonCancel);
-		saveButton = (Button) view.findViewById(R.id.buttonSave);
 		addButton = (Button) view.findViewById(R.id.buttonAdd);
 		linearLayoutSpinners = (LinearLayout) view
 				.findViewById(R.id.linearLayoutSpinners);

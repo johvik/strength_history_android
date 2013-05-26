@@ -50,6 +50,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	private Exercise mExercise = null;
 	private DataProvider dataProvider = null;
 	private AlertDialog alertDialogDeleteConfirm = null;
+	private View viewMenuSave = null;
 	private View viewMenuDelete = null;
 
 	@Override
@@ -91,6 +92,13 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 						onExerciseCreateClick();
 					}
 				}));
+		viewMenuSave = createMenuItem(R.drawable.ic_action_save,
+				R.string.save_exercise, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						saveCallback(exerciseEditFragment.getExercise());
+					}
+				});
 		viewMenuDelete = createMenuItem(R.drawable.ic_action_delete,
 				R.string.delete_exercise, new OnClickListener() {
 					@Override
@@ -154,7 +162,9 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				frameLayoutExerciseEditFragment.setVisibility(View.VISIBLE);
 				exerciseEditFragment.setExercise(mExercise);
 				removeMenuItem(viewMenuDelete);
+				removeMenuItem(viewMenuSave);
 				addMenuItem(viewMenuDelete, 0);
+				addMenuItem(viewMenuSave, 0);
 				setTitle(R.string.edit_exercise);
 			} else {
 				Intent intent = new Intent(this, ExerciseEditActivity.class);
@@ -178,7 +188,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				saveCallback((Exercise) data
 						.getParcelableExtra(ExerciseEditActivity.EXERCISE));
 			} else if (resultCode == RESULT_CANCELED) {
-				cancelCallback();
+				reset();
 			} else if (resultCode == ExerciseEditActivity.RESULT_ORIENTATION) {
 				mExercise = data
 						.getParcelableExtra(ExerciseEditActivity.EXERCISE);
@@ -197,6 +207,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 			textSelectExerciseToEdit.setVisibility(View.VISIBLE);
 			frameLayoutExerciseEditFragment.setVisibility(View.GONE);
 			removeMenuItem(viewMenuDelete);
+			removeMenuItem(viewMenuSave);
 			setTitle(R.string.exercises);
 		}
 		mCurCheckPosition = -1;
@@ -221,11 +232,6 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				dataProvider.update(e, getApplicationContext());
 			}
 		}
-		reset();
-	}
-
-	@Override
-	public void cancelCallback() {
 		reset();
 	}
 

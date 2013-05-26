@@ -56,6 +56,13 @@ public class WorkoutEditActivity extends CustomTitleFragmentActivity implements
 		}
 
 		setTitle(R.string.edit_workout);
+		addMenuItem(createMenuItem(R.drawable.ic_action_save,
+				R.string.save_workout, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						saveCallback(workoutEditFragment.getWorkout());
+					}
+				}));
 		addMenuItem(createMenuItem(R.drawable.ic_action_delete,
 				R.string.delete_workout, new OnClickListener() {
 					@Override
@@ -97,12 +104,6 @@ public class WorkoutEditActivity extends CustomTitleFragmentActivity implements
 		Intent intent = new Intent();
 		intent.putExtra(WORKOUT, e);
 		setResult(RESULT_OK, intent);
-		finish();
-	}
-
-	@Override
-	public void cancelCallback() {
-		setResult(RESULT_CANCELED);
 		finish();
 	}
 
