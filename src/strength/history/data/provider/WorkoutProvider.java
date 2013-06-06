@@ -36,9 +36,7 @@ public class WorkoutProvider extends Provider<Workout> {
 	@Override
 	public void tryAddListener(Object object) {
 		if (object instanceof Events) {
-			Events e = (Events) object;
-			e.workoutQueryCallback(data, false); // Initial values
-			eventListeners.add(e);
+			eventListeners.add((Events) object);
 		}
 	}
 
