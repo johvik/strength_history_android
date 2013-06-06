@@ -2,6 +2,7 @@ package strength.history.data.structure;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,10 +15,10 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
 
 	public Workout(String name) {
-		this(-1, Sync.NEW, name);
+		this(-1, new Date().getTime(), name);
 	}
 
-	public Workout(long id, int sync, String name) {
+	public Workout(long id, long sync, String name) {
 		super(id, sync);
 		this.name = name;
 	}

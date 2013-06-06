@@ -17,10 +17,10 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	private ArrayList<ExerciseData> exercises = new ArrayList<ExerciseData>();
 
 	public WorkoutData(long time, long workout_id) {
-		this(-1, Sync.NEW, time, workout_id);
+		this(-1, new Date().getTime(), time, workout_id);
 	}
 
-	public WorkoutData(long id, int sync, long time, long workout_id) {
+	public WorkoutData(long id, long sync, long time, long workout_id) {
 		super(id, sync);
 		this.time = time;
 		this.workout_id = workout_id;

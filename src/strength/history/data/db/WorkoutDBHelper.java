@@ -128,7 +128,7 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
 			Workout w = new Workout(id, sync, name);
 			// Load bindings

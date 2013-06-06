@@ -5,7 +5,7 @@ package strength.history.data.db.entry;
  */
 public interface SyncColumns {
 	/**
-	 * Type: INTEGER (int)
+	 * Type: INTEGER (long)
 	 */
 	public static final String SYNC = "sync";
 }

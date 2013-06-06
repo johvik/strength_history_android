@@ -106,7 +106,7 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
 			MuscleGroup muscleGroup = MuscleGroup.parse(cursor.getInt(3));
 			res.add(new Exercise(id, sync, name, muscleGroup));

@@ -28,7 +28,7 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 			// screen rotated
 			Intent intent = new Intent();
 			intent.putExtra(EXERCISE,
-					(Exercise) savedInstanceState.getParcelable(EXERCISE));
+					savedInstanceState.getParcelable(EXERCISE));
 			setResult(RESULT_ORIENTATION, intent);
 			finish();
 			return;

@@ -2,6 +2,7 @@ package strength.history.data.structure;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -68,7 +69,7 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param muscleGroup
 	 */
 	public Exercise(String name, MuscleGroup muscleGroup) {
-		this(-1, Sync.NEW, name, muscleGroup);
+		this(-1, new Date().getTime(), name, muscleGroup);
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param name
 	 * @param muscleGroup
 	 */
-	public Exercise(long id, int sync, String name, MuscleGroup muscleGroup) {
+	public Exercise(long id, long sync, String name, MuscleGroup muscleGroup) {
 		super(id, sync);
 		this.name = name;
 		this.muscleGroup = muscleGroup;

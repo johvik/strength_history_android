@@ -27,8 +27,7 @@ public class WorkoutEditActivity extends CustomTitleFragmentActivity implements
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			// screen rotated
 			Intent intent = new Intent();
-			intent.putExtra(WORKOUT,
-					(Workout) savedInstanceState.getParcelable(WORKOUT));
+			intent.putExtra(WORKOUT, savedInstanceState.getParcelable(WORKOUT));
 			setResult(RESULT_ORIENTATION, intent);
 			finish();
 			return;

@@ -255,7 +255,7 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 
 		if (cursor.moveToFirst()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
 			res = new WorkoutData(id, sync, time, workout_id);
@@ -307,7 +307,7 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
 			WorkoutData w = new WorkoutData(id, sync, time, workout_id);

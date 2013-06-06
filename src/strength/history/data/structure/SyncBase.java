@@ -8,7 +8,7 @@ import android.os.Parcel;
  * @param <T>
  */
 public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
-	private int sync;
+	private long sync;
 
 	/**
 	 * Constructor
@@ -16,7 +16,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 * @param id
 	 * @param sync
 	 */
-	public SyncBase(long id, int sync) {
+	public SyncBase(long id, long sync) {
 		super(id);
 		this.sync = sync;
 	}
@@ -28,7 +28,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 */
 	protected SyncBase(Parcel in) {
 		super(in);
-		sync = in.readInt();
+		sync = in.readLong();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	@Override
 	public final void writeToParcel(Parcel out, int flags) {
 		out.writeLong(getId());
-		out.writeInt(sync);
+		out.writeLong(sync);
 		_writeToParcel(out, flags);
 	}
 
@@ -59,7 +59,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 * 
 	 * @return The sync state
 	 */
-	public final int getSync() {
+	public final long getSync() {
 		return sync;
 	}
 
@@ -69,7 +69,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 * @param sync
 	 *            The new sync state
 	 */
-	public final void setSync(int sync) {
+	public final void setSync(long sync) {
 		this.sync = sync;
 	}
 }

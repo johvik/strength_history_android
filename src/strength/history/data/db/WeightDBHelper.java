@@ -96,7 +96,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 
 		if (cursor.moveToFirst()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
 			res = new Weight(id, sync, time, weight);
@@ -130,7 +130,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long id = cursor.getLong(0);
-			int sync = cursor.getInt(1);
+			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
 			res.add(new Weight(id, sync, time, weight));

@@ -19,7 +19,7 @@ public class Weight extends SyncBase<Weight> {
 	 * @param weight
 	 */
 	public Weight(long time, double weight) {
-		this(-1, Sync.NEW, time, weight);
+		this(-1, new Date().getTime(), time, weight);
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class Weight extends SyncBase<Weight> {
 	 * @param time
 	 * @param weight
 	 */
-	public Weight(long id, int sync, long time, double weight) {
+	public Weight(long id, long sync, long time, double weight) {
 		super(id, sync);
 		this.time = time;
 		this.weight = weight;
