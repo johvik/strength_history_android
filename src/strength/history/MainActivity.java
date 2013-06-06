@@ -1,17 +1,21 @@
 package strength.history;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import strength.history.data.DataListener;
 import strength.history.data.DataProvider;
 import strength.history.ui.custom.CustomTitleActivity;
-import strength.history.ui.workout.WorkoutsActivity;
 
-import android.content.Intent;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,14 +24,19 @@ import android.widget.TextView;
  * Main Activity
  */
 public class MainActivity extends CustomTitleActivity {
+	private static final String CUSTOM_DATE = "cdate";
+
 	private DataProvider mDataProvider = null;
+	private ImageButton imageButtonChangeDate;
+	private DatePickerDialog datePickerDialog;
+	private TextView textViewDate;
+	private boolean customDate = false;
+	private static Calendar customCalendar = Calendar.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Intent i = new Intent(this, WorkoutsActivity.class);
-		startActivity(i);
 		setTitle(R.string.app_name);
 		addMenuItem(createMenuItem(R.drawable.ic_action_weight,
 				R.string.add_weight_entry, new OnClickListener() {
@@ -46,13 +55,73 @@ public class MainActivity extends CustomTitleActivity {
 		ListView listViewActiveWorkouts = (ListView) findViewById(R.id.listViewActiveWorkouts);
 		listViewActiveWorkouts
 				.setEmptyView(findViewById(R.id.textViewEmptyList));
-		TextView textViewDate = (TextView) findViewById(R.id.textViewDate);
-		textViewDate.setText(DateFormat.getMediumDateFormat(this).format(
-				new Date()));
+		textViewDate = (TextView) findViewById(R.id.textViewDate);
+		updateTextViewDate(new Date());
+
+		datePickerDialog = new DatePickerDialog(this, new OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				Calendar c = Calendar.getInstance();
+				customCalendar.set(year, monthOfYear, dayOfMonth,
+						c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
+				if (customDate) {
+					updateTextViewDate(customCalendar.getTime());
+				}
+			}
+		}, customCalendar.get(Calendar.YEAR),
+				customCalendar.get(Calendar.MONTH),
+				customCalendar.get(Calendar.DAY_OF_MONTH));
+		datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				getText(R.string.done), new Dialog.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						onDateDoneClick();
+					}
+				});
 		// TODO What if date is changed?
-		ImageButton imageButtonChangeData = (ImageButton) findViewById(R.id.imageButtonChangeDate);
+		imageButtonChangeDate = (ImageButton) findViewById(R.id.imageButtonChangeDate);
+		imageButtonChangeDate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (customDate) {
+					imageButtonChangeDate
+							.setImageResource(R.drawable.ic_action_date_gray);
+					customDate = false;
+					updateTextViewDate(new Date());
+				} else {
+					datePickerDialog.show();
+				}
+			}
+		});
+		if (savedInstanceState != null) {
+			customDate = savedInstanceState.getBoolean(CUSTOM_DATE, false);
+			if (customDate) {
+				onDateDoneClick();
+			}
+		}
 
 		mDataProvider = DataListener.add(this);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(CUSTOM_DATE, customDate);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (!customDate) {
+			updateTextViewDate(new Date());
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		datePickerDialog.dismiss();
 	}
 
 	@Override
@@ -64,5 +133,16 @@ public class MainActivity extends CustomTitleActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		DataListener.remove(this);
+	}
+
+	private void updateTextViewDate(Date d) {
+		textViewDate.setText(DateFormat.getMediumDateFormat(this).format(d));
+	}
+
+	private void onDateDoneClick() {
+		imageButtonChangeDate
+				.setImageResource(R.drawable.ic_action_restore_gray);
+		customDate = true;
+		updateTextViewDate(customCalendar.getTime());
 	}
 }
