@@ -38,6 +38,8 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private boolean customDate = false;
 	private boolean forceSet = false;
 	private static Calendar customCalendar = Calendar.getInstance();
+	private boolean fragmentLoaded = false;
+	private boolean weightLoaded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +106,8 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			}
 		}
 
+		updateProgressBar();
 		mDataProvider = DataListener.add(this);
-		Log.d("Add!", "" + mDataProvider);
 		mDataProvider.latestWeight(getApplicationContext());
 	}
 
@@ -158,6 +160,14 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		updateTextViewDate(customCalendar.getTime());
 	}
 
+	private void updateProgressBar() {
+		if (fragmentLoaded && weightLoaded) {
+			setCustomProgressBarVisibility(false);
+		} else {
+			setCustomProgressBarVisibility(true);
+		}
+	}
+
 	@Override
 	public void startWorkout(Workout w) {
 		// TODO Auto-generated method stub
@@ -165,8 +175,16 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	}
 
 	@Override
+	public void setLoaded(boolean loaded) {
+		fragmentLoaded = loaded;
+		updateProgressBar();
+	}
+
+	@Override
 	public void latestCallback(Weight e, boolean ok) {
 		// TODO Auto-generated method stub
+		weightLoaded = true;
+		updateProgressBar();
 		Log.d("MainActivity", "last weight: " + e);
 	}
 }

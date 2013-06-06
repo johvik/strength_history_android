@@ -26,6 +26,8 @@ public class ActiveWorkoutListFragment extends Fragment implements
 		WorkoutProvider.Events, WorkoutDataProvider.Events.LatestWorkoutData {
 	public interface Listener {
 		public void startWorkout(Workout w);
+
+		public void setLoaded(boolean loaded);
 	}
 
 	private ListView listViewActiveWorkouts;
@@ -52,11 +54,16 @@ public class ActiveWorkoutListFragment extends Fragment implements
 			}, true);
 	private ActiveWorkoutAdapter activeWorkoutAdapter;
 	private DataProvider dataProvider = null;
+	private boolean loaded = false;
+	private Listener masterActivity;
+	private int totalWorkouts = 0;
+	private int loadedWorkouts = 0;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof Listener) {
+			masterActivity = (Listener) activity;
 			activeWorkoutAdapter = new ActiveWorkoutAdapter(activity,
 					activeWorkoutList);
 		} else {
@@ -67,7 +74,11 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		loaded = false;
+		masterActivity.setLoaded(loaded);
 		dataProvider = DataListener.add(this);
+		totalWorkouts = 0;
+		loadedWorkouts = 0;
 		dataProvider.queryWorkout(getActivity());
 	}
 
@@ -87,13 +98,13 @@ public class ActiveWorkoutListFragment extends Fragment implements
 		listViewActiveWorkouts.setEmptyView(view
 				.findViewById(R.id.textViewEmptyList));
 		listViewActiveWorkouts.setAdapter(activeWorkoutAdapter);
-		final Listener l = (Listener) getActivity();
 		listViewActiveWorkouts
 				.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						l.startWorkout(activeWorkoutList.get(position).first);
+						masterActivity.startWorkout(activeWorkoutList
+								.get(position).first);
 					}
 				});
 		return view;
@@ -101,34 +112,61 @@ public class ActiveWorkoutListFragment extends Fragment implements
 
 	@Override
 	public void deleteCallback(Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			long id = e.getId();
+			for (int i = 0, j = activeWorkoutList.size(); i < j; i++) {
+				if (id == activeWorkoutList.get(i).first.getId()) {
+					activeWorkoutList.remove(i);
+					totalWorkouts--;
+					activeWorkoutAdapter.notifyDataSetChanged();
+					break;
+				}
+			}
+		}
 	}
 
 	@Override
 	public void insertCallback(Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			// New ones doesn't have history
+			activeWorkoutList.add(Pair.create(e, (WorkoutData) null));
+			totalWorkouts++;
+			activeWorkoutAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void updateCallback(Workout old, Workout e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			long id = e.getId();
+			for (int i = 0, j = activeWorkoutList.size(); i < j; i++) {
+				if (id == activeWorkoutList.get(i).first.getId()) {
+					// Use old data
+					Pair<Workout, WorkoutData> p = activeWorkoutList.remove(i);
+					activeWorkoutList.add(Pair.create(e, p.second));
+					activeWorkoutAdapter.notifyDataSetChanged();
+					break;
+				}
+			}
+		}
 	}
 
 	@Override
 	public void workoutQueryCallback(Collection<Workout> e, boolean done) {
+		totalWorkouts += e.size();
 		for (Workout w : e) {
 			activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
 			dataProvider.latestWorkoutData(w.getId(), getActivity());
 		}
 		activeWorkoutAdapter.notifyDataSetChanged();
+		if (done) {
+			totalWorkouts = activeWorkoutList.size();
+		}
 	}
 
 	@Override
 	public void latestCallback(WorkoutData e, long workoutId, boolean ok) {
-		// TODO Show loading
+		loadedWorkouts++;
 		if (ok) {
 			for (int i = 0, j = activeWorkoutList.size(); i < j; i++) {
 				long id = activeWorkoutList.get(i).first.getId();
@@ -139,6 +177,11 @@ public class ActiveWorkoutListFragment extends Fragment implements
 					break;
 				}
 			}
+		}
+		if (loadedWorkouts >= totalWorkouts) {
+			// TODO This might get messed up
+			loaded = true;
+			masterActivity.setLoaded(loaded);
 		}
 	}
 }
