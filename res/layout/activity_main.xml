@@ -46,19 +46,12 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listViewActiveWorkouts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/linearLayoutTop" />
-
-    <TextView
-        android:id="@+id/textViewEmptyList"
+    <fragment
+        android:id="@+id/fragmentActiveWorkoutList"
+        android:name="strength.history.ui.workout.ActiveWorkoutListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linearLayoutTop"
-        android:gravity="center"
-        android:text="@string/empty_listview"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        tools:layout="@layout/fragment_active_workout_list" />
 
 </RelativeLayout>

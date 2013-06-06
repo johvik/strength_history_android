@@ -5,7 +5,9 @@ import java.util.Date;
 
 import strength.history.data.DataListener;
 import strength.history.data.DataProvider;
-import strength.history.ui.custom.CustomTitleActivity;
+import strength.history.data.structure.Workout;
+import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.workout.ActiveWorkoutListFragment;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -13,17 +15,18 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
  * Main Activity
  */
-public class MainActivity extends CustomTitleActivity {
+public class MainActivity extends CustomTitleFragmentActivity implements
+		ActiveWorkoutListFragment.Listener {
 	private static final String CUSTOM_DATE = "cdate";
 
 	private DataProvider mDataProvider = null;
@@ -53,9 +56,6 @@ public class MainActivity extends CustomTitleActivity {
 						// TODO Auto-generated method stub
 					}
 				}));
-		ListView listViewActiveWorkouts = (ListView) findViewById(R.id.listViewActiveWorkouts);
-		listViewActiveWorkouts
-				.setEmptyView(findViewById(R.id.textViewEmptyList));
 		textViewDate = (TextView) findViewById(R.id.textViewDate);
 		updateTextViewDate(new Date());
 
@@ -103,6 +103,8 @@ public class MainActivity extends CustomTitleActivity {
 		}
 
 		mDataProvider = DataListener.add(this);
+		Log.d("Add!", "" + mDataProvider);
+		mDataProvider.queryWorkout(getApplicationContext());
 	}
 
 	@Override
@@ -152,5 +154,11 @@ public class MainActivity extends CustomTitleActivity {
 				.setImageResource(R.drawable.ic_action_restore_gray);
 		customDate = true;
 		updateTextViewDate(customCalendar.getTime());
+	}
+
+	@Override
+	public void startWorkout(Workout w) {
+		// TODO Auto-generated method stub
+		Log.d("MainActivity", "starting: " + w);
 	}
 }
