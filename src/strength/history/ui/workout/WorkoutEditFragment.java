@@ -73,9 +73,9 @@ public class WorkoutEditFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		dataProvider = DataListener.add(this);
 		loaded = false;
 		masterActivity.setLoaded(loaded);
+		dataProvider = DataListener.add(this);
 		dataProvider.queryExercise(getActivity().getApplicationContext());
 	}
 

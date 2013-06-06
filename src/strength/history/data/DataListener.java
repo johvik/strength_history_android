@@ -10,7 +10,8 @@ public final class DataListener {
 	}
 
 	/**
-	 * Should be called in onCreate
+	 * Should be called in onCreate, you probably want to do this AFTER you set
+	 * all GUI variables
 	 * 
 	 * @param object
 	 * @return The data provider object

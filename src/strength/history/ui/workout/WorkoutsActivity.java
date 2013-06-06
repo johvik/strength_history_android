@@ -57,7 +57,6 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		dataProvider = DataListener.add(this);
 		workoutEditFragment = (WorkoutEditFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.fragmentWorkoutEdit);
 		mDualPane = findViewById(R.id.fragmentWorkoutEdit) != null;
@@ -108,6 +107,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 					}
 				});
 		updateProgressBar();
+		dataProvider = DataListener.add(this);
 		// get workouts
 		dataProvider.queryWorkout(getApplicationContext());
 

@@ -25,7 +25,6 @@ public class MainActivity extends CustomTitleActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mDataProvider = DataListener.add(this);
 
 		Intent i = new Intent(this, WorkoutsActivity.class);
 		startActivity(i);
@@ -52,6 +51,8 @@ public class MainActivity extends CustomTitleActivity {
 				new Date()));
 		// TODO What if date is changed?
 		ImageButton imageButtonChangeData = (ImageButton) findViewById(R.id.imageButtonChangeDate);
+
+		mDataProvider = DataListener.add(this);
 	}
 
 	@Override
