@@ -5,6 +5,8 @@ import java.util.Date;
 
 import strength.history.data.DataListener;
 import strength.history.data.DataProvider;
+import strength.history.data.provider.WeightProvider;
+import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.workout.ActiveWorkoutListFragment;
@@ -26,7 +28,7 @@ import android.widget.TextView;
  * Main Activity
  */
 public class MainActivity extends CustomTitleFragmentActivity implements
-		ActiveWorkoutListFragment.Listener {
+		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest {
 	private static final String CUSTOM_DATE = "cdate";
 
 	private DataProvider mDataProvider = null;
@@ -104,7 +106,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 
 		mDataProvider = DataListener.add(this);
 		Log.d("Add!", "" + mDataProvider);
-		mDataProvider.queryWorkout(getApplicationContext());
+		mDataProvider.latestWeight(getApplicationContext());
 	}
 
 	@Override
@@ -160,5 +162,11 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	public void startWorkout(Workout w) {
 		// TODO Auto-generated method stub
 		Log.d("MainActivity", "starting: " + w);
+	}
+
+	@Override
+	public void latestCallback(Weight e, boolean ok) {
+		// TODO Auto-generated method stub
+		Log.d("MainActivity", "last weight: " + e);
 	}
 }

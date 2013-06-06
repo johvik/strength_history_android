@@ -68,6 +68,7 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		dataProvider = DataListener.add(this);
+		dataProvider.queryWorkout(getActivity());
 	}
 
 	@Override
