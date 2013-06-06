@@ -9,8 +9,8 @@ import strength.history.ui.custom.CustomTitleActivity;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
-import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -65,21 +65,21 @@ public class MainActivity extends CustomTitleActivity {
 				Calendar c = Calendar.getInstance();
 				customCalendar.set(year, monthOfYear, dayOfMonth,
 						c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-				if (customDate) {
-					updateTextViewDate(customCalendar.getTime());
-				}
+				onDateDoneClick();
 			}
 		}, customCalendar.get(Calendar.YEAR),
 				customCalendar.get(Calendar.MONTH),
 				customCalendar.get(Calendar.DAY_OF_MONTH));
-		datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-				getText(R.string.done), new Dialog.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						onDateDoneClick();
-					}
-				});
-		// TODO What if date is changed?
+		datePickerDialog.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				imageButtonChangeDate
+						.setImageResource(R.drawable.ic_action_date_gray);
+				customDate = false;
+				updateTextViewDate(new Date());
+			}
+		});
+		// TODO What if date is changed (day etc. changes)?
 		imageButtonChangeDate = (ImageButton) findViewById(R.id.imageButtonChangeDate);
 		imageButtonChangeDate.setOnClickListener(new OnClickListener() {
 			@Override
