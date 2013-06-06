@@ -120,6 +120,7 @@ public class MainActivity extends CustomTitleActivity {
 		if (!customDate) {
 			updateTextViewDate(new Date());
 		}
+		forceSet = false;
 	}
 
 	@Override
