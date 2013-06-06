@@ -9,6 +9,7 @@ import android.os.Parcelable;
  * Weight class
  */
 public class Weight extends SyncBase<Weight> {
+	public static final double DEFAULT = 75.0;
 	private long time;
 	private double weight;
 

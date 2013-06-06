@@ -9,8 +9,10 @@ import strength.history.data.provider.WeightProvider;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.custom.NumberDecimalPicker;
 import strength.history.ui.workout.ActiveWorkoutListFragment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
@@ -30,6 +32,7 @@ import android.widget.TextView;
 public class MainActivity extends CustomTitleFragmentActivity implements
 		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest {
 	private static final String CUSTOM_DATE = "cdate";
+	private static final String SELECTED_WEIGHT = "sweight";
 
 	private DataProvider mDataProvider = null;
 	private ImageButton imageButtonChangeDate;
@@ -40,6 +43,8 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private static Calendar customCalendar = Calendar.getInstance();
 	private boolean fragmentLoaded = false;
 	private boolean weightLoaded = false;
+	private AlertDialog alertDialogAddWeight;
+	private NumberDecimalPicker weightPicker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 				R.string.add_weight_entry, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+						alertDialogAddWeight.show();
 					}
 				}));
 		addMenuItem(createMenuItem(R.drawable.ic_action_settings,
@@ -105,10 +110,34 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 				onDateDoneClick();
 			}
 		}
+		// TODO Change other Alerts to title?
+		weightPicker = new NumberDecimalPicker(this);
+		weightPicker.setNumber(Weight.DEFAULT);
+		alertDialogAddWeight = new AlertDialog.Builder(this)
+				.setTitle(R.string.add_weight_entry)
+				.setView(weightPicker)
+				.setPositiveButton(R.string.button_ok,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mDataProvider.insert(new Weight(getDate()
+										.getTime(), weightPicker.getNumber()),
+										getApplicationContext());
+							}
+						}).setNegativeButton(R.string.button_cancel, null)
+				.create();
 
 		updateProgressBar();
 		mDataProvider = DataListener.add(this);
-		mDataProvider.latestWeight(getApplicationContext());
+		if (savedInstanceState == null) {
+			mDataProvider.latestWeight(getApplicationContext());
+		} else {
+			weightPicker.setNumber(savedInstanceState.getDouble(
+					SELECTED_WEIGHT, Weight.DEFAULT));
+			weightLoaded = true;
+			updateProgressBar();
+		}
 	}
 
 	@Override
@@ -118,6 +147,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			customDate = false;
 		}
 		outState.putBoolean(CUSTOM_DATE, customDate);
+		outState.putDouble(SELECTED_WEIGHT, weightPicker.getNumber());
 	}
 
 	@Override
@@ -136,6 +166,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			datePickerDialog.cancel();
 			forceSet = true;
 		}
+		alertDialogAddWeight.dismiss();
 	}
 
 	@Override
@@ -168,6 +199,19 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		}
 	}
 
+	/**
+	 * Use this to get the date!
+	 * 
+	 * @return Selected date if customDate else current time
+	 */
+	private Date getDate() {
+		if (customDate) {
+			return customCalendar.getTime();
+		} else {
+			return new Date();
+		}
+	}
+
 	@Override
 	public void startWorkout(Workout w) {
 		// TODO Auto-generated method stub
@@ -182,9 +226,10 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 
 	@Override
 	public void latestCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
+		if (ok) {
+			weightPicker.setNumber(e.getWeight());
+		}
 		weightLoaded = true;
 		updateProgressBar();
-		Log.d("MainActivity", "last weight: " + e);
 	}
 }
