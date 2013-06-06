@@ -9,8 +9,7 @@ import junit.framework.Assert;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class DataTest extends Activity implements ExerciseProvider.Events.Edit,
-		ExerciseProvider.Events.Query {
+public class DataTest extends Activity implements ExerciseProvider.Events {
 	private Exercise e = null;
 	private DataProvider dataProvider = null;
 

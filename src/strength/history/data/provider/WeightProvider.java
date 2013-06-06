@@ -8,9 +8,7 @@ import android.content.Context;
 import android.os.Messenger;
 import android.util.Log;
 
-import strength.history.data.provider.WeightProvider.Events.Edit;
 import strength.history.data.provider.WeightProvider.Events.Latest;
-import strength.history.data.provider.WeightProvider.Events.Query;
 import strength.history.data.service.local.LocalWeightService;
 import strength.history.data.service.local.LocalWeightService.Request;
 import strength.history.data.structure.Weight;
@@ -20,20 +18,16 @@ import strength.history.data.structure.Weight;
  */
 public class WeightProvider extends Provider<Weight> {
 	public interface Events {
-		public interface Edit {
-			public void deleteCallback(Weight e, boolean ok);
+		public void deleteCallback(Weight e, boolean ok);
 
-			public void insertCallback(Weight e, boolean ok);
+		public void insertCallback(Weight e, boolean ok);
 
-			public void updateCallback(Weight old, Weight e, boolean ok);
-		}
+		public void updateCallback(Weight old, Weight e, boolean ok);
+
+		public void weightQueryCallback(Collection<Weight> e, boolean done);
 
 		public interface Latest {
 			public void latestCallback(Weight e, boolean ok);
-		}
-
-		public interface Query {
-			public void weightQueryCallback(Collection<Weight> e, boolean done);
 		}
 	}
 
@@ -51,37 +45,30 @@ public class WeightProvider extends Provider<Weight> {
 		public void update(Weight e, Context context);
 	}
 
-	private LinkedHashSet<Edit> editListeners = new LinkedHashSet<Edit>();
+	private LinkedHashSet<Events> eventListeners = new LinkedHashSet<Events>();
 	private LinkedHashSet<Latest> latestListeners = new LinkedHashSet<Latest>();
-	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
 	private Weight latestCache = null;
 
 	@Override
 	public void tryAddListener(Object object) {
-		if (object instanceof Edit) {
-			editListeners.add((Edit) object);
+		if (object instanceof Events) {
+			Events e = (Events) object;
+			e.weightQueryCallback(data, false); // Initial values
+			eventListeners.add((Events) object);
 		}
 		if (object instanceof Latest) {
 			latestListeners.add((Latest) object);
-		}
-		if (object instanceof Query) {
-			Query e = (Query) object;
-			e.weightQueryCallback(data, false); // Initial values
-			queryListeners.add(e);
 		}
 	}
 
 	@Override
 	public void tryRemoveListener(Object object) {
-		if (object instanceof Edit) {
-			editListeners.remove(object);
+		if (object instanceof Events) {
+			eventListeners.remove(object);
 		}
 		if (object instanceof Latest) {
 			latestListeners.remove(object);
-		}
-		if (object instanceof Query) {
-			queryListeners.remove(object);
 		}
 	}
 
@@ -97,28 +84,28 @@ public class WeightProvider extends Provider<Weight> {
 
 	@Override
 	protected void deleteCallback(Weight e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.deleteCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void insertCallback(Weight e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.insertCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void queryCallback(Collection<Weight> e, boolean done) {
-		for (Query t : queryListeners) {
+		for (Events t : eventListeners) {
 			t.weightQueryCallback(e, done);
 		}
 	}
 
 	@Override
 	protected void updateCallback(Weight old, Weight e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.updateCallback(old, e, ok);
 		}
 	}

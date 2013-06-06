@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 		WorkoutListFragment.Listener, WorkoutEditFragment.Listener,
-		WorkoutProvider.Events.Edit, WorkoutProvider.Events.Query {
+		WorkoutProvider.Events {
 	private static final int REQUEST_CODE = 1;
 	private static final String CUR_CHOICE = "curChoice";
 	private static final String CUR_WORKOUT = "curWork";

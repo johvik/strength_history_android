@@ -23,7 +23,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	protected final HashSet<E> data = new HashSet<E>();
 	protected boolean loaded = false;
 
-	// TODO Set query and edit in the same interface again
+	// TODO How to handle multiple queries at the same time?
 
 	@SuppressWarnings("static-method")
 	protected int getDeleteArg() {

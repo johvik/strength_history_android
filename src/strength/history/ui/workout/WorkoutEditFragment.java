@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class WorkoutEditFragment extends Fragment implements
-		ExerciseProvider.Events.Edit, ExerciseProvider.Events.Query {
+		ExerciseProvider.Events {
 	public interface Listener {
 		public void saveCallback(Workout e);
 

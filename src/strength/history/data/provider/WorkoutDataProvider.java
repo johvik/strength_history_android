@@ -9,10 +9,8 @@ import android.content.Context;
 import android.os.Messenger;
 import android.util.Log;
 
-import strength.history.data.provider.WorkoutDataProvider.Events.Edit;
 import strength.history.data.provider.WorkoutDataProvider.Events.LatestExerciseData;
 import strength.history.data.provider.WorkoutDataProvider.Events.LatestWorkoutData;
-import strength.history.data.provider.WorkoutDataProvider.Events.Query;
 import strength.history.data.service.local.LocalWorkoutDataService;
 import strength.history.data.service.local.LocalWorkoutDataService.Request;
 import strength.history.data.structure.ExerciseData;
@@ -20,14 +18,14 @@ import strength.history.data.structure.WorkoutData;
 
 public class WorkoutDataProvider extends Provider<WorkoutData> {
 	public interface Events {
-		public interface Edit {
-			public void deleteCallback(WorkoutData e, boolean ok);
+		public void deleteCallback(WorkoutData e, boolean ok);
 
-			public void insertCallback(WorkoutData e, boolean ok);
+		public void insertCallback(WorkoutData e, boolean ok);
 
-			public void updateCallback(WorkoutData old, WorkoutData e,
-					boolean ok);
-		}
+		public void updateCallback(WorkoutData old, WorkoutData e, boolean ok);
+
+		public void workoutDataQueryCallback(Collection<WorkoutData> e,
+				boolean done);
 
 		public interface LatestExerciseData {
 			public void latestCallback(ExerciseData e, long exerciseId,
@@ -36,11 +34,6 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 		public interface LatestWorkoutData {
 			public void latestCallback(WorkoutData e, long workoutId, boolean ok);
-		}
-
-		public interface Query {
-			public void workoutDataQueryCallback(Collection<WorkoutData> e,
-					boolean done);
 		}
 	}
 
@@ -60,18 +53,19 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		public void update(WorkoutData e, Context context);
 	}
 
-	private LinkedHashSet<Edit> editListeners = new LinkedHashSet<Edit>();
+	private LinkedHashSet<Events> eventListeners = new LinkedHashSet<Events>();
 	private LinkedHashSet<LatestExerciseData> latestExerciseDataListeners = new LinkedHashSet<LatestExerciseData>();
 	private LinkedHashSet<LatestWorkoutData> latestWorkoutDataListeners = new LinkedHashSet<LatestWorkoutData>();
-	private LinkedHashSet<Query> queryListeners = new LinkedHashSet<Query>();
 
 	private HashMap<Long, ExerciseData> latestExerciseDataCache = new HashMap<Long, ExerciseData>();
 	private HashMap<Long, WorkoutData> latestWorkoutDataCache = new HashMap<Long, WorkoutData>();
 
 	@Override
 	public void tryAddListener(Object object) {
-		if (object instanceof Edit) {
-			editListeners.add((Edit) object);
+		if (object instanceof Events) {
+			Events e = (Events) object;
+			e.workoutDataQueryCallback(data, false); // Initial values
+			eventListeners.add((Events) object);
 		}
 		if (object instanceof LatestExerciseData) {
 			latestExerciseDataListeners.add((LatestExerciseData) object);
@@ -79,26 +73,18 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		if (object instanceof LatestWorkoutData) {
 			latestWorkoutDataListeners.add((LatestWorkoutData) object);
 		}
-		if (object instanceof Query) {
-			Query e = (Query) object;
-			e.workoutDataQueryCallback(data, false); // Initial values
-			queryListeners.add(e);
-		}
 	}
 
 	@Override
 	public void tryRemoveListener(Object object) {
-		if (object instanceof Edit) {
-			editListeners.remove(object);
+		if (object instanceof Events) {
+			eventListeners.remove(object);
 		}
 		if (object instanceof LatestExerciseData) {
 			latestExerciseDataListeners.remove(object);
 		}
 		if (object instanceof LatestWorkoutData) {
 			latestWorkoutDataListeners.remove(object);
-		}
-		if (object instanceof Query) {
-			queryListeners.remove(object);
 		}
 	}
 
@@ -114,28 +100,28 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 
 	@Override
 	protected void deleteCallback(WorkoutData e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.deleteCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void insertCallback(WorkoutData e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.insertCallback(e, ok);
 		}
 	}
 
 	@Override
 	protected void queryCallback(Collection<WorkoutData> e, boolean done) {
-		for (Query t : queryListeners) {
+		for (Events t : eventListeners) {
 			t.workoutDataQueryCallback(e, done);
 		}
 	}
 
 	@Override
 	protected void updateCallback(WorkoutData old, WorkoutData e, boolean ok) {
-		for (Edit t : editListeners) {
+		for (Events t : eventListeners) {
 			t.updateCallback(old, e, ok);
 		}
 	}
