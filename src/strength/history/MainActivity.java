@@ -31,6 +31,7 @@ public class MainActivity extends CustomTitleActivity {
 	private DatePickerDialog datePickerDialog;
 	private TextView textViewDate;
 	private boolean customDate = false;
+	private boolean forceSet = false;
 	private static Calendar customCalendar = Calendar.getInstance();
 
 	@Override
@@ -107,6 +108,9 @@ public class MainActivity extends CustomTitleActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		if (forceSet) {
+			customDate = false;
+		}
 		outState.putBoolean(CUSTOM_DATE, customDate);
 	}
 
@@ -121,7 +125,10 @@ public class MainActivity extends CustomTitleActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		datePickerDialog.dismiss();
+		if (datePickerDialog.isShowing()) {
+			datePickerDialog.cancel();
+			forceSet = true;
+		}
 	}
 
 	@Override
