@@ -30,11 +30,12 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		}
 
 		public interface LatestExerciseData {
-			public void latestCallback(ExerciseData e, boolean ok);
+			public void latestCallback(ExerciseData e, long exerciseId,
+					boolean ok);
 		}
 
 		public interface LatestWorkoutData {
-			public void latestCallback(WorkoutData e, boolean ok);
+			public void latestCallback(WorkoutData e, long workoutId, boolean ok);
 		}
 
 		public interface Query {
@@ -139,15 +140,15 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 		}
 	}
 
-	private void latestCallback(ExerciseData e, boolean ok) {
+	private void latestCallback(ExerciseData e, long exerciseId, boolean ok) {
 		for (LatestExerciseData t : latestExerciseDataListeners) {
-			t.latestCallback(e, ok);
+			t.latestCallback(e, exerciseId, ok);
 		}
 	}
 
-	private void latestCallback(WorkoutData e, boolean ok) {
+	private void latestCallback(WorkoutData e, long workoutId, boolean ok) {
 		for (LatestWorkoutData t : latestWorkoutDataListeners) {
-			t.latestCallback(e, ok);
+			t.latestCallback(e, workoutId, ok);
 		}
 	}
 
@@ -158,7 +159,7 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			runLocalService(exerciseId, context, messenger,
 					Request.LATEST_EXERCISE_DATA.ordinal());
 		} else {
-			latestCallback(e, true);
+			latestCallback(e, e.getExerciseId(), true);
 		}
 	}
 
@@ -169,7 +170,7 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			runLocalService(workoutId, context, messenger,
 					Request.LATEST_WORKOUT_DATA.ordinal());
 		} else {
-			latestCallback(e, true);
+			latestCallback(e, e.getWorkoutId(), true);
 		}
 	}
 
@@ -263,25 +264,30 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			break;
 		}
 		case LATEST_EXERCISE_DATA: {
-			ExerciseData e = (ExerciseData) object;
+
 			if (!ok) {
+				long exerciseId = (Long) object;
 				Log.e("WorkoutDataProvider",
-						"failed to get latest exercisedata " + e);
+						"failed to get latest exercisedata " + exerciseId);
+				latestCallback((ExerciseData) null, exerciseId, ok);
 			} else {
+				ExerciseData e = (ExerciseData) object;
 				latestExerciseDataCache.put(e.getExerciseId(), e);
+				latestCallback(e, e.getExerciseId(), ok);
 			}
-			latestCallback(e, ok);
 			break;
 		}
 		case LATEST_WORKOUT_DATA: {
-			WorkoutData e = (WorkoutData) object;
 			if (!ok) {
+				long workoutId = (Long) object;
 				Log.e("WorkoutDataProvider",
-						"failed to get latest workoutdata " + e);
+						"failed to get latest workoutdata " + workoutId);
+				latestCallback((WorkoutData) null, workoutId, ok);
 			} else {
+				WorkoutData e = (WorkoutData) object;
 				latestWorkoutDataCache.put(e.getWorkoutId(), e);
+				latestCallback(e, e.getWorkoutId(), ok);
 			}
-			latestCallback(e, ok);
 			break;
 		}
 		case PURGE: {

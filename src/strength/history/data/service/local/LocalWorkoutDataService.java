@@ -119,8 +119,9 @@ public class LocalWorkoutDataService extends
 		msg.arg2 = Request.LATEST_EXERCISE_DATA.ordinal();
 
 		ExerciseData e = db.latestExerciseData(exerciseId);
-		msg.what = e != null ? 1 : 0;
-		msg.obj = e;
+		boolean ok = e != null;
+		msg.what = ok ? 1 : 0;
+		msg.obj = ok ? e : exerciseId;
 
 		try {
 			messenger.send(msg);
@@ -136,8 +137,9 @@ public class LocalWorkoutDataService extends
 		msg.arg2 = Request.LATEST_WORKOUT_DATA.ordinal();
 
 		WorkoutData w = db.latestWorkoutData(workoutId);
-		msg.what = w != null ? 1 : 0;
-		msg.obj = w;
+		boolean ok = w != null;
+		msg.what = ok ? 1 : 0;
+		msg.obj = ok ? w : workoutId;
 
 		try {
 			messenger.send(msg);
