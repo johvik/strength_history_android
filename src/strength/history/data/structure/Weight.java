@@ -63,7 +63,7 @@ public class Weight extends SyncBase<Weight> {
 	@Override
 	public int hashCode() {
 		long id = getId();
-		int result = 37 + (int) (id ^ (id >>> 32));
+		int result = (int) (id ^ (id >>> 32));
 		return result * 37 + (int) (time ^ (time >>> 32));
 	}
 

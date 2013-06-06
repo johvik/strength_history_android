@@ -48,7 +48,7 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 
 	@Override
 	public int hashCode() {
-		return 37 + (int) (id ^ (id >>> 32));
+		return (int) (id ^ (id >>> 32));
 	}
 
 	@Override
