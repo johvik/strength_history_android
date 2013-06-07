@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:summary="@string/exercises_preference_summary"
+        android:title="@string/exercises" >
+        <intent
+            android:targetClass="strength.history.ui.exercise.ExercisesActivity"
+            android:targetPackage="strength.history" />
+    </Preference>
+    <Preference
+        android:summary="@string/workouts_preference_summary"
+        android:title="@string/workouts" >
+        <intent
+            android:targetClass="strength.history.ui.workout.WorkoutsActivity"
+            android:targetPackage="strength.history" />
+    </Preference>
+
+</PreferenceScreen>

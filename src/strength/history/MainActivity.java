@@ -8,6 +8,7 @@ import strength.history.data.DataProvider;
 import strength.history.data.provider.WeightProvider;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
+import strength.history.ui.SettingsActivity;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.custom.NumberDecimalPicker;
 import strength.history.ui.workout.ActiveWorkoutListFragment;
@@ -17,7 +18,11 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +35,8 @@ import android.widget.TextView;
  * Main Activity
  */
 public class MainActivity extends CustomTitleFragmentActivity implements
-		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest {
+		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest,
+		OnSharedPreferenceChangeListener {
 	private static final String CUSTOM_DATE = "cdate";
 	private static final String SELECTED_WEIGHT = "sweight";
 
@@ -45,10 +51,12 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private boolean weightLoaded = false;
 	private AlertDialog alertDialogAddWeight;
 	private NumberDecimalPicker weightPicker;
+	private SharedPreferences sharedPreferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		setTitle(R.string.app_name);
 		addMenuItem(createMenuItem(R.drawable.ic_action_weight,
@@ -62,7 +70,9 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 				R.string.settings, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+						Intent i = new Intent(MainActivity.this,
+								SettingsActivity.class);
+						startActivity(i);
 					}
 				}));
 		textViewDate = (TextView) findViewById(R.id.textViewDate);
@@ -138,6 +148,14 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			weightLoaded = true;
 			updateProgressBar();
 		}
+
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -153,6 +171,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 		if (!customDate) {
 			updateTextViewDate(new Date());
 		}
@@ -162,6 +181,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 		if (datePickerDialog.isShowing()) {
 			datePickerDialog.cancel();
 			forceSet = true;
