@@ -75,7 +75,8 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 			listViewWorkouts.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
 		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
-				.setMessage(R.string.dialog_workout_delete)
+				.setTitle(R.string.dialog_workout_delete)
+				.setMessage(R.string.dialog_delete_info)
 				.setPositiveButton(R.string.button_ok,
 						new DialogInterface.OnClickListener() {
 							@Override

@@ -34,7 +34,8 @@ public class ExerciseEditActivity extends CustomTitleFragmentActivity implements
 			return;
 		}
 		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
-				.setMessage(R.string.dialog_exercise_delete)
+				.setTitle(R.string.dialog_exercise_delete)
+				.setMessage(R.string.dialog_delete_info)
 				.setPositiveButton(R.string.button_ok,
 						new DialogInterface.OnClickListener() {
 							@Override

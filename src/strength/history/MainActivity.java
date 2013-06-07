@@ -120,7 +120,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 				onDateDoneClick();
 			}
 		}
-		// TODO Change other Alerts to title?
 		weightPicker = new NumberDecimalPicker(this);
 		weightPicker.setNumber(Weight.DEFAULT);
 		alertDialogAddWeight = new AlertDialog.Builder(this)
