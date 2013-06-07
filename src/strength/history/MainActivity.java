@@ -11,7 +11,7 @@ import strength.history.data.structure.Workout;
 import strength.history.ui.SettingsActivity;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.custom.NumberDecimalPicker;
-import strength.history.ui.workout.ActiveWorkoutListFragment;
+import strength.history.ui.workout.active.ActiveWorkoutListFragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

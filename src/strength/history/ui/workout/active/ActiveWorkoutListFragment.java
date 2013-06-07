@@ -1,4 +1,4 @@
-package strength.history.ui.workout;
+package strength.history.ui.workout.active;
 
 import java.util.Collection;
 import java.util.Comparator;

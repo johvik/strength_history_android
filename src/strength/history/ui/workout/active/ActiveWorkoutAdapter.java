@@ -1,4 +1,4 @@
-package strength.history.ui.workout;
+package strength.history.ui.workout.active;
 
 import android.content.Context;
 import android.text.format.DateFormat;
