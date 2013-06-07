@@ -16,6 +16,7 @@ public class Exercise extends SyncBase<Exercise> {
 		// a change will change the type of all existing exercises
 		ARMS, CHEST, BACK, SHOULDERS, ABS, LEGS;
 
+		public static final MuscleGroup DEFAULT = ARMS;
 		public static final MuscleGroup[] SORTED_VALUES = MuscleGroup.values();
 		private static final MuscleGroup[] VALUES = MuscleGroup.values();
 		static {

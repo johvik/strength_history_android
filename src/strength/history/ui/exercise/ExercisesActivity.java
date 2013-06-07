@@ -255,8 +255,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	public void onExerciseCreateClick() {
 		listViewExercises.setItemChecked(mCurCheckPosition, false);
 		mCurCheckPosition = -1;
-		// TODO Default muscle group
-		starteEditExercise(new Exercise("", MuscleGroup.ARMS));
+		starteEditExercise(new Exercise("", MuscleGroup.DEFAULT));
 	}
 
 	@Override
