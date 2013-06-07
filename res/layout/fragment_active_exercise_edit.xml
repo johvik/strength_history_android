@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.workout.active.ActiveExerciseEditFragment" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ui_half_space"
+        android:layout_marginLeft="@dimen/ui_half_space"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="@string/repetitions"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <strength.history.ui.custom.NumberPicker
+        android:id="@+id/numberPickerRepetitions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ui_half_space"
+        android:layout_marginLeft="@dimen/ui_half_space"
+        android:layout_marginTop="@dimen/ui_space"
+        android:text="@string/weight"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <strength.history.ui.custom.NumberDecimalPicker
+        android:id="@+id/numberDecimalPickerWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ui_half_space"
+        android:layout_marginLeft="@dimen/ui_half_space"
+        android:layout_marginTop="@dimen/ui_space"
+        android:text="@string/results"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ListView
+        android:id="@+id/listViewSetData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@android:layout/simple_list_item_1" >
+    </ListView>
+
+</LinearLayout>

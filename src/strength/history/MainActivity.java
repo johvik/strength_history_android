@@ -11,6 +11,7 @@ import strength.history.data.structure.Workout;
 import strength.history.ui.SettingsActivity;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.custom.NumberDecimalPicker;
+import strength.history.ui.workout.RunWorkoutActivity;
 import strength.history.ui.workout.active.ActiveWorkoutListFragment;
 
 import android.app.AlertDialog;
@@ -233,7 +234,10 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 
 	@Override
 	public void startWorkout(Workout w) {
-		// TODO Auto-generated method stub
+		Intent i = new Intent(this, RunWorkoutActivity.class);
+		i.putExtra(RunWorkoutActivity.WORKOUT, w);
+		i.putExtra(RunWorkoutActivity.TIME, getDate().getTime());
+		startActivity(i);
 		Log.d("MainActivity", "starting: " + w);
 	}
 

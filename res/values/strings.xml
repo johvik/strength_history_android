@@ -37,5 +37,10 @@
     <string name="exercises_preference_summary">Mange exercises</string>
     <string name="workouts_preference_summary">Mange workouts</string>
     <string name="dialog_delete_info">History data associated with this entry will be lost.</string>
+    <string name="repetitions">Repetitions</string>
+    <string name="weight">Weight</string>
+    <string name="results">Results</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 
 </resources>
