@@ -6,11 +6,11 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import strength.history.R;
 import strength.history.data.DataListener;
@@ -26,6 +26,7 @@ import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.workout.active.ActiveExerciseEditFragment;
+import strength.history.ui.workout.active.RunSummaryAdapter;
 
 public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData {
@@ -37,10 +38,14 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private Workout workout = null;
 	private long time = -1;
 	private WorkoutData workoutData = null;
-	private HashMap<Long, SetData> savedSetData = new HashMap<Long, SetData>();
+	private HashMap<Long, Pair<Integer, SetData>> savedSetData = new HashMap<Long, Pair<Integer, SetData>>();
 	private int index = 0;
 	private ActiveExerciseEditFragment activeExerciseEditFragment;
 	private View fragmentActiveExerciseEditView;
+	private View menuItemCreate;
+	private View menuItemDelete;
+	private ListView listViewRunSummary;
+	private RunSummaryAdapter runSummaryAdapter;
 	private SortedList<Exercise> exercises = new SortedList<Exercise>(
 			new Comparator<Exercise>() {
 				@Override
@@ -62,9 +67,8 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		if (savedInstanceState != null) {
 			index = savedInstanceState.getInt(INDEX, 0);
 			workoutData = savedInstanceState.getParcelable(WORKOUT_DATA);
-			savedSetData = (HashMap<Long, SetData>) savedInstanceState
+			savedSetData = (HashMap<Long, Pair<Integer, SetData>>) savedInstanceState
 					.getSerializable(SAVED_SET_DATA);
-			Log.d("hmm", savedSetData + "");
 		}
 		if (workout != null && time != -1) {
 			toastWarning = Toast.makeText(this, R.string.run_back_warning,
@@ -73,6 +77,23 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			activeExerciseEditFragment = (ActiveExerciseEditFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.fragmentActiveExerciseEdit);
 			fragmentActiveExerciseEditView = findViewById(R.id.fragmentActiveExerciseEdit);
+			listViewRunSummary = (ListView) findViewById(R.id.listViewRunSummary);
+			runSummaryAdapter = new RunSummaryAdapter(this, this);
+			listViewRunSummary.setAdapter(runSummaryAdapter);
+			menuItemCreate = createMenuItem(R.drawable.ic_action_plus,
+					R.string.add, new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activeExerciseEditFragment.addSetData();
+						}
+					});
+			menuItemDelete = createMenuItem(R.drawable.ic_action_delete,
+					R.string.delete, new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activeExerciseEditFragment.removeSetData();
+						}
+					});
 			Button buttonPrevious = (Button) findViewById(R.id.buttonRunPrevious);
 			Button buttonNext = (Button) findViewById(R.id.buttonRunNext);
 			buttonPrevious.setOnClickListener(new OnClickListener() {
@@ -148,9 +169,39 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		previous();
 	}
 
+	public ExerciseData getItem(int position) {
+		return workoutData == null ? null : workoutData.get(position);
+	}
+
+	public int getSize() {
+		return workoutData == null ? 0 : workoutData.size();
+	}
+
+	public String getItemString(int position) {
+		if (workoutData == null) {
+			return "";
+		} else {
+			ExerciseData e = workoutData.get(position);
+			String s;
+			int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0, "",
+					MuscleGroup.DEFAULT));
+			if (pos != -1) {
+				Exercise ex = exercises.get(pos);
+				s = ex.getName() + "";
+			} else {
+				s = "";
+			}
+			for (SetData d : e) {
+				// TODO Add Metrics
+				s += "\n" + d.getRepetitions() + "x" + d.getWeight();
+			}
+			return s;
+		}
+	}
+
 	private void save() {
 		if (index >= 0 && index < workoutData.size()) {
-			Pair<ExerciseData, SetData> p = activeExerciseEditFragment
+			Pair<ExerciseData, Pair<Integer, SetData>> p = activeExerciseEditFragment
 					.getExerciseData();
 			savedSetData.put(p.first.getExerciseId(), p.second);
 			workoutData.set(index, p.first);
@@ -187,21 +238,34 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
 						"", MuscleGroup.DEFAULT));
-				Log.d("", size + " " + pos + " " + exercises.size());
 				if (pos != -1) {
 					Exercise ex = exercises.get(pos);
 					setTitle((index + 1) + "/" + size + " " + ex.getName());
 				}
-				SetData s = savedSetData.get(e.getExerciseId());
+				Pair<Integer, SetData> p = savedSetData.get(e.getExerciseId());
+				int selectedIndex = p.first;
+				SetData s = p.second;
 				if (s == null) {
 					s = SetData.getDefault();
 				}
-				activeExerciseEditFragment.setExerciseData(Pair.create(e, s));
+				activeExerciseEditFragment.setExerciseData(Pair.create(e,
+						Pair.create(selectedIndex, s)));
 				fragmentActiveExerciseEditView.setVisibility(View.VISIBLE);
+				listViewRunSummary.setVisibility(View.GONE);
+				removeMenuItem(menuItemDelete);
+				if (selectedIndex != -1) {
+					// TODO Handle selection changes
+					addMenuItem(menuItemDelete);
+				}
+				removeMenuItem(menuItemCreate);
+				addMenuItem(menuItemCreate);
 			} else {
-				// TODO Summary
 				setTitle(R.string.summary);
 				fragmentActiveExerciseEditView.setVisibility(View.GONE);
+				runSummaryAdapter.notifyDataSetChanged();
+				listViewRunSummary.setVisibility(View.VISIBLE);
+				removeMenuItem(menuItemDelete);
+				removeMenuItem(menuItemCreate);
 			}
 		}
 	}
@@ -239,7 +303,8 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 
 	@Override
 	public void latestCallback(ExerciseData e, long exerciseId, boolean ok) {
-		savedSetData.put(exerciseId, e == null ? null : e.getBestWeightSet());
+		savedSetData.put(exerciseId,
+				Pair.create(-1, e == null ? null : e.getBestWeightSet()));
 		latestLoaded++;
 		update(0);
 	}

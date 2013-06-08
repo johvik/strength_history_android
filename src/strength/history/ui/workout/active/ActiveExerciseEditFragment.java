@@ -22,6 +22,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 	private SetDataAdapter setDataAdapter;
 	private ExerciseData exerciseData = null;
 	private SetData savedSetData = null;
+	private int selectedIndex = AdapterView.INVALID_POSITION;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -29,15 +30,17 @@ public class ActiveExerciseEditFragment extends Fragment {
 		setDataAdapter = new SetDataAdapter(activity.getApplicationContext());
 	}
 
-	public void setExerciseData(Pair<ExerciseData, SetData> p) {
+	public void setExerciseData(Pair<ExerciseData, Pair<Integer, SetData>> p) {
 		exerciseData = p.first;
-		savedSetData = p.second;
+		selectedIndex = p.second.first;
+		savedSetData = p.second.second;
 		update();
 	}
 
-	public Pair<ExerciseData, SetData> getExerciseData() {
+	public Pair<ExerciseData, Pair<Integer, SetData>> getExerciseData() {
 		save();
-		return Pair.create(exerciseData, savedSetData);
+		return Pair.create(exerciseData,
+				Pair.create(selectedIndex, savedSetData));
 	}
 
 	public void addSetData() {
@@ -50,7 +53,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 
 	public void editSetData() {
 		if (exerciseData != null) {
-			int index = listViewSetData.getSelectedItemPosition();
+			int index = listViewSetData.getCheckedItemPosition();
 			if (index != AdapterView.INVALID_POSITION) {
 				// TODO
 			}
@@ -59,8 +62,9 @@ public class ActiveExerciseEditFragment extends Fragment {
 
 	public void removeSetData() {
 		if (exerciseData != null) {
-			int index = listViewSetData.getSelectedItemPosition();
+			int index = listViewSetData.getCheckedItemPosition();
 			if (index != AdapterView.INVALID_POSITION) {
+				listViewSetData.clearChoices();
 				exerciseData.remove(index);
 				setDataAdapter.notifyDataSetChanged();
 			}
@@ -72,12 +76,18 @@ public class ActiveExerciseEditFragment extends Fragment {
 			numberPickerRepetitions.setNumber(savedSetData.getRepetitions());
 			numberDecimalPickerWeight.setNumber(savedSetData.getWeight());
 		}
+		if (selectedIndex != AdapterView.INVALID_POSITION) {
+			listViewSetData.setItemChecked(selectedIndex, true);
+		} else {
+			listViewSetData.clearChoices();
+		}
 		setDataAdapter.setList(exerciseData);
 	}
 
 	private void save() {
 		savedSetData = new SetData(numberDecimalPickerWeight.getNumber(),
 				numberPickerRepetitions.getNumber());
+		selectedIndex = listViewSetData.getCheckedItemPosition();
 	}
 
 	@Override
@@ -90,6 +100,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 		numberDecimalPickerWeight = (NumberDecimalPicker) view
 				.findViewById(R.id.numberDecimalPickerWeight);
 		listViewSetData = (ListView) view.findViewById(R.id.listViewSetData);
+		listViewSetData.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listViewSetData.setAdapter(setDataAdapter);
 		return view;
 	}
