@@ -79,4 +79,8 @@ public class SetData extends Base<SetData> {
 	public int getRepetitions() {
 		return repetitions;
 	}
+
+	public static SetData getDefault() {
+		return new SetData(50.0, 5);
+	}
 }

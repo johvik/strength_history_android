@@ -85,6 +85,28 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 		return exercise_id;
 	}
 
+	public SetData getBestWeightSet() {
+		int size = sets.size();
+		if (size == 0) {
+			return null;
+		}
+		SetData res = sets.get(0);
+		double best = res.getWeight();
+		for (int i = 1; i < size; i++) {
+			SetData si = sets.get(i);
+			double w = si.getWeight();
+			if (w > best) {
+				res = si;
+				best = w;
+			} else if (w == best) {
+				if (si.getRepetitions() > res.getRepetitions()) {
+					res = si;
+				}
+			}
+		}
+		return res;
+	}
+
 	/*
 	 * *************************************************************
 	 * 

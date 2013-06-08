@@ -2,6 +2,7 @@ package strength.history.ui.workout;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -31,12 +32,15 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	public static final String WORKOUT = "rwork";
 	public static final String TIME = "rtime";
 	private static final String WORKOUT_DATA = "rwdata";
+	private static final String SAVED_SET_DATA = "ssdata";
 	private static final String INDEX = "rindex";
 	private Workout workout = null;
 	private long time = -1;
 	private WorkoutData workoutData = null;
+	private HashMap<Long, SetData> savedSetData = new HashMap<Long, SetData>();
 	private int index = 0;
 	private ActiveExerciseEditFragment activeExerciseEditFragment;
+	private View fragmentActiveExerciseEditView;
 	private SortedList<Exercise> exercises = new SortedList<Exercise>(
 			new Comparator<Exercise>() {
 				@Override
@@ -49,6 +53,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private boolean showedWarning = false;
 	private Toast toastWarning;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,6 +62,9 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		if (savedInstanceState != null) {
 			index = savedInstanceState.getInt(INDEX, 0);
 			workoutData = savedInstanceState.getParcelable(WORKOUT_DATA);
+			savedSetData = (HashMap<Long, SetData>) savedInstanceState
+					.getSerializable(SAVED_SET_DATA);
+			Log.d("hmm", savedSetData + "");
 		}
 		if (workout != null && time != -1) {
 			toastWarning = Toast.makeText(this, R.string.run_back_warning,
@@ -64,6 +72,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			setTitle(workout.getName());
 			activeExerciseEditFragment = (ActiveExerciseEditFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.fragmentActiveExerciseEdit);
+			fragmentActiveExerciseEditView = findViewById(R.id.fragmentActiveExerciseEdit);
 			Button buttonPrevious = (Button) findViewById(R.id.buttonRunPrevious);
 			Button buttonNext = (Button) findViewById(R.id.buttonRunNext);
 			buttonPrevious.setOnClickListener(new OnClickListener() {
@@ -77,8 +86,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				public void onClick(View v) {
 					showedWarning = false;
 					toastWarning.cancel();
-					index++;
-					update();
+					update(1);
 				}
 			});
 			setCustomBackButton(new OnClickListener() {
@@ -119,6 +127,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		super.onPause();
 		DataListener.remove(this);
 		toastWarning.cancel();
+		save();
 	}
 
 	@Override
@@ -126,6 +135,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt(INDEX, index);
 		outState.putParcelable(WORKOUT_DATA, workoutData);
+		outState.putSerializable(SAVED_SET_DATA, savedSetData);
 	}
 
 	@Override
@@ -138,9 +148,17 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		previous();
 	}
 
+	private void save() {
+		if (index >= 0 && index < workoutData.size()) {
+			Pair<ExerciseData, SetData> p = activeExerciseEditFragment
+					.getExerciseData();
+			savedSetData.put(p.first.getExerciseId(), p.second);
+			workoutData.set(index, p.first);
+		}
+	}
+
 	private void previous() {
-		index--;
-		if (index == -1) {
+		if (index == 0) {
 			if (showedWarning) {
 				finish(); // Cancel
 			} else {
@@ -148,13 +166,17 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				toastWarning.show();
 			}
 		}
-		update();
+		update(-1);
 	}
 
-	private void update() {
+	private void update(int change) {
 		int size = workoutData.size();
 		if (exercisesLoaded && latestLoaded >= size) {
 			setCustomProgressBarVisibility(false);
+			if (change != 0) {
+				save();
+			}
+			index += change;
 			if (index < 0) {
 				index = 0;
 			}
@@ -162,7 +184,6 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				index = size;
 			}
 			if (index < size) {
-				// TODO
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
 						"", MuscleGroup.DEFAULT));
@@ -171,11 +192,16 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 					Exercise ex = exercises.get(pos);
 					setTitle((index + 1) + "/" + size + " " + ex.getName());
 				}
-				activeExerciseEditFragment.setExerciseData(Pair.create(e,
-						new SetData(50, 5)));
+				SetData s = savedSetData.get(e.getExerciseId());
+				if (s == null) {
+					s = SetData.getDefault();
+				}
+				activeExerciseEditFragment.setExerciseData(Pair.create(e, s));
+				fragmentActiveExerciseEditView.setVisibility(View.VISIBLE);
 			} else {
 				// TODO Summary
 				setTitle(R.string.summary);
+				fragmentActiveExerciseEditView.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -207,14 +233,14 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		exercises.addAll(e);
 		if (done) {
 			exercisesLoaded = true;
-			update();
+			update(0);
 		}
 	}
 
 	@Override
 	public void latestCallback(ExerciseData e, long exerciseId, boolean ok) {
-		// TODO Auto-generated method stub
+		savedSetData.put(exerciseId, e == null ? null : e.getBestWeightSet());
 		latestLoaded++;
-		update();
+		update(0);
 	}
 }
