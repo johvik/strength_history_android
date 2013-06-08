@@ -42,5 +42,8 @@
     <string name="results">Results</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="run_workout_error">Failed to open workout.</string>
+    <string name="run_back_warning">Press again to cancel.</string>
+    <string name="summary">Summary</string>
 
 </resources>

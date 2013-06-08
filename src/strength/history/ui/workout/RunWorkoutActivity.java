@@ -1,46 +1,220 @@
 package strength.history.ui.workout;
 
+import java.util.Collection;
+import java.util.Comparator;
+
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 import strength.history.R;
+import strength.history.data.DataListener;
+import strength.history.data.DataProvider;
+import strength.history.data.SortedList;
+import strength.history.data.provider.ExerciseProvider;
+import strength.history.data.provider.WorkoutDataProvider;
+import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
+import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.workout.active.ActiveExerciseEditFragment;
 
-public class RunWorkoutActivity extends CustomTitleFragmentActivity {
+public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
+		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData {
 	public static final String WORKOUT = "rwork";
 	public static final String TIME = "rtime";
+	private static final String WORKOUT_DATA = "rwdata";
+	private static final String INDEX = "rindex";
 	private Workout workout = null;
 	private long time = -1;
 	private WorkoutData workoutData = null;
+	private int index = 0;
+	private ActiveExerciseEditFragment activeExerciseEditFragment;
+	private SortedList<Exercise> exercises = new SortedList<Exercise>(
+			new Comparator<Exercise>() {
+				@Override
+				public int compare(Exercise lhs, Exercise rhs) {
+					return lhs.compareTo(rhs);
+				}
+			}, true);
+	private boolean exercisesLoaded = false;
+	private int latestLoaded = 0;
+	private boolean showedWarning = false;
+	private Toast toastWarning;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		workout = getIntent().getParcelableExtra(WORKOUT);
 		time = getIntent().getLongExtra(TIME, -1);
+		if (savedInstanceState != null) {
+			index = savedInstanceState.getInt(INDEX, 0);
+			workoutData = savedInstanceState.getParcelable(WORKOUT_DATA);
+		}
 		if (workout != null && time != -1) {
+			toastWarning = Toast.makeText(this, R.string.run_back_warning,
+					Toast.LENGTH_SHORT);
 			setTitle(workout.getName());
+			activeExerciseEditFragment = (ActiveExerciseEditFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.fragmentActiveExerciseEdit);
+			Button buttonPrevious = (Button) findViewById(R.id.buttonRunPrevious);
+			Button buttonNext = (Button) findViewById(R.id.buttonRunNext);
+			buttonPrevious.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					previous();
+				}
+			});
+			buttonNext.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					showedWarning = false;
+					toastWarning.cancel();
+					index++;
+					update();
+				}
+			});
+			setCustomBackButton(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					previous();
+				}
+			});
+		} else {
+			Toast.makeText(this, R.string.run_workout_error, Toast.LENGTH_SHORT)
+					.show();
+			finish();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// TODO Change all to resume/pause!
+		setCustomProgressBarVisibility(true);
+		DataProvider dataProvider = DataListener.add(this);
+		Context c = getApplicationContext();
+		if (workoutData == null) {
+			latestLoaded = 0;
 			workoutData = new WorkoutData(time, workout.getId());
 			for (Long l : workout) {
 				workoutData.add(new ExerciseData(l));
+				dataProvider.latestExerciseData(l, c);
 			}
-			int index = 0;
-			if (index < workoutData.size()) {
-				// TODO
-				ActiveExerciseEditFragment activeExerciseEditFragment = (ActiveExerciseEditFragment) getSupportFragmentManager()
-						.findFragmentById(R.id.fragmentActiveExerciseEdit);
-				activeExerciseEditFragment.setExerciseData(Pair.create(
-						workoutData.get(index), new SetData(50, 5)));
-			}
+		} else {
+			latestLoaded = workoutData.size();
 		}
+		dataProvider.queryExercise(c);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		DataListener.remove(this);
+		toastWarning.cancel();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(INDEX, index);
+		outState.putParcelable(WORKOUT_DATA, workoutData);
 	}
 
 	@Override
 	protected int getLayoutResID() {
 		return R.layout.activity_run_workout;
+	}
+
+	@Override
+	public void onBackPressed() {
+		previous();
+	}
+
+	private void previous() {
+		index--;
+		if (index == -1) {
+			if (showedWarning) {
+				finish(); // Cancel
+			} else {
+				showedWarning = true;
+				toastWarning.show();
+			}
+		}
+		update();
+	}
+
+	private void update() {
+		int size = workoutData.size();
+		if (exercisesLoaded && latestLoaded >= size) {
+			setCustomProgressBarVisibility(false);
+			if (index < 0) {
+				index = 0;
+			}
+			if (index > size) {
+				index = size;
+			}
+			if (index < size) {
+				// TODO
+				ExerciseData e = workoutData.get(index);
+				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
+						"", MuscleGroup.DEFAULT));
+				Log.d("", size + " " + pos + " " + exercises.size());
+				if (pos != -1) {
+					Exercise ex = exercises.get(pos);
+					setTitle((index + 1) + "/" + size + " " + ex.getName());
+				}
+				activeExerciseEditFragment.setExerciseData(Pair.create(e,
+						new SetData(50, 5)));
+			} else {
+				// TODO Summary
+				setTitle(R.string.summary);
+			}
+		}
+	}
+
+	@Override
+	public void deleteCallback(Exercise e, boolean ok) {
+		if (ok) {
+			exercises.remove(e);
+		}
+	}
+
+	@Override
+	public void insertCallback(Exercise e, boolean ok) {
+		if (ok) {
+			exercises.add(e);
+		}
+	}
+
+	@Override
+	public void updateCallback(Exercise old, Exercise e, boolean ok) {
+		if (ok) {
+			exercises.remove(old);
+			exercises.add(e);
+		}
+	}
+
+	@Override
+	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
+		exercises.addAll(e);
+		if (done) {
+			exercisesLoaded = true;
+			update();
+		}
+	}
+
+	@Override
+	public void latestCallback(ExerciseData e, long exerciseId, boolean ok) {
+		// TODO Auto-generated method stub
+		latestLoaded++;
+		update();
 	}
 }
