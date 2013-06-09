@@ -55,7 +55,7 @@ public class SetDataAdapter extends BaseAdapter {
 		TextView text1;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.list_item_single, parent, false);
+					R.layout.list_item_single_small, parent, false);
 			text1 = (TextView) convertView.findViewById(R.id.text1);
 			convertView.setTag(new ViewHolder(text1));
 		} else {
