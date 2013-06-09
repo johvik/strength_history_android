@@ -11,6 +11,7 @@ import strength.history.data.structure.Workout;
 import strength.history.ui.SettingsActivity;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.custom.NumberDecimalPicker;
+import strength.history.ui.history.HistoryActivity;
 import strength.history.ui.workout.RunWorkoutActivity;
 import strength.history.ui.workout.active.ActiveWorkoutListFragment;
 
@@ -69,7 +70,9 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 				R.string.history, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+						Intent i = new Intent(MainActivity.this,
+								HistoryActivity.class);
+						startActivity(i);
 					}
 				}));
 		addMenuItem(createMenuItem(R.drawable.ic_action_settings,

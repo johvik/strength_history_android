@@ -54,5 +54,7 @@
     <string name="unit_preference_summary">Weights are displayed in %1$s</string>
     <string name="units">Units</string>
     <string name="history">History</string>
+    <string name="event">Event</string>
+    <string name="date">Date</string>
 
 </resources>
