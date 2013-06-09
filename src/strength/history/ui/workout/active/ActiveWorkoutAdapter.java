@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import strength.history.R;
 import strength.history.data.SortedList;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
@@ -35,11 +36,10 @@ public class ActiveWorkoutAdapter extends
 		TextView text1;
 		TextView text2;
 		if (convertView == null) {
-			// TODO Create custom view
 			convertView = LayoutInflater.from(context).inflate(
-					android.R.layout.simple_list_item_2, parent, false);
-			text1 = (TextView) convertView.findViewById(android.R.id.text1);
-			text2 = (TextView) convertView.findViewById(android.R.id.text2);
+					R.layout.list_item_active_workout, parent, false);
+			text1 = (TextView) convertView.findViewById(R.id.text1);
+			text2 = (TextView) convertView.findViewById(R.id.text2);
 			convertView.setTag(new ViewHolder(text1, text2));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
@@ -53,8 +53,9 @@ public class ActiveWorkoutAdapter extends
 		if (d != null) {
 			text2.setText(DateFormat.getMediumDateFormat(context).format(
 					d.getTime()));
+			text2.setVisibility(View.VISIBLE);
 		} else {
-			text2.setText("");
+			text2.setVisibility(View.GONE);
 		}
 		return convertView;
 	}
