@@ -68,7 +68,11 @@ public class ActiveExerciseEditFragment extends Fragment {
 		if (exerciseData != null) {
 			int index = listViewSetData.getCheckedItemPosition();
 			if (index != AdapterView.INVALID_POSITION) {
-				// TODO
+				exerciseData.remove(index);
+				SetData d = new SetData(numberDecimalPickerWeight.getNumber(),
+						numberPickerRepetitions.getNumber());
+				exerciseData.add(index, d);
+				setDataAdapter.notifyDataSetChanged();
 			}
 		}
 	}

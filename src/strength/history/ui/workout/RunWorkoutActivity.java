@@ -84,14 +84,14 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			runSummaryAdapter = new WorkoutDataSummaryAdapter(this, this);
 			listViewRunSummary.setAdapter(runSummaryAdapter);
 			menuItemCreate = createMenuItem(R.drawable.ic_action_plus,
-					R.string.add, new OnClickListener() {
+					R.string.add_set, new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							activeExerciseEditFragment.addSetData();
 						}
 					});
 			menuItemDelete = createMenuItem(R.drawable.ic_action_delete,
-					R.string.delete, new OnClickListener() {
+					R.string.delete_selected, new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							updateMenu(false);
@@ -99,7 +99,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 						}
 					});
 			menuItemEdit = createMenuItem(R.drawable.ic_action_edit,
-					R.string.edit, new OnClickListener() {
+					R.string.edit_selected, new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							activeExerciseEditFragment.editSetData();

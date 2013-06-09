@@ -45,7 +45,8 @@
     <string name="run_workout_error">Failed to open workout.</string>
     <string name="run_back_warning">Press again to cancel.</string>
     <string name="summary">Summary</string>
-    <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
+    <string name="delete_selected">Delete selected</string>
+    <string name="edit_selected">Edit selected</string>
+    <string name="add_set">Add set</string>
 
 </resources>
