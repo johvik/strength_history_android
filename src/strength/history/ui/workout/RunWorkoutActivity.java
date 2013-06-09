@@ -26,10 +26,11 @@ import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.workout.active.ActiveExerciseEditFragment;
-import strength.history.ui.workout.active.RunSummaryAdapter;
+import strength.history.ui.workout.active.WorkoutDataSummaryAdapter;
 
 public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
-		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData {
+		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData,
+		WorkoutDataSummaryAdapter.Master {
 	public static final String WORKOUT = "rwork";
 	public static final String TIME = "rtime";
 	private static final String WORKOUT_DATA = "rwdata";
@@ -45,7 +46,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private View menuItemCreate;
 	private View menuItemDelete;
 	private ListView listViewRunSummary;
-	private RunSummaryAdapter runSummaryAdapter;
+	private WorkoutDataSummaryAdapter runSummaryAdapter;
 	private SortedList<Exercise> exercises = new SortedList<Exercise>(
 			new Comparator<Exercise>() {
 				@Override
@@ -77,8 +78,9 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			activeExerciseEditFragment = (ActiveExerciseEditFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.fragmentActiveExerciseEdit);
 			fragmentActiveExerciseEditView = findViewById(R.id.fragmentActiveExerciseEdit);
+			fragmentActiveExerciseEditView.setVisibility(View.GONE);
 			listViewRunSummary = (ListView) findViewById(R.id.listViewRunSummary);
-			runSummaryAdapter = new RunSummaryAdapter(this, this);
+			runSummaryAdapter = new WorkoutDataSummaryAdapter(this, this);
 			listViewRunSummary.setAdapter(runSummaryAdapter);
 			menuItemCreate = createMenuItem(R.drawable.ic_action_plus,
 					R.string.add, new OnClickListener() {
@@ -169,34 +171,29 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		previous();
 	}
 
+	@Override
 	public ExerciseData getItem(int position) {
 		return workoutData == null ? null : workoutData.get(position);
 	}
 
+	@Override
 	public int getSize() {
 		return workoutData == null ? 0 : workoutData.size();
 	}
 
-	public String getItemString(int position) {
+	@Override
+	public Pair<ExerciseData, Exercise> getPairItem(int position) {
 		if (workoutData == null) {
-			return "";
-		} else {
-			ExerciseData e = workoutData.get(position);
-			String s;
-			int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0, "",
-					MuscleGroup.DEFAULT));
-			if (pos != -1) {
-				Exercise ex = exercises.get(pos);
-				s = ex.getName() + "";
-			} else {
-				s = "";
-			}
-			for (SetData d : e) {
-				// TODO Add Metrics
-				s += "\n" + d.getRepetitions() + "x" + d.getWeight();
-			}
-			return s;
+			return Pair.create(null, null);
 		}
+		ExerciseData d = workoutData.get(position);
+		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
+				MuscleGroup.DEFAULT));
+		Exercise e = null;
+		if (pos != -1) {
+			e = exercises.get(pos);
+		}
+		return Pair.create(d, e);
 	}
 
 	private void save() {
