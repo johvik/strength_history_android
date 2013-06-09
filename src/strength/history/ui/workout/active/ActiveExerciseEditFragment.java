@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class ActiveExerciseEditFragment extends Fragment {
 	public interface Listener {
@@ -25,6 +26,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 	private NumberDecimalPicker numberDecimalPickerWeight;
 	private ListView listViewSetData;
 	private SetDataAdapter setDataAdapter;
+	private TextView textViewSetResults;
 	private ExerciseData exerciseData = null;
 	private SetData savedSetData = null;
 	private int selectedIndex = AdapterView.INVALID_POSITION;
@@ -58,6 +60,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 			exerciseData.add(new SetData(numberDecimalPickerWeight.getNumber(),
 					numberPickerRepetitions.getNumber()));
 			setDataAdapter.notifyDataSetChanged();
+			updateResultText();
 		}
 	}
 
@@ -77,6 +80,7 @@ public class ActiveExerciseEditFragment extends Fragment {
 				listViewSetData.clearChoices();
 				exerciseData.remove(index);
 				setDataAdapter.notifyDataSetChanged();
+				updateResultText();
 			}
 		}
 	}
@@ -91,7 +95,19 @@ public class ActiveExerciseEditFragment extends Fragment {
 		} else {
 			listViewSetData.clearChoices();
 		}
+		updateResultText();
 		setDataAdapter.setList(exerciseData);
+	}
+
+	private void updateResultText() {
+		int size;
+		if (exerciseData != null) {
+			size = exerciseData.size();
+		} else {
+			size = 0;
+		}
+		textViewSetResults.setText(getString(R.string.results) + " (" + size
+				+ ")");
 	}
 
 	private void save() {
@@ -119,6 +135,8 @@ public class ActiveExerciseEditFragment extends Fragment {
 				listener.onItemSelected();
 			}
 		});
+		textViewSetResults = (TextView) view
+				.findViewById(R.id.textViewSetResults);
 		return view;
 	}
 }

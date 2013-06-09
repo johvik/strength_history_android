@@ -51,6 +51,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textViewSetResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/ui_half_space"
@@ -62,7 +63,7 @@
         android:id="@+id/listViewSetData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@android:layout/simple_list_item_1" >
+        tools:listitem="@layout/list_item_single_small" >
     </ListView>
 
 </LinearLayout>
