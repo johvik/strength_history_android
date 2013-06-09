@@ -48,5 +48,6 @@
     <string name="delete_selected">Delete selected</string>
     <string name="edit_selected">Edit selected</string>
     <string name="add_set">Add set</string>
+    <string name="finish">Finish</string>
 
 </resources>

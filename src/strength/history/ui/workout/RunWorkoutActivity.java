@@ -46,6 +46,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private View menuItemCreate;
 	private View menuItemDelete;
 	private View menuItemEdit;
+	private Button buttonNext;
 	private ListView listViewRunSummary;
 	private WorkoutDataSummaryAdapter runSummaryAdapter;
 	private SortedList<Exercise> exercises = new SortedList<Exercise>(
@@ -59,6 +60,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private int latestLoaded = 0;
 	private boolean showedWarning = false;
 	private Toast toastWarning;
+	private DataProvider dataProvider = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -106,7 +108,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 						}
 					});
 			Button buttonPrevious = (Button) findViewById(R.id.buttonRunPrevious);
-			Button buttonNext = (Button) findViewById(R.id.buttonRunNext);
+			buttonNext = (Button) findViewById(R.id.buttonRunNext);
 			buttonPrevious.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -139,7 +141,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		super.onResume();
 		// TODO Change all to resume/pause!
 		setCustomProgressBarVisibility(true);
-		DataProvider dataProvider = DataListener.add(this);
+		dataProvider = DataListener.add(this);
 		Context c = getApplicationContext();
 		if (workoutData == null) {
 			latestLoaded = 0;
@@ -248,8 +250,12 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			}
 			if (index > size) {
 				index = size;
+				// Save
+				dataProvider.insert(workoutData, getApplicationContext());
+				finish();
 			}
 			if (index < size) {
+				buttonNext.setText(R.string.next);
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
 						"", MuscleGroup.DEFAULT));
@@ -271,6 +277,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				addMenuItem(menuItemCreate);
 				updateMenu(selectedIndex != -1);
 			} else {
+				buttonNext.setText(R.string.finish);
 				setTitle(R.string.summary);
 				fragmentActiveExerciseEditView.setVisibility(View.GONE);
 				runSummaryAdapter.notifyDataSetChanged();
