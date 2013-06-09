@@ -20,7 +20,6 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,8 +35,7 @@ import android.widget.TextView;
  * Main Activity
  */
 public class MainActivity extends CustomTitleFragmentActivity implements
-		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest,
-		OnSharedPreferenceChangeListener {
+		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest {
 	private static final String CUSTOM_DATE = "cdate";
 	private static final String SELECTED_WEIGHT = "sweight";
 
@@ -52,7 +50,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private boolean weightLoaded = false;
 	private AlertDialog alertDialogAddWeight;
 	private NumberDecimalPicker weightPicker;
-	private SharedPreferences sharedPreferences;
+	private static String unit = "kg";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,14 +146,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			weightLoaded = true;
 			updateProgressBar();
 		}
-
-		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -171,7 +161,11 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		unit = sharedPreferences.getString(
+				SettingsActivity.PREF_WEIGHT_UNITS_KEY,
+				getString(R.string.pref_unit_kg));
 		if (!customDate) {
 			updateTextViewDate(new Date());
 		}
@@ -181,7 +175,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 		if (datePickerDialog.isShowing()) {
 			datePickerDialog.cancel();
 			forceSet = true;
@@ -254,5 +247,9 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		}
 		weightLoaded = true;
 		updateProgressBar();
+	}
+
+	public static String getUnit() {
+		return unit;
 	}
 }

@@ -49,5 +49,9 @@
     <string name="edit_selected">Edit selected</string>
     <string name="add_set">Add set</string>
     <string name="finish">Finish</string>
+    <string name="pref_unit_kg">kg</string>
+    <string name="pref_unit_lbs">lbs</string>
+    <string name="unit_preference_summary">Weights are displayed in %1$s</string>
+    <string name="units">Units</string>
 
 </resources>

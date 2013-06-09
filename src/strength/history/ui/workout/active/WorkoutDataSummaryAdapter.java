@@ -1,5 +1,6 @@
 package strength.history.ui.workout.active;
 
+import strength.history.MainActivity;
 import strength.history.R;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
@@ -83,10 +84,9 @@ public class WorkoutDataSummaryAdapter extends BaseAdapter {
 		}
 		if (d != null) {
 			String r = "";
-			// TODO Add Metrics
 			for (SetData s : d) {
 				r += (r == "" ? "" : "\n") + s.getRepetitions() + "x"
-						+ s.getWeight();
+						+ s.getWeight() + " " + MainActivity.getUnit();
 			}
 			if (r.length() == 0) {
 				text2.setText("-");

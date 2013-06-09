@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <ListPreference
+        android:defaultValue="@string/pref_unit_kg"
+        android:entries="@array/pref_weight_units"
+        android:entryValues="@array/pref_weight_units"
+        android:key="pref_weight_units_key"
+        android:summary="@string/unit_preference_summary"
+        android:title="@string/units" />
+
     <Preference
         android:summary="@string/exercises_preference_summary"
         android:title="@string/exercises" >

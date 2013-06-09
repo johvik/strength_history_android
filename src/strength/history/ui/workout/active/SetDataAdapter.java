@@ -1,5 +1,6 @@
 package strength.history.ui.workout.active;
 
+import strength.history.MainActivity;
 import strength.history.R;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
@@ -65,8 +66,8 @@ public class SetDataAdapter extends BaseAdapter {
 
 		if (list != null) {
 			SetData e = list.get(position);
-			// TODO Add Metrics
-			text1.setText(e.getRepetitions() + "x" + e.getWeight());
+			text1.setText(e.getRepetitions() + "x" + e.getWeight() + " "
+					+ MainActivity.getUnit());
 		}
 		return convertView;
 	}
