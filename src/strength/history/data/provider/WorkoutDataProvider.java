@@ -159,10 +159,48 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 	}
 
 	@Override
-	protected void onPurge() {
-		super.onPurge();
+	protected void onBeforePurge() {
+		super.onBeforePurge();
 		latestExerciseDataCache.clear();
 		latestWorkoutDataCache.clear();
+	}
+
+	@Override
+	protected void onBeforeDelete(WorkoutData e) {
+		if (e != null) {
+			latestExerciseDataCache.clear();
+			long workoutId = e.getWorkoutId();
+			WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+			if (cache != null) {
+				if (cache.getId() == e.getId()) {
+					latestWorkoutDataCache.remove(workoutId);
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void onBeforeInsert(WorkoutData e) {
+		if (e != null) {
+			latestExerciseDataCache.clear();
+			long workoutId = e.getWorkoutId();
+			WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+			if (cache != null) {
+				latestWorkoutDataCache.remove(workoutId);
+			}
+		}
+	}
+
+	@Override
+	protected void onBeforeUpdate(WorkoutData e) {
+		if (e != null) {
+			latestExerciseDataCache.clear();
+			long workoutId = e.getWorkoutId();
+			WorkoutData cache = latestWorkoutDataCache.get(workoutId);
+			if (cache != null) {
+				latestWorkoutDataCache.remove(workoutId);
+			}
+		}
 	}
 
 	@Override
@@ -248,7 +286,6 @@ public class WorkoutDataProvider extends Provider<WorkoutData> {
 			break;
 		}
 		case LATEST_EXERCISE_DATA: {
-
 			if (!ok) {
 				long exerciseId = (Long) object;
 				Log.e("WorkoutDataProvider",

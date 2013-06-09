@@ -143,14 +143,22 @@ public abstract class Provider<E extends SyncBase<E>> {
 	/**
 	 * Called when the provider is being purged
 	 */
-	protected void onPurge() {
+	protected void onBeforePurge() {
 		data.clear();
 		loaded = false;
 	}
 
 	public final void purge(Context context, Messenger messenger) {
-		onPurge();
+		onBeforePurge();
 		runLocalService(null, context, messenger, getPurgeArg());
+	}
+
+	/**
+	 * Called before running a local service
+	 * 
+	 * @param e
+	 */
+	protected void onBeforeDelete(E e) {
 	}
 
 	/**
@@ -163,7 +171,16 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void delete(E e, Context context, Messenger messenger) {
+		onBeforeDelete(e);
 		runLocalService(e, context, messenger, getDeleteArg());
+	}
+
+	/**
+	 * Called before running a local service
+	 * 
+	 * @param e
+	 */
+	protected void onBeforeInsert(E e) {
 	}
 
 	/**
@@ -176,6 +193,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void insert(E e, Context context, Messenger messenger) {
+		onBeforeInsert(e);
 		runLocalService(e, context, messenger, getInsertArg());
 	}
 
@@ -208,6 +226,14 @@ public abstract class Provider<E extends SyncBase<E>> {
 	}
 
 	/**
+	 * Called before running a local service
+	 * 
+	 * @param e
+	 */
+	protected void onBeforeUpdate(E e) {
+	}
+
+	/**
 	 * Updates item
 	 * 
 	 * @param e
@@ -217,6 +243,7 @@ public abstract class Provider<E extends SyncBase<E>> {
 	 *            Messenger for callback
 	 */
 	public final void update(E e, Context context, Messenger messenger) {
+		onBeforeUpdate(e);
 		runLocalService(e, context, messenger, getUpdateArg());
 	}
 

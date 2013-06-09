@@ -123,9 +123,37 @@ public class WeightProvider extends Provider<Weight> {
 	}
 
 	@Override
-	protected void onPurge() {
-		super.onPurge();
+	protected void onBeforePurge() {
+		super.onBeforePurge();
 		latestCache = null;
+	}
+
+	@Override
+	protected void onBeforeDelete(Weight e) {
+		if (e != null && latestCache != null) {
+			if (e.getId() == latestCache.getId()) {
+				latestCache = null;
+			}
+		}
+	}
+
+	@Override
+	protected void onBeforeInsert(Weight e) {
+		if (e != null && latestCache != null) {
+			if (latestCache.getTime() <= e.getTime()) {
+				latestCache = null;
+			}
+		}
+	}
+
+	@Override
+	protected void onBeforeUpdate(Weight e) {
+		if (e != null && latestCache != null) {
+			if (e.getId() == latestCache.getId()
+					|| latestCache.getTime() <= e.getTime()) {
+				latestCache = null;
+			}
+		}
 	}
 
 	@Override

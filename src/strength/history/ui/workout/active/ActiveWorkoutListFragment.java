@@ -72,9 +72,10 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onResume() {
+		super.onResume();
 		loaded = false;
+		activeWorkoutList.clear();
 		masterActivity.setLoaded(loaded);
 		dataProvider = DataListener.add(this);
 		totalWorkouts = 0;
@@ -83,8 +84,8 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onPause() {
+		super.onPause();
 		DataListener.remove(this);
 	}
 
@@ -154,12 +155,12 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	@Override
 	public void workoutQueryCallback(Collection<Workout> e, boolean done) {
 		totalWorkouts += e.size();
+		if (done) {
+			totalWorkouts = activeWorkoutList.size();
+		}
 		for (Workout w : e) {
 			activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
 			dataProvider.latestWorkoutData(w.getId(), getActivity());
-		}
-		if (done) {
-			totalWorkouts = activeWorkoutList.size();
 		}
 	}
 
