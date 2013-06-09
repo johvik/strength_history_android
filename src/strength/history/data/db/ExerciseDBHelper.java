@@ -72,14 +72,19 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		return rows != 0;
 	}
 
-	@Override
-	public boolean insert(Exercise e) {
-		SQLiteDatabase db = instance.getWritableDatabase();
+	private static boolean insert(SQLiteDatabase db, Exercise e) {
 		long id = db
 				.insert(Entry.TABLE_NAME, null, instance.toContentValues(e));
 		e.setId(id);
-		db.close();
 		return id != -1;
+	}
+
+	@Override
+	public boolean insert(Exercise e) {
+		SQLiteDatabase db = instance.getWritableDatabase();
+		boolean inserted = insert(db, e);
+		db.close();
+		return inserted;
 	}
 
 	@Override
@@ -132,5 +137,54 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
 				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL, "
 				+ Entry.MUSCLE_GROUP + " INTEGER NOT NULL);");
+		createDefaults(db);
+	}
+
+	private static void createDefaults(SQLiteDatabase db) {
+		// Unsure of the muscle groups :)
+		insert(db, new Exercise("Barbell Curl", MuscleGroup.ARMS));
+		insert(db, new Exercise("Dumbbell Curl", MuscleGroup.ARMS));
+		insert(db, new Exercise("Barbell Tricep Press", MuscleGroup.ARMS));
+		insert(db, new Exercise("Dumbbell Tricep Press", MuscleGroup.ARMS));
+		insert(db, new Exercise("Overhead Press", MuscleGroup.SHOULDERS));
+		insert(db, new Exercise("Wrist Curl", MuscleGroup.ARMS));
+		insert(db, new Exercise("Tricep Kickback", MuscleGroup.ARMS));
+		insert(db, new Exercise("Bench Press", MuscleGroup.CHEST));
+		insert(db, new Exercise("Cable Crossover", MuscleGroup.CHEST));
+		insert(db, new Exercise("Dumbbell Fly", MuscleGroup.CHEST));
+		insert(db, new Exercise("Incline Bench", MuscleGroup.CHEST));
+		insert(db, new Exercise("Dips", MuscleGroup.ARMS));
+		insert(db, new Exercise("Pushup", MuscleGroup.CHEST));
+		insert(db, new Exercise("Pullup", MuscleGroup.BACK));
+		insert(db, new Exercise("Back Raise", MuscleGroup.BACK));
+		insert(db, new Exercise("Bent-Over Row", MuscleGroup.BACK));
+		insert(db, new Exercise("Seated Row", MuscleGroup.BACK));
+		insert(db, new Exercise("Chinup", MuscleGroup.BACK));
+		insert(db, new Exercise("Lat Pulldown", MuscleGroup.BACK));
+		insert(db, new Exercise("Seated Reverse Fly", MuscleGroup.BACK));
+		insert(db, new Exercise("Military Press", MuscleGroup.SHOULDERS));
+		insert(db, new Exercise("Upright Row", MuscleGroup.BACK));
+		insert(db, new Exercise("Front Raise", MuscleGroup.BACK));
+		insert(db, new Exercise("Side Lateral Raise", MuscleGroup.ABS));
+		insert(db, new Exercise("Snatch", MuscleGroup.ARMS));
+		insert(db, new Exercise("Push Press", MuscleGroup.ARMS));
+		insert(db, new Exercise("Shrug", MuscleGroup.SHOULDERS));
+		insert(db, new Exercise("Crunch Machine", MuscleGroup.ABS));
+		insert(db, new Exercise("Crunch", MuscleGroup.ABS));
+		insert(db, new Exercise("Ab Twist", MuscleGroup.ABS));
+		insert(db, new Exercise("Bicycle Kick", MuscleGroup.ABS));
+		insert(db, new Exercise("Hanging Leg Raise", MuscleGroup.ABS));
+		insert(db, new Exercise("Hanging Knee Raise", MuscleGroup.ABS));
+		insert(db, new Exercise("Reverse Crunch", MuscleGroup.ABS));
+		insert(db, new Exercise("V Up", MuscleGroup.ABS));
+		insert(db, new Exercise("Situp", MuscleGroup.ABS));
+		insert(db, new Exercise("Squat", MuscleGroup.LEGS));
+		insert(db, new Exercise("Lunge", MuscleGroup.LEGS));
+		insert(db, new Exercise("Dead Lift", MuscleGroup.LEGS));
+		insert(db, new Exercise("Hamstring Curl", MuscleGroup.LEGS));
+		insert(db, new Exercise("Good Morning", MuscleGroup.BACK));
+		insert(db, new Exercise("Clean", MuscleGroup.LEGS));
+		insert(db, new Exercise("Leg Press", MuscleGroup.LEGS));
+		insert(db, new Exercise("Leg Extension", MuscleGroup.LEGS));
 	}
 }

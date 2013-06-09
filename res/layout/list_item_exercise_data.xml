@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:padding="@dimen/ui_half_space"
+        android:padding="@dimen/ui_space"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:padding="@dimen/ui_half_space"
+        android:padding="@dimen/ui_space"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />

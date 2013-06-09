@@ -54,7 +54,6 @@ public class ActiveWorkoutListFragment extends Fragment implements
 			}, true);
 	private ActiveWorkoutAdapter activeWorkoutAdapter;
 	private DataProvider dataProvider = null;
-	private boolean loaded = false;
 	private Listener masterActivity;
 	private int totalWorkouts = 0;
 	private int loadedWorkouts = 0;
@@ -74,9 +73,8 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		loaded = false;
 		activeWorkoutList.clear();
-		masterActivity.setLoaded(loaded);
+		masterActivity.setLoaded(false);
 		dataProvider = DataListener.add(this);
 		totalWorkouts = 0;
 		loadedWorkouts = 0;
@@ -157,6 +155,9 @@ public class ActiveWorkoutListFragment extends Fragment implements
 		totalWorkouts += e.size();
 		if (done) {
 			totalWorkouts = activeWorkoutList.size();
+			if (totalWorkouts == 0) {
+				masterActivity.setLoaded(true);
+			}
 		}
 		for (Workout w : e) {
 			activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
@@ -180,8 +181,7 @@ public class ActiveWorkoutListFragment extends Fragment implements
 		activeWorkoutAdapter.notifyDataSetChanged();
 		if (loadedWorkouts >= totalWorkouts) {
 			// TODO This might get messed up
-			loaded = true;
-			masterActivity.setLoaded(loaded);
+			masterActivity.setLoaded(true);
 		}
 	}
 }
