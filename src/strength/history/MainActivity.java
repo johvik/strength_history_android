@@ -205,7 +205,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	}
 
 	private void updateProgressBar() {
-		// TODO Progress won't become invisible when empty
 		if (fragmentLoaded && weightLoaded) {
 			setCustomProgressBarVisibility(false);
 		} else {
