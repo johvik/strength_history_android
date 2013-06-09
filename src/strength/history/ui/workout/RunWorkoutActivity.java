@@ -30,7 +30,7 @@ import strength.history.ui.workout.active.WorkoutDataSummaryAdapter;
 
 public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData,
-		WorkoutDataSummaryAdapter.Master {
+		WorkoutDataSummaryAdapter.Master, ActiveExerciseEditFragment.Listener {
 	public static final String WORKOUT = "rwork";
 	public static final String TIME = "rtime";
 	private static final String WORKOUT_DATA = "rwdata";
@@ -45,6 +45,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	private View fragmentActiveExerciseEditView;
 	private View menuItemCreate;
 	private View menuItemDelete;
+	private View menuItemEdit;
 	private ListView listViewRunSummary;
 	private WorkoutDataSummaryAdapter runSummaryAdapter;
 	private SortedList<Exercise> exercises = new SortedList<Exercise>(
@@ -93,7 +94,15 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 					R.string.delete, new OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							updateMenu(false);
 							activeExerciseEditFragment.removeSetData();
+						}
+					});
+			menuItemEdit = createMenuItem(R.drawable.ic_action_edit,
+					R.string.edit, new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activeExerciseEditFragment.editSetData();
 						}
 					});
 			Button buttonPrevious = (Button) findViewById(R.id.buttonRunPrevious);
@@ -217,6 +226,15 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		update(-1);
 	}
 
+	private void updateMenu(boolean show) {
+		removeMenuItem(menuItemEdit);
+		removeMenuItem(menuItemDelete);
+		if (show) {
+			addMenuItem(menuItemDelete, 0);
+			addMenuItem(menuItemEdit, 0);
+		}
+	}
+
 	private void update(int change) {
 		int size = workoutData.size();
 		if (exercisesLoaded && latestLoaded >= size) {
@@ -249,19 +267,15 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 						Pair.create(selectedIndex, s)));
 				fragmentActiveExerciseEditView.setVisibility(View.VISIBLE);
 				listViewRunSummary.setVisibility(View.GONE);
-				removeMenuItem(menuItemDelete);
-				if (selectedIndex != -1) {
-					// TODO Handle selection changes
-					addMenuItem(menuItemDelete);
-				}
 				removeMenuItem(menuItemCreate);
 				addMenuItem(menuItemCreate);
+				updateMenu(selectedIndex != -1);
 			} else {
 				setTitle(R.string.summary);
 				fragmentActiveExerciseEditView.setVisibility(View.GONE);
 				runSummaryAdapter.notifyDataSetChanged();
 				listViewRunSummary.setVisibility(View.VISIBLE);
-				removeMenuItem(menuItemDelete);
+				updateMenu(false);
 				removeMenuItem(menuItemCreate);
 			}
 		}
@@ -304,5 +318,10 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				Pair.create(-1, e == null ? null : e.getBestWeightSet()));
 		latestLoaded++;
 		update(0);
+	}
+
+	@Override
+	public void onItemSelected() {
+		updateMenu(true);
 	}
 }

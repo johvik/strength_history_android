@@ -13,9 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ActiveExerciseEditFragment extends Fragment {
+	public interface Listener {
+		public void onItemSelected();
+	}
+
 	private NumberPicker numberPickerRepetitions;
 	private NumberDecimalPicker numberDecimalPickerWeight;
 	private ListView listViewSetData;
@@ -23,10 +28,15 @@ public class ActiveExerciseEditFragment extends Fragment {
 	private ExerciseData exerciseData = null;
 	private SetData savedSetData = null;
 	private int selectedIndex = AdapterView.INVALID_POSITION;
+	private Listener listener;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		if (!(activity instanceof Listener)) {
+			throw new ClassCastException();
+		}
+		listener = (Listener) activity;
 		setDataAdapter = new SetDataAdapter(activity.getApplicationContext());
 	}
 
@@ -102,6 +112,13 @@ public class ActiveExerciseEditFragment extends Fragment {
 		listViewSetData = (ListView) view.findViewById(R.id.listViewSetData);
 		listViewSetData.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listViewSetData.setAdapter(setDataAdapter);
+		listViewSetData.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				listener.onItemSelected();
+			}
+		});
 		return view;
 	}
 }

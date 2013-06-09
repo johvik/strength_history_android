@@ -46,5 +46,6 @@
     <string name="run_back_warning">Press again to cancel.</string>
     <string name="summary">Summary</string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 
 </resources>
