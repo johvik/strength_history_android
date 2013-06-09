@@ -158,7 +158,6 @@ public class ActiveWorkoutListFragment extends Fragment implements
 			activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
 			dataProvider.latestWorkoutData(w.getId(), getActivity());
 		}
-		activeWorkoutAdapter.notifyDataSetChanged();
 		if (done) {
 			totalWorkouts = activeWorkoutList.size();
 		}
@@ -173,11 +172,11 @@ public class ActiveWorkoutListFragment extends Fragment implements
 				if (id == workoutId) {
 					Pair<Workout, WorkoutData> p = activeWorkoutList.remove(i);
 					activeWorkoutList.add(Pair.create(p.first, e));
-					activeWorkoutAdapter.notifyDataSetChanged();
 					break;
 				}
 			}
 		}
+		activeWorkoutAdapter.notifyDataSetChanged();
 		if (loadedWorkouts >= totalWorkouts) {
 			// TODO This might get messed up
 			loaded = true;
