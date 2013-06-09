@@ -65,6 +65,13 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 						alertDialogAddWeight.show();
 					}
 				}));
+		addMenuItem(createMenuItem(R.drawable.ic_action_history,
+				R.string.history, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+					}
+				}));
 		addMenuItem(createMenuItem(R.drawable.ic_action_settings,
 				R.string.settings, new OnClickListener() {
 					@Override

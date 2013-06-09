@@ -53,5 +53,6 @@
     <string name="pref_unit_lbs">lbs</string>
     <string name="unit_preference_summary">Weights are displayed in %1$s</string>
     <string name="units">Units</string>
+    <string name="history">History</string>
 
 </resources>
