@@ -36,19 +36,19 @@ public class ActiveWorkoutListFragment extends Fragment implements
 				@Override
 				public int compare(Pair<Workout, WorkoutData> lhs,
 						Pair<Workout, WorkoutData> rhs) {
-					// TODO Fix order
 					WorkoutData lhsd = lhs.second;
 					WorkoutData rhsd = rhs.second;
 					if (lhsd == null) {
 						if (rhsd == null) {
-							return lhs.first.compareTo(rhs.first);
+							return lhs.first.getName().compareTo(
+									rhs.first.getName());
 						} else {
 							return -1;
 						}
 					} else if (rhsd == null) {
 						return 1;
 					} else {
-						return lhsd.compareTo(rhsd);
+						return rhsd.compareTo(lhsd);
 					}
 				}
 			}, true);
