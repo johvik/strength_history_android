@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import strength.history.R;
 import strength.history.data.DataListener;
@@ -23,6 +25,7 @@ import strength.history.ui.custom.CustomTitleActivity;
 public class HistoryActivity extends CustomTitleActivity implements
 		WeightProvider.Events, WorkoutDataProvider.Events,
 		WorkoutProvider.Events {
+	private static final String SELECTED_INDEX = "seli";
 	private HistoryAdapter historyAdapter;
 	private SortedList<Workout> workouts = new SortedList<Workout>(
 			new Comparator<Workout>() {
@@ -45,6 +48,10 @@ public class HistoryActivity extends CustomTitleActivity implements
 	private boolean workoutsLoaded = false;
 	private boolean workoutDataLoaded = false;
 	private boolean weightsLoaded = false;
+	private View menuItemDelete;
+	private View menuItemEdit;
+	private int selectedIndex = AdapterView.INVALID_POSITION;
+	private ListView listViewHistory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +63,58 @@ public class HistoryActivity extends CustomTitleActivity implements
 				finish();
 			}
 		});
-		ListView listViewHistory = (ListView) findViewById(R.id.listViewHistory);
+		listViewHistory = (ListView) findViewById(R.id.listViewHistory);
 		listViewHistory.setEmptyView(findViewById(R.id.textViewEmptyList));
 		historyAdapter = new HistoryAdapter(this, historyEvents, workouts);
 		listViewHistory.setAdapter(historyAdapter);
+		listViewHistory.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		listViewHistory.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				selectedIndex = position;
+				updateMenu(true);
+			}
+		});
+
+		addMenuItem(createMenuItem(R.drawable.ic_action_chart, R.string.charts,
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Create chart activity
+					}
+				}));
+		menuItemDelete = createMenuItem(R.drawable.ic_action_delete,
+				R.string.delete_data, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (selectedIndex != AdapterView.INVALID_POSITION) {
+							// TODO Create delete confirm
+							HistoryEvent e = historyEvents
+									.remove(selectedIndex);
+							if (e.isWeight()) {
+								dataProvider.delete(e.getWeight(),
+										getApplicationContext());
+							} else {
+								dataProvider.delete(e.getWorkoutData(),
+										getApplicationContext());
+							}
+							selectedIndex = AdapterView.INVALID_POSITION;
+						}
+					}
+				});
+		menuItemEdit = createMenuItem(R.drawable.ic_action_edit,
+				R.string.edit_data, new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// TODO Create edit stuff
+					}
+				});
+		if (savedInstanceState != null) {
+			selectedIndex = savedInstanceState.getInt(SELECTED_INDEX,
+					AdapterView.INVALID_POSITION);
+		}
 	}
 
 	@Override
@@ -99,11 +154,29 @@ public class HistoryActivity extends CustomTitleActivity implements
 		dataProvider.stop((Weight) null, c);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(SELECTED_INDEX, selectedIndex);
+	}
+
 	private void updateProgressBar() {
 		if (workoutsLoaded && workoutDataLoaded && weightsLoaded) {
+			updateMenu(selectedIndex != AdapterView.INVALID_POSITION);
 			setCustomProgressBarVisibility(false);
+			listViewHistory.setItemChecked(selectedIndex, true);
+			listViewHistory.setSelection(selectedIndex);
 		} else {
 			setCustomProgressBarVisibility(true);
+		}
+	}
+
+	private void updateMenu(boolean show) {
+		removeMenuItem(menuItemDelete);
+		removeMenuItem(menuItemEdit);
+		if (show) {
+			addMenuItem(menuItemDelete, 0);
+			addMenuItem(menuItemEdit, 0);
 		}
 	}
 

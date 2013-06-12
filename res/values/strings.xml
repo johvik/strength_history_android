@@ -56,5 +56,8 @@
     <string name="history">History</string>
     <string name="event">Event</string>
     <string name="date">Date</string>
+    <string name="charts">Charts</string>
+    <string name="edit_data">Edit data</string>
+    <string name="delete_data">Delete data</string>
 
 </resources>

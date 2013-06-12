@@ -33,6 +33,18 @@ public class HistoryEvent {
 		return false;
 	}
 
+	public boolean isWeight() {
+		return w != null;
+	}
+
+	public Weight getWeight() {
+		return w;
+	}
+
+	public WorkoutData getWorkoutData() {
+		return d;
+	}
+
 	public String getEventString(Context context, SortedList<Workout> workouts) {
 		if (d != null) {
 			int pos = workouts.indexOf(new Workout(d.getWorkoutId(), 0, ""));
