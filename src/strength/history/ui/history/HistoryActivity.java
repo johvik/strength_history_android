@@ -101,6 +101,7 @@ public class HistoryActivity extends CustomTitleActivity implements
 										getApplicationContext());
 							}
 							selectedIndex = AdapterView.INVALID_POSITION;
+							listViewHistory.clearChoices();
 							updateMenu(false);
 						}
 					}
