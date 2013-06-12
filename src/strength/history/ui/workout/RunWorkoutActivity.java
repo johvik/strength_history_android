@@ -153,6 +153,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		} else {
 			latestLoaded = workoutData.size();
 		}
+		exercisesLoaded = false;
 		dataProvider.queryExercise(c);
 	}
 

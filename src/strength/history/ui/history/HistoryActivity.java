@@ -39,6 +39,9 @@ public class HistoryActivity extends CustomTitleActivity implements
 				}
 			});
 	private DataProvider dataProvider;
+	private boolean workoutsLoaded = false;
+	private boolean workoutDataLoaded = false;
+	private boolean weightsLoaded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +71,13 @@ public class HistoryActivity extends CustomTitleActivity implements
 		workouts.clear();
 		Context c = getApplicationContext();
 		dataProvider = DataListener.add(this);
+		workoutsLoaded = false;
+		workoutDataLoaded = false;
+		weightsLoaded = false;
+		updateProgressBar();
 		dataProvider.queryWorkout(c);
 		dataProvider.queryWorkoutData(c);
 		dataProvider.queryWeight(c);
-		// TODO Fix progress bar
 	}
 
 	@Override
@@ -88,6 +94,14 @@ public class HistoryActivity extends CustomTitleActivity implements
 		dataProvider.stop((Workout) null, c);
 		dataProvider.stop((WorkoutData) null, c);
 		dataProvider.stop((Weight) null, c);
+	}
+
+	private void updateProgressBar() {
+		if (workoutsLoaded && workoutDataLoaded && weightsLoaded) {
+			setCustomProgressBarVisibility(false);
+		} else {
+			setCustomProgressBarVisibility(true);
+		}
 	}
 
 	@Override
@@ -116,6 +130,10 @@ public class HistoryActivity extends CustomTitleActivity implements
 	public void workoutQueryCallback(Collection<Workout> e, boolean done) {
 		workouts.addAll(e);
 		historyAdapter.notifyDataSetChanged();
+		if (done) {
+			workoutsLoaded = true;
+			updateProgressBar();
+		}
 	}
 
 	@Override
@@ -143,6 +161,10 @@ public class HistoryActivity extends CustomTitleActivity implements
 			historyEvents.add(new HistoryEvent(d));
 		}
 		historyAdapter.notifyDataSetChanged();
+		if (done) {
+			workoutDataLoaded = true;
+			updateProgressBar();
+		}
 	}
 
 	@Override
@@ -170,5 +192,9 @@ public class HistoryActivity extends CustomTitleActivity implements
 			historyEvents.add(new HistoryEvent(w));
 		}
 		historyAdapter.notifyDataSetChanged();
+		if (done) {
+			weightsLoaded = true;
+			updateProgressBar();
+		}
 	}
 }
