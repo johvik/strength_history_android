@@ -20,6 +20,19 @@ public class HistoryEvent {
 		this.d = d;
 	}
 
+	public boolean isSame(HistoryEvent e) {
+		if (w != null) {
+			if (e.w != null) {
+				return w.getId() == e.w.getId();
+			}
+		} else if (d != null) {
+			if (e.d != null) {
+				return d.getId() == e.d.getId();
+			}
+		}
+		return false;
+	}
+
 	public String getEventString(Context context, SortedList<Workout> workouts) {
 		if (d != null) {
 			int pos = workouts.indexOf(new Workout(d.getWorkoutId(), 0, ""));

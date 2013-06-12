@@ -35,9 +35,12 @@ public class HistoryActivity extends CustomTitleActivity implements
 			new Comparator<HistoryEvent>() {
 				@Override
 				public int compare(HistoryEvent lhs, HistoryEvent rhs) {
+					if (lhs.isSame(rhs)) {
+						return 0;
+					}
 					return Long.valueOf(rhs.getTime()).compareTo(lhs.getTime());
 				}
-			});
+			}, true);
 	private DataProvider dataProvider;
 	private boolean workoutsLoaded = false;
 	private boolean workoutDataLoaded = false;
@@ -138,25 +141,31 @@ public class HistoryActivity extends CustomTitleActivity implements
 
 	@Override
 	public void deleteCallback(WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.remove(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void insertCallback(WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.add(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void updateCallback(WorkoutData old, WorkoutData e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.remove(new HistoryEvent(old));
+			historyEvents.add(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void workoutDataQueryCallback(Collection<WorkoutData> e, boolean done) {
-		// TODO Auto-generated method stub
 		for (WorkoutData d : e) {
 			historyEvents.add(new HistoryEvent(d));
 		}
@@ -169,25 +178,31 @@ public class HistoryActivity extends CustomTitleActivity implements
 
 	@Override
 	public void deleteCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.remove(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void insertCallback(Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.add(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void updateCallback(Weight old, Weight e, boolean ok) {
-		// TODO Auto-generated method stub
-
+		if (ok) {
+			historyEvents.remove(new HistoryEvent(old));
+			historyEvents.add(new HistoryEvent(e));
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
 	public void weightQueryCallback(Collection<Weight> e, boolean done) {
-		// TODO Auto-generated method stub
 		for (Weight w : e) {
 			historyEvents.add(new HistoryEvent(w));
 		}
