@@ -93,7 +93,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 					updateTextViewDate(new Date());
 				} else {
 					showDateDialog(customCalendar);
-					// datePickerDialog.show();
 				}
 			}
 		});
