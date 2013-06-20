@@ -10,15 +10,12 @@ import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.ui.SettingsActivity;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.dialog.DateDialog;
 import strength.history.ui.dialog.WeightDialog;
 import strength.history.ui.history.HistoryActivity;
 import strength.history.ui.workout.RunWorkoutActivity;
 import strength.history.ui.workout.active.ActiveWorkoutListFragment;
 
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,7 +25,6 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -37,16 +33,14 @@ import android.widget.TextView;
  */
 public class MainActivity extends CustomTitleFragmentActivity implements
 		ActiveWorkoutListFragment.Listener, WeightProvider.Events.Latest,
-		WeightDialog.Listener {
+		WeightDialog.Listener, DateDialog.Listener {
 	private static final String CUSTOM_DATE = "cdate";
 	private static final String SELECTED_WEIGHT = "sweight";
 
 	private DataProvider mDataProvider = null;
 	private ImageButton imageButtonChangeDate;
-	private DatePickerDialog datePickerDialog;
 	private TextView textViewDate;
 	private boolean customDate = false;
-	private boolean forceSet = false;
 	private static Calendar customCalendar = Calendar.getInstance();
 	private boolean fragmentLoaded = false;
 	private boolean weightLoaded = false;
@@ -87,27 +81,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		textViewDate = (TextView) findViewById(R.id.textViewDate);
 		updateTextViewDate(new Date());
 
-		datePickerDialog = new DatePickerDialog(this, new OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear,
-					int dayOfMonth) {
-				Calendar c = Calendar.getInstance();
-				customCalendar.set(year, monthOfYear, dayOfMonth,
-						c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
-				onDateDoneClick();
-			}
-		}, customCalendar.get(Calendar.YEAR),
-				customCalendar.get(Calendar.MONTH),
-				customCalendar.get(Calendar.DAY_OF_MONTH));
-		datePickerDialog.setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				imageButtonChangeDate
-						.setImageResource(R.drawable.ic_action_date_gray);
-				customDate = false;
-				updateTextViewDate(new Date());
-			}
-		});
 		// TODO What if date is changed (day etc. changes)?
 		imageButtonChangeDate = (ImageButton) findViewById(R.id.imageButtonChangeDate);
 		imageButtonChangeDate.setOnClickListener(new OnClickListener() {
@@ -119,7 +92,8 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 					customDate = false;
 					updateTextViewDate(new Date());
 				} else {
-					datePickerDialog.show();
+					showDateDialog(customCalendar);
+					// datePickerDialog.show();
 				}
 			}
 		});
@@ -145,9 +119,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (forceSet) {
-			customDate = false;
-		}
 		outState.putBoolean(CUSTOM_DATE, customDate);
 		outState.putDouble(SELECTED_WEIGHT, savedWeight);
 	}
@@ -163,16 +134,6 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		if (!customDate) {
 			updateTextViewDate(new Date());
 		}
-		forceSet = false;
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (datePickerDialog.isShowing()) {
-			datePickerDialog.cancel();
-			forceSet = true;
-		}
 	}
 
 	@Override
@@ -186,8 +147,16 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		DataListener.remove(this);
 	}
 
+	private void showDateDialog(Calendar c) {
+		FragmentManager fm = getSupportFragmentManager();
+		DateDialog d = new DateDialog();
+		Bundle b = new Bundle();
+		b.putSerializable(DateDialog.DATE, c);
+		d.setArguments(b);
+		d.show(fm, "fragment_date_dialog");
+	}
+
 	private void showWeightDialog(double weight) {
-		// TODO Make all dialogs fragments!
 		FragmentManager fm = getSupportFragmentManager();
 		WeightDialog d = new WeightDialog();
 		Bundle b = new Bundle();
@@ -266,5 +235,19 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	public void onWeightCancel(double weight) {
 		savedWeight = weight;
+	}
+
+	@Override
+	public void onDateSet(Calendar c) {
+		customCalendar = c;
+		onDateDoneClick();
+	}
+
+	@Override
+	public void onDateCancel(Calendar c) {
+		customCalendar = c;
+		imageButtonChangeDate.setImageResource(R.drawable.ic_action_date_gray);
+		customDate = false;
+		updateTextViewDate(new Date());
 	}
 }
