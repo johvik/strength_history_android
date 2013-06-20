@@ -10,10 +10,10 @@ import strength.history.data.SortedList;
 import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.structure.Workout;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import strength.history.ui.dialog.WorkoutDeleteConfirmDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 		WorkoutListFragment.Listener, WorkoutEditFragment.Listener,
-		WorkoutProvider.Events {
+		WorkoutProvider.Events, WorkoutDeleteConfirmDialog.Listener {
 	private static final int REQUEST_CODE = 1;
 	private static final String CUR_CHOICE = "curChoice";
 	private static final String CUR_WORKOUT = "curWork";
@@ -48,7 +48,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 	private int mCurCheckPosition = -1;
 	private Workout mWorkout = null;
 	private DataProvider dataProvider = null;
-	private AlertDialog alertDialogDeleteConfirm = null;
+	private WorkoutDeleteConfirmDialog workoutDeleteConfirmDialog = null;
 	private View viewMenuSave = null;
 	private View viewMenuDelete = null;
 	private boolean fragmentLoaded = false;
@@ -74,18 +74,6 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 		if (mDualPane) {
 			listViewWorkouts.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
-		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
-				.setTitle(R.string.dialog_workout_delete)
-				.setMessage(R.string.dialog_delete_info)
-				.setPositiveButton(R.string.button_ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								deleteCallback();
-							}
-						}).setNegativeButton(R.string.button_cancel, null)
-				.create();
 		addMenuItem(createMenuItem(R.drawable.ic_action_plus,
 				R.string.create_workout, new OnClickListener() {
 					@Override
@@ -104,7 +92,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 				R.string.delete_workout, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						alertDialogDeleteConfirm.show();
+						showWorkoutDeleteConfirmDialog();
 					}
 				});
 		updateProgressBar();
@@ -129,7 +117,9 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		alertDialogDeleteConfirm.dismiss();
+		if (workoutDeleteConfirmDialog != null) {
+			workoutDeleteConfirmDialog.dismiss();
+		}
 	}
 
 	@Override
@@ -155,6 +145,13 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt(CUR_CHOICE, mCurCheckPosition);
 		outState.putParcelable(CUR_WORKOUT, mWorkout);
+	}
+
+	private void showWorkoutDeleteConfirmDialog() {
+		FragmentManager fm = getSupportFragmentManager();
+		workoutDeleteConfirmDialog = new WorkoutDeleteConfirmDialog();
+		workoutDeleteConfirmDialog.show(fm,
+				"fragment_workout_delete_confirm_dialog");
 	}
 
 	private void continueEditWorkout() {
@@ -316,5 +313,10 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 		} else {
 			setCustomProgressBarVisibility(true);
 		}
+	}
+
+	@Override
+	public void onWorkoutDeleteConfirm() {
+		deleteCallback();
 	}
 }
