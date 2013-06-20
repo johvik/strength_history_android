@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -20,11 +21,12 @@ import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
-import strength.history.ui.custom.CustomTitleActivity;
+import strength.history.ui.WeightDialog;
+import strength.history.ui.custom.CustomTitleFragmentActivity;
 
-public class HistoryActivity extends CustomTitleActivity implements
+public class HistoryActivity extends CustomTitleFragmentActivity implements
 		WeightProvider.Events, WorkoutDataProvider.Events,
-		WorkoutProvider.Events {
+		WorkoutProvider.Events, WeightDialog.Listener {
 	private static final String SELECTED_INDEX = "seli";
 	private HistoryAdapter historyAdapter;
 	private SortedList<Workout> workouts = new SortedList<Workout>(
@@ -110,13 +112,19 @@ public class HistoryActivity extends CustomTitleActivity implements
 				R.string.edit_data, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Create edit stuff
+						HistoryEvent e = historyEvents.get(selectedIndex);
+						if (e.isWeight()) {
+							showWeightDialog(e.getWeight().getWeight());
+						} else {
+							// TODO Create edit stuff
+						}
 					}
 				});
 		if (savedInstanceState != null) {
 			selectedIndex = savedInstanceState.getInt(SELECTED_INDEX,
 					AdapterView.INVALID_POSITION);
 		}
+		// TODO How to handle date in edit?
 	}
 
 	@Override
@@ -160,6 +168,15 @@ public class HistoryActivity extends CustomTitleActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(SELECTED_INDEX, selectedIndex);
+	}
+
+	private void showWeightDialog(double weight) {
+		FragmentManager fm = getSupportFragmentManager();
+		WeightDialog d = new WeightDialog();
+		Bundle b = new Bundle();
+		b.putDouble(WeightDialog.WEIGHT, weight);
+		d.setArguments(b);
+		d.show(fm, "fragment_weight_dialog_edit");
 	}
 
 	private void updateProgressBar() {
@@ -286,5 +303,20 @@ public class HistoryActivity extends CustomTitleActivity implements
 			weightsLoaded = true;
 			updateProgressBar();
 		}
+	}
+
+	@Override
+	public void onWeightOk(double weight) {
+		HistoryEvent e = historyEvents.get(selectedIndex);
+		if (e.isWeight()) {
+			Weight w = e.getWeight();
+			w.setWeight(weight);
+			dataProvider.update(w, getApplicationContext());
+		}
+	}
+
+	@Override
+	public void onWeightCancel(double weight) {
+		// Do nothing
 	}
 }
