@@ -21,8 +21,8 @@ import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
-import strength.history.ui.WeightDialog;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.dialog.WeightDialog;
 
 public class HistoryActivity extends CustomTitleFragmentActivity implements
 		WeightProvider.Events, WorkoutDataProvider.Events,

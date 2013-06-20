@@ -11,10 +11,10 @@ import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import strength.history.ui.dialog.ExerciseDeleteConfirmDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		ExerciseListFragment.Listener, ExerciseEditFragment.Listener,
-		ExerciseProvider.Events {
+		ExerciseProvider.Events, ExerciseDeleteConfirmDialog.Listener {
 	private static final int REQUEST_CODE = 1;
 	private static final String CUR_CHOICE = "curChoice";
 	private static final String CUR_EXERCISE = "curExer";
@@ -49,9 +49,9 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	private int mCurCheckPosition = -1;
 	private Exercise mExercise = null;
 	private DataProvider dataProvider = null;
-	private AlertDialog alertDialogDeleteConfirm = null;
 	private View viewMenuSave = null;
 	private View viewMenuDelete = null;
+	private ExerciseDeleteConfirmDialog exerciseDeleteConfirmDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +73,6 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		if (mDualPane) {
 			listViewExercises.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		}
-		alertDialogDeleteConfirm = new AlertDialog.Builder(this)
-				.setTitle(R.string.dialog_exercise_delete)
-				.setMessage(R.string.dialog_delete_info)
-				.setPositiveButton(R.string.button_ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								deleteCallback();
-							}
-						}).setNegativeButton(R.string.button_cancel, null)
-				.create();
 		addMenuItem(createMenuItem(R.drawable.ic_action_plus,
 				R.string.create_exercise, new OnClickListener() {
 					@Override
@@ -103,7 +91,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				R.string.delete_exercise, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						alertDialogDeleteConfirm.show();
+						showExerciseDeleteConfirmDialog();
 					}
 				});
 		setCustomProgressBarVisibility(true);
@@ -128,7 +116,9 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		alertDialogDeleteConfirm.dismiss();
+		if (exerciseDeleteConfirmDialog != null) {
+			exerciseDeleteConfirmDialog.dismiss();
+		}
 	}
 
 	@Override
@@ -154,6 +144,13 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 		super.onSaveInstanceState(outState);
 		outState.putInt(CUR_CHOICE, mCurCheckPosition);
 		outState.putParcelable(CUR_EXERCISE, mExercise);
+	}
+
+	private void showExerciseDeleteConfirmDialog() {
+		FragmentManager fm = getSupportFragmentManager();
+		exerciseDeleteConfirmDialog = new ExerciseDeleteConfirmDialog();
+		exerciseDeleteConfirmDialog.show(fm,
+				"fragment_exercise_delete_confirm_dialog");
 	}
 
 	private void continueEditExercise() {
@@ -300,5 +297,10 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 				exerciseAdapter.notifyDataSetChanged();
 			}
 		}
+	}
+
+	@Override
+	public void onExerciseDeleteConfirm() {
+		deleteCallback();
 	}
 }
