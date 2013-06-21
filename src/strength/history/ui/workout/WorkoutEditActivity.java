@@ -29,6 +29,7 @@ public class WorkoutEditActivity extends CustomTitleFragmentActivity implements
 			Intent intent = new Intent();
 			intent.putExtra(WORKOUT, savedInstanceState.getParcelable(WORKOUT));
 			setResult(RESULT_ORIENTATION, intent);
+			// TODO Try to merge into one activity
 			finish();
 			return;
 		}
