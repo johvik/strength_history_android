@@ -22,13 +22,13 @@ import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
-import strength.history.ui.dialog.EntryDeleteConfirmDialog;
+import strength.history.ui.dialog.EventDeleteConfirmDialog;
 import strength.history.ui.dialog.WeightDialog;
 
 public class HistoryActivity extends CustomTitleFragmentActivity implements
 		WeightProvider.Events, WorkoutDataProvider.Events,
 		WorkoutProvider.Events, WeightDialog.Listener,
-		EntryDeleteConfirmDialog.Listener {
+		EventDeleteConfirmDialog.Listener {
 	private static final String SELECTED_INDEX = "seli";
 	private HistoryAdapter historyAdapter;
 	private SortedList<Workout> workouts = new SortedList<Workout>(
@@ -95,7 +95,7 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 					public void onClick(View v) {
 						if (selectedIndex != AdapterView.INVALID_POSITION) {
 							HistoryEvent e = historyEvents.get(selectedIndex);
-							showEntryDeleteConfirmDialog(e);
+							showEventDeleteConfirmDialog(e);
 						}
 					}
 				});
@@ -172,13 +172,13 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 		d.show(fm, "fragment_weight_dialog_edit");
 	}
 
-	private void showEntryDeleteConfirmDialog(HistoryEvent e) {
+	private void showEventDeleteConfirmDialog(HistoryEvent e) {
 		FragmentManager fm = getSupportFragmentManager();
-		EntryDeleteConfirmDialog d = new EntryDeleteConfirmDialog();
+		EventDeleteConfirmDialog d = new EventDeleteConfirmDialog();
 		Bundle b = new Bundle();
-		b.putString(EntryDeleteConfirmDialog.NAME,
+		b.putString(EventDeleteConfirmDialog.NAME,
 				e.getEventString(this, workouts));
-		b.putLong(EntryDeleteConfirmDialog.TIME, e.getTime());
+		b.putLong(EventDeleteConfirmDialog.TIME, e.getTime());
 		d.setArguments(b);
 		d.show(fm, "fragment_entry_delete_confirm");
 	}
@@ -327,7 +327,7 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 	}
 
 	@Override
-	public void onEntryDeleteConfirm() {
+	public void onEventDeleteConfirm() {
 		if (selectedIndex != AdapterView.INVALID_POSITION) {
 			HistoryEvent e = historyEvents.remove(selectedIndex);
 			if (e.isWeight()) {

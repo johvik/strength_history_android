@@ -31,7 +31,6 @@
     <string name="start_workout">Start workout</string>
     <string name="self_weight_entry">Self weight entry</string>
     <string name="settings">Settings</string>
-    <string name="done">Done</string>
     <string name="exercises_preference_summary">Mange exercises</string>
     <string name="workouts_preference_summary">Mange workouts</string>
     <string name="repetitions">Repetitions</string>
@@ -57,12 +56,11 @@
     <string name="edit_data">Edit data</string>
     <string name="delete_data">Delete data</string>
     <string name="button_save">Save</string>
-    <string name="dialog_entry_delete_title">Delete entry?</string>
-    <string name="dialog_entry_delete_message">%1$s %2$s will be lost.</string>
+    <string name="dialog_event_delete_title">Delete event?</string>
+    <string name="dialog_event_delete_message">%1$s %2$s will be lost.</string>
     <string name="dialog_exercise_delete_title">Delete exercise?</string>
     <string name="dialog_exercise_delete_message">History data associated with this exercise will be lost.</string>
     <string name="dialog_workout_delete_title">Delete workout?</string>
     <string name="dialog_workout_delete_message">History data associated with this workout will be lost.</string>
-    <string name="workout">Workout</string>
 
 </resources>

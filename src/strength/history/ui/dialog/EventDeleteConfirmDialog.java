@@ -12,9 +12,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 
-public class EntryDeleteConfirmDialog extends DialogFragment {
+public class EventDeleteConfirmDialog extends DialogFragment {
 	public interface Listener {
-		public void onEntryDeleteConfirm();
+		public void onEventDeleteConfirm();
 	}
 
 	public static final String NAME = "nam";
@@ -46,16 +46,16 @@ public class EntryDeleteConfirmDialog extends DialogFragment {
 			}
 		}
 		return new AlertDialog.Builder(a)
-				.setTitle(R.string.dialog_entry_delete_title)
+				.setTitle(R.string.dialog_event_delete_title)
 				.setMessage(
-						a.getString(R.string.dialog_entry_delete_message, name,
+						a.getString(R.string.dialog_event_delete_message, name,
 								time))
 				.setPositiveButton(R.string.button_ok,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								listener.onEntryDeleteConfirm();
+								listener.onEventDeleteConfirm();
 							}
 						}).setNegativeButton(R.string.button_cancel, null)
 				.create();
