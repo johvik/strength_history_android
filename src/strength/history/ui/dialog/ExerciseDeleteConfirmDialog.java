@@ -27,8 +27,8 @@ public class ExerciseDeleteConfirmDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		return new AlertDialog.Builder(getActivity())
-				.setTitle(R.string.dialog_exercise_delete)
-				.setMessage(R.string.dialog_delete_info)
+				.setTitle(R.string.dialog_exercise_delete_title)
+				.setMessage(R.string.dialog_exercise_delete_message)
 				.setPositiveButton(R.string.button_ok,
 						new DialogInterface.OnClickListener() {
 							@Override

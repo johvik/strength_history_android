@@ -9,7 +9,6 @@
     <string name="exercises">Exercises</string>
     <string name="edit_exercise">Edit exercise</string>
     <string name="text_select_exercise_to_edit">Select exercise to edit.</string>
-    <string name="dialog_exercise_delete">Delete exercise?</string>
     <string name="empty_str"></string>
     <string name="plus">+</string>
     <string name="minus">-</string>
@@ -19,7 +18,6 @@
     <string name="delete_exercise">Delete exercise</string>
     <string name="add">Add</string>
     <string name="text_select_workout_to_edit">Select workout to edit.</string>
-    <string name="dialog_workout_delete">Delete workout?</string>
     <string name="edit_workout">Edit workout</string>
     <string name="create_workout">Create workout</string>
     <string name="delete_workout">Delete workout</string>
@@ -36,7 +34,6 @@
     <string name="done">Done</string>
     <string name="exercises_preference_summary">Mange exercises</string>
     <string name="workouts_preference_summary">Mange workouts</string>
-    <string name="dialog_delete_info">History data associated with this entry will be lost.</string>
     <string name="repetitions">Repetitions</string>
     <string name="weight">Weight</string>
     <string name="results">Results</string>
@@ -60,5 +57,12 @@
     <string name="edit_data">Edit data</string>
     <string name="delete_data">Delete data</string>
     <string name="button_save">Save</string>
+    <string name="dialog_entry_delete_title">Delete entry?</string>
+    <string name="dialog_entry_delete_message">%1$s %2$s will be lost.</string>
+    <string name="dialog_exercise_delete_title">Delete exercise?</string>
+    <string name="dialog_exercise_delete_message">History data associated with this exercise will be lost.</string>
+    <string name="dialog_workout_delete_title">Delete workout?</string>
+    <string name="dialog_workout_delete_message">History data associated with this workout will be lost.</string>
+    <string name="workout">Workout</string>
 
 </resources>

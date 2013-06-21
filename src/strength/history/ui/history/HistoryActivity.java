@@ -22,11 +22,13 @@ import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.dialog.EntryDeleteConfirmDialog;
 import strength.history.ui.dialog.WeightDialog;
 
 public class HistoryActivity extends CustomTitleFragmentActivity implements
 		WeightProvider.Events, WorkoutDataProvider.Events,
-		WorkoutProvider.Events, WeightDialog.Listener {
+		WorkoutProvider.Events, WeightDialog.Listener,
+		EntryDeleteConfirmDialog.Listener {
 	private static final String SELECTED_INDEX = "seli";
 	private HistoryAdapter historyAdapter;
 	private SortedList<Workout> workouts = new SortedList<Workout>(
@@ -92,19 +94,8 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 					@Override
 					public void onClick(View v) {
 						if (selectedIndex != AdapterView.INVALID_POSITION) {
-							// TODO Create delete confirm
-							HistoryEvent e = historyEvents
-									.remove(selectedIndex);
-							if (e.isWeight()) {
-								dataProvider.delete(e.getWeight(),
-										getApplicationContext());
-							} else {
-								dataProvider.delete(e.getWorkoutData(),
-										getApplicationContext());
-							}
-							selectedIndex = AdapterView.INVALID_POSITION;
-							listViewHistory.clearChoices();
-							updateMenu(false);
+							HistoryEvent e = historyEvents.get(selectedIndex);
+							showEntryDeleteConfirmDialog(e);
 						}
 					}
 				});
@@ -112,11 +103,13 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 				R.string.edit_data, new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						HistoryEvent e = historyEvents.get(selectedIndex);
-						if (e.isWeight()) {
-							showWeightDialog(e.getWeight().getWeight());
-						} else {
-							// TODO Create edit stuff
+						if (selectedIndex != AdapterView.INVALID_POSITION) {
+							HistoryEvent e = historyEvents.get(selectedIndex);
+							if (e.isWeight()) {
+								showWeightDialog(e.getWeight().getWeight());
+							} else {
+								// TODO Create edit stuff
+							}
 						}
 					}
 				});
@@ -177,6 +170,17 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 		b.putDouble(WeightDialog.WEIGHT, weight);
 		d.setArguments(b);
 		d.show(fm, "fragment_weight_dialog_edit");
+	}
+
+	private void showEntryDeleteConfirmDialog(HistoryEvent e) {
+		FragmentManager fm = getSupportFragmentManager();
+		EntryDeleteConfirmDialog d = new EntryDeleteConfirmDialog();
+		Bundle b = new Bundle();
+		b.putString(EntryDeleteConfirmDialog.NAME,
+				e.getEventString(this, workouts));
+		b.putLong(EntryDeleteConfirmDialog.TIME, e.getTime());
+		d.setArguments(b);
+		d.show(fm, "fragment_entry_delete_confirm");
 	}
 
 	private void updateProgressBar() {
@@ -307,16 +311,34 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 
 	@Override
 	public void onWeightOk(double weight) {
-		HistoryEvent e = historyEvents.get(selectedIndex);
-		if (e.isWeight()) {
-			Weight w = e.getWeight();
-			w.setWeight(weight);
-			dataProvider.update(w, getApplicationContext());
+		if (selectedIndex != AdapterView.INVALID_POSITION) {
+			HistoryEvent e = historyEvents.get(selectedIndex);
+			if (e.isWeight()) {
+				Weight w = e.getWeight();
+				w.setWeight(weight);
+				dataProvider.update(w, getApplicationContext());
+			}
 		}
 	}
 
 	@Override
 	public void onWeightCancel(double weight) {
 		// Do nothing
+	}
+
+	@Override
+	public void onEntryDeleteConfirm() {
+		if (selectedIndex != AdapterView.INVALID_POSITION) {
+			HistoryEvent e = historyEvents.remove(selectedIndex);
+			if (e.isWeight()) {
+				dataProvider.delete(e.getWeight(), getApplicationContext());
+			} else {
+				dataProvider
+						.delete(e.getWorkoutData(), getApplicationContext());
+			}
+			selectedIndex = AdapterView.INVALID_POSITION;
+			listViewHistory.clearChoices();
+			updateMenu(false);
+		}
 	}
 }

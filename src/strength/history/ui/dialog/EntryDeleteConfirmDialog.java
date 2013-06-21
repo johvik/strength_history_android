@@ -1,5 +1,7 @@
 package strength.history.ui.dialog;
 
+import java.util.Date;
+
 import strength.history.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,11 +9,16 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 
-public class WorkoutDeleteConfirmDialog extends DialogFragment {
+public class EntryDeleteConfirmDialog extends DialogFragment {
 	public interface Listener {
-		public void onWorkoutDeleteConfirm();
+		public void onEntryDeleteConfirm();
 	}
+
+	public static final String NAME = "nam";
+	public static final String TIME = "tim";
 
 	private Listener listener;
 
@@ -26,15 +33,29 @@ public class WorkoutDeleteConfirmDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return new AlertDialog.Builder(getActivity())
-				.setTitle(R.string.dialog_workout_delete_title)
-				.setMessage(R.string.dialog_workout_delete_message)
+		FragmentActivity a = getActivity();
+		Bundle b = getArguments();
+		String name = "?";
+		String time = "?";
+		if (b != null) {
+			name = b.getString(NAME);
+			time = DateFormat.getMediumDateFormat(a).format(
+					new Date(b.getLong(TIME)));
+			if (name == null) {
+				name = "?";
+			}
+		}
+		return new AlertDialog.Builder(a)
+				.setTitle(R.string.dialog_entry_delete_title)
+				.setMessage(
+						a.getString(R.string.dialog_entry_delete_message, name,
+								time))
 				.setPositiveButton(R.string.button_ok,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								listener.onWorkoutDeleteConfirm();
+								listener.onEntryDeleteConfirm();
 							}
 						}).setNegativeButton(R.string.button_cancel, null)
 				.create();
