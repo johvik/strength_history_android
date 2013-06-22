@@ -87,7 +87,9 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Create chart activity
+						Intent i = new Intent(HistoryActivity.this,
+								HistoryChartActivity.class);
+						startActivity(i);
 					}
 				}));
 		menuItemDelete = createMenuItem(R.drawable.ic_action_delete,

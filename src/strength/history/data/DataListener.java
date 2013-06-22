@@ -25,8 +25,10 @@ public final class DataListener {
 	 * Should be called in onDestroy
 	 * 
 	 * @param object
+	 * @return The data provider object
 	 */
-	public static void remove(Object object) {
+	public static DataProvider remove(Object object) {
 		dataProvider.removeListeners(object);
+		return dataProvider;
 	}
 }
