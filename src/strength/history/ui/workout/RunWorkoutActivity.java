@@ -24,9 +24,9 @@ import strength.history.data.structure.SetData;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
+import strength.history.ui.active.ActiveExerciseEditFragment;
+import strength.history.ui.active.WorkoutDataSummaryAdapter;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
-import strength.history.ui.workout.active.ActiveExerciseEditFragment;
-import strength.history.ui.workout.active.WorkoutDataSummaryAdapter;
 
 public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		ExerciseProvider.Events, WorkoutDataProvider.Events.LatestExerciseData,

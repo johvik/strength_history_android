@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/fragmentActiveWorkoutList"
-        android:name="strength.history.ui.workout.active.ActiveWorkoutListFragment"
+        android:name="strength.history.ui.active.ActiveWorkoutListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/linearLayoutTop"

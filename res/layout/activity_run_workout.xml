@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/fragmentActiveExerciseEdit"
-        android:name="strength.history.ui.workout.active.ActiveExerciseEditFragment"
+        android:name="strength.history.ui.active.ActiveExerciseEditFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linearLayoutRunBottom"
