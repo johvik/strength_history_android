@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -108,7 +109,17 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 							if (e.isWeight()) {
 								showWeightDialog(e.getWeight().getWeight());
 							} else {
-								// TODO Create edit stuff
+								Intent i = new Intent(HistoryActivity.this,
+										WorkoutDataEditActivity.class);
+								i.putExtra(
+										WorkoutDataEditActivity.WORKOUT_NAME, e
+												.getEventString(
+														HistoryActivity.this,
+														workouts));
+								i.putExtra(
+										WorkoutDataEditActivity.WORKOUT_DATA, e
+												.getWorkoutData().copy());
+								startActivity(i);
 							}
 						}
 					}

@@ -45,7 +45,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/linearLayoutHistoryTop"
         android:gravity="center"
-        android:text="@string/empty_listview"
+        android:text="@string/empty_listview_hint_create"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

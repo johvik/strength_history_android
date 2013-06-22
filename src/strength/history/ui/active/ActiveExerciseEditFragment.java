@@ -90,10 +90,11 @@ public class ActiveExerciseEditFragment extends Fragment {
 	}
 
 	private void update() {
-		if (savedSetData != null) {
-			numberPickerRepetitions.setNumber(savedSetData.getRepetitions());
-			numberDecimalPickerWeight.setNumber(savedSetData.getWeight());
+		if (savedSetData == null) {
+			savedSetData = SetData.getDefault();
 		}
+		numberPickerRepetitions.setNumber(savedSetData.getRepetitions());
+		numberDecimalPickerWeight.setNumber(savedSetData.getWeight());
 		if (selectedIndex != AdapterView.INVALID_POSITION) {
 			listViewSetData.setItemChecked(selectedIndex, true);
 		} else {

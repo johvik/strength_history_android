@@ -266,12 +266,8 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				}
 				Pair<Integer, SetData> p = savedSetData.get(e.getExerciseId());
 				int selectedIndex = p.first;
-				SetData s = p.second;
-				if (s == null) {
-					s = SetData.getDefault();
-				}
 				activeExerciseEditFragment.setExerciseData(Pair.create(e,
-						Pair.create(selectedIndex, s)));
+						Pair.create(selectedIndex, p.second)));
 				fragmentActiveExerciseEditView.setVisibility(View.VISIBLE);
 				listViewRunSummary.setVisibility(View.GONE);
 				removeMenuItem(menuItemCreate);

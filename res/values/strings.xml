@@ -13,7 +13,8 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="muscle_group">Muscle group</string>
-    <string name="empty_listview">Nothing here! Try to create something.</string>
+    <string name="empty_listview_hint_create">Nothing here! Try to create something.</string>
+    <string name="empty_listview">Nothing here!</string>
     <string name="create_exercise">Create exercise</string>
     <string name="delete_exercise">Delete exercise</string>
     <string name="add">Add</string>
@@ -62,5 +63,9 @@
     <string name="dialog_exercise_delete_message">History data associated with this exercise will be lost.</string>
     <string name="dialog_workout_delete_title">Delete workout?</string>
     <string name="dialog_workout_delete_message">History data associated with this workout will be lost.</string>
+    <string name="error_exercise_data_not_found">Error: Exercise data not found.</string>
+    <string name="error_workout_data_not_found">Error: Workout data not found.</string>
+    <string name="select_exercisedata_to_edit">Select exercise data to edit</string>
+    <string name="save_changes">Save changes</string>
 
 </resources>

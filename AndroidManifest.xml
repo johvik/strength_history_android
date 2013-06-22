@@ -37,7 +37,9 @@
         <activity android:name="strength.history.ui.SettingsActivity" />
         <activity android:name="strength.history.ui.exercise.ExercisesActivity" />
         <activity android:name="strength.history.ui.exercise.ExerciseEditActivity" />
+        <activity android:name="strength.history.ui.history.ExerciseDataEditActivity" />
         <activity android:name="strength.history.ui.history.HistoryActivity" />
+        <activity android:name="strength.history.ui.history.WorkoutDataEditActivity" />
         <activity android:name="strength.history.ui.workout.RunWorkoutActivity" />
         <activity android:name="strength.history.ui.workout.WorkoutsActivity" />
         <activity android:name="strength.history.ui.workout.WorkoutEditActivity" />
