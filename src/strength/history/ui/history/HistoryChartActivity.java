@@ -2,6 +2,7 @@ package strength.history.ui.history;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -15,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,6 +31,7 @@ import strength.history.data.provider.WeightProvider;
 import strength.history.data.provider.WorkoutDataProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
+import strength.history.data.structure.SetData;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.WorkoutData;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
@@ -71,6 +74,17 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 					return rhs.compareTo(lhs);
 				}
 			}, true);
+	private Comparator<Pair<Long, SetData>> pairCmp = new Comparator<Pair<Long, SetData>>() {
+		@Override
+		public int compare(Pair<Long, SetData> lhs, Pair<Long, SetData> rhs) {
+			int c = rhs.first.compareTo(lhs.first);
+			if (c == 0) {
+				return lhs.second.compareTo(rhs.second);
+			}
+			return c;
+		}
+	};
+	private HashMap<Long, SortedList<Pair<Long, SetData>>> groupedData = new HashMap<Long, SortedList<Pair<Long, SetData>>>();
 	private int selectedIndex = 0;
 	private StringSelectDialog stringSelectDialog = null;
 
@@ -139,6 +153,10 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (stringSelectDialog != null) {
 			stringSelectDialog.dismiss();
 		}
+		weightData.clear();
+		workoutData.clear();
+		exercises.clear();
+		groupedData.clear();
 	}
 
 	@Override
@@ -156,6 +174,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		weightData.clear();
 		workoutData.clear();
 		exercises.clear();
+		groupedData.clear();
 		setCustomProgressBarVisibility(true);
 		DataProvider dataProvider = DataListener.add(this);
 		Context c = getApplicationContext();
@@ -178,7 +197,27 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	private void update() {
 		if (weightLoaded && workoutDataLoaded && exercisesLoaded) {
 			setCustomProgressBarVisibility(false);
+			groupData();
 			resetChart();
+		}
+	}
+
+	private void groupData() {
+		// Groups data by exercise id
+		groupedData.clear();
+		for (WorkoutData w : workoutData) {
+			for (ExerciseData d : w) {
+				long id = d.getExerciseId();
+				SetData s = d.getBestWeightSet();
+				if (s != null) {
+					SortedList<Pair<Long, SetData>> l = groupedData.get(id);
+					if (l == null) {
+						l = new SortedList<Pair<Long, SetData>>(pairCmp, true);
+					}
+					l.add(Pair.create(w.getTime(), s));
+					groupedData.put(id, l);
+				}
+			}
 		}
 	}
 
@@ -212,13 +251,10 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 			Exercise e = exercises.get(index - 1);
 			s = new XYSeries(e.getName());
 			long id = e.getId();
-			// TODO Probably too slow, create a exercise data by id in service?
-			for (WorkoutData wd : workoutData) {
-				for (ExerciseData ed : wd) {
-					if (ed.getExerciseId() == id && !ed.isEmpty()) {
-						s.add(wd.getTime(), ed.getBestWeightSet().getWeight());
-						break;
-					}
+			SortedList<Pair<Long, SetData>> data = groupedData.get(id);
+			if (data != null) {
+				for (Pair<Long, SetData> p : data) {
+					s.add(p.first, p.second.getWeight());
 				}
 			}
 		}
@@ -239,6 +275,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void deleteCallback(Weight e, boolean ok) {
 		if (ok) {
 			weightData.remove(e);
+			update();
 		}
 	}
 
@@ -246,6 +283,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void insertCallback(Weight e, boolean ok) {
 		if (ok) {
 			weightData.add(e);
+			update();
 		}
 	}
 
@@ -254,6 +292,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (ok) {
 			weightData.remove(old);
 			weightData.add(e);
+			update();
 		}
 	}
 
@@ -270,6 +309,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void deleteCallback(WorkoutData e, boolean ok) {
 		if (ok) {
 			workoutData.remove(e);
+			update();
 		}
 	}
 
@@ -277,6 +317,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void insertCallback(WorkoutData e, boolean ok) {
 		if (ok) {
 			workoutData.add(e);
+			update();
 		}
 	}
 
@@ -285,6 +326,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (ok) {
 			workoutData.remove(old);
 			workoutData.add(e);
+			update();
 		}
 	}
 
@@ -301,6 +343,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void deleteCallback(Exercise e, boolean ok) {
 		if (ok) {
 			exercises.remove(e);
+			update();
 		}
 	}
 
@@ -308,6 +351,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	public void insertCallback(Exercise e, boolean ok) {
 		if (ok) {
 			exercises.add(e);
+			update();
 		}
 	}
 
@@ -316,6 +360,7 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (ok) {
 			exercises.remove(old);
 			exercises.add(e);
+			update();
 		}
 	}
 
