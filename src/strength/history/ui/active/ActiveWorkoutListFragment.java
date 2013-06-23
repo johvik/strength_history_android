@@ -12,6 +12,7 @@ import strength.history.data.provider.WorkoutProvider;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Pair;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 public class ActiveWorkoutListFragment extends Fragment implements
@@ -104,6 +106,19 @@ public class ActiveWorkoutListFragment extends Fragment implements
 							int position, long id) {
 						masterActivity.startWorkout(activeWorkoutList
 								.get(position).first);
+					}
+				});
+		listViewActiveWorkouts
+				.setOnItemLongClickListener(new OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent,
+							View view, int position, long id) {
+						Intent i = new Intent(getActivity(),
+								LatestWorkoutDataActivity.class);
+						i.putExtra(LatestWorkoutDataActivity.WORKOUT,
+								activeWorkoutList.get(position).first);
+						startActivity(i);
+						return true;
 					}
 				});
 		return view;

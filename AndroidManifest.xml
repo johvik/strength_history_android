@@ -35,6 +35,7 @@
             android:exported="false" />
 
         <activity android:name="strength.history.ui.SettingsActivity" />
+        <activity android:name="strength.history.ui.active.LatestWorkoutDataActivity" />
         <activity android:name="strength.history.ui.exercise.ExercisesActivity" />
         <activity android:name="strength.history.ui.exercise.ExerciseEditActivity" />
         <activity android:name="strength.history.ui.history.ExerciseDataEditActivity" />

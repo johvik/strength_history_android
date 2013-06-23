@@ -71,5 +71,6 @@
     <string name="chart_label_y">Weight (%1$s)</string>
     <string name="select_chart">Select chart</string>
     <string name="generating_defaults">Generating defaults</string>
+    <string name="latest_workoutdata_title">Latest %1$s</string>
 
 </resources>
