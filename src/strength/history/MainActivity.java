@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
@@ -49,6 +50,13 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private boolean weightLoaded = false;
 	private double savedWeight = Weight.DEFAULT;
 	private static String unit = "kg";
+	private Handler refreshHandler = new Handler();
+	private Runnable refreshRunnable = new Runnable() {
+		@Override
+		public void run() {
+			refreshDate();
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +90,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 					}
 				}));
 		textViewDate = (TextView) findViewById(R.id.textViewDate);
-		updateTextViewDate(new Date());
 
-		// TODO What if date is changed (day etc. changes)?
 		imageButtonChangeDate = (ImageButton) findViewById(R.id.imageButtonChangeDate);
 		imageButtonChangeDate.setOnClickListener(new OnClickListener() {
 			@Override
@@ -144,9 +150,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		unit = sharedPreferences.getString(
 				SettingsActivity.PREF_WEIGHT_UNITS_KEY,
 				getString(R.string.pref_unit_kg));
-		if (!customDate) {
-			updateTextViewDate(new Date());
-		}
+		refreshDate();
 	}
 
 	@Override
@@ -155,9 +159,30 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onPause() {
+		super.onPause();
+		refreshHandler.removeCallbacks(refreshRunnable);
 		DataListener.remove(this);
+	}
+
+	private void refreshDate() {
+		if (!customDate) {
+			updateTextViewDate(new Date());
+		}
+		refreshHandler.removeCallbacks(refreshRunnable); // Double check
+		// +50 for some extra margin
+		refreshHandler.postDelayed(refreshRunnable, timeToNextDay() + 50);
+	}
+
+	private static long timeToNextDay() {
+		Calendar c = Calendar.getInstance();
+		long now = c.getTimeInMillis();
+		c.add(Calendar.DAY_OF_MONTH, 1); // day+1
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		return c.getTimeInMillis() - now;
 	}
 
 	private void onFirstRun() {
