@@ -2,7 +2,9 @@ package strength.history.ui.history;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
@@ -17,15 +19,18 @@ import strength.history.data.DataListener;
 import strength.history.data.DataProvider;
 import strength.history.data.SortedList;
 import strength.history.data.provider.ExerciseProvider;
+import strength.history.data.provider.WorkoutDataProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
+import strength.history.data.structure.SetData;
 import strength.history.data.structure.WorkoutData;
 import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.active.WorkoutDataSummaryAdapter;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 
 public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
-		implements ExerciseProvider.Events, WorkoutDataSummaryAdapter.Master {
+		implements ExerciseProvider.Events, WorkoutDataSummaryAdapter.Master,
+		WorkoutDataProvider.Events.LatestExerciseData {
 	public static final String WORKOUT_DATA = "woda";
 	public static final String WORKOUT_NAME = "wona";
 	private static final String EDIT_POSITION = "epos";
@@ -41,6 +46,10 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 	private DataProvider dataProvider;
 	private WorkoutDataSummaryAdapter workoutDataSummaryAdapter;
 	private int editPosition = AdapterView.INVALID_POSITION;
+	private boolean exercisesLoaded = false;
+	private int latestTotalCount = 0;
+	private int latestCallbackCount = 0;
+	private HashMap<Long, SetData> latestBestSet = new HashMap<Long, SetData>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +99,11 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 									ExerciseDataEditActivity.class);
 							Pair<ExerciseData, Exercise> p = getPairItem(position);
 							Exercise e = p.second;
+							ExerciseData d = p.first.copy();
 							i.putExtra(ExerciseDataEditActivity.EXERCISE_DATA,
-									p.first.copy());
+									d);
+							SetData s = latestBestSet.get(d.getExerciseId());
+							i.putExtra(ExerciseDataEditActivity.SET_DATA, s);
 							i.putExtra(ExerciseDataEditActivity.EXERCISE_NAME,
 									e != null ? e.getName() : "?");
 							editPosition = position;
@@ -122,9 +134,19 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
+		exercisesLoaded = false;
 		setCustomProgressBarVisibility(true);
 		dataProvider = DataListener.add(this);
-		dataProvider.queryExercise(getApplicationContext());
+		Context c = getApplicationContext();
+		dataProvider.queryExercise(c);
+		if (workoutData != null) {
+			latestBestSet.clear();
+			latestTotalCount = workoutData.size();
+			latestCallbackCount = 0;
+			for (ExerciseData d : workoutData) {
+				dataProvider.latestExerciseData(d.getExerciseId(), c);
+			}
+		}
 	}
 
 	@Override
@@ -143,6 +165,12 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(WORKOUT_DATA, workoutData);
 		outState.putInt(EDIT_POSITION, editPosition);
+	}
+
+	private void update() {
+		if (exercisesLoaded && latestCallbackCount >= latestTotalCount) {
+			setCustomProgressBarVisibility(false);
+		}
 	}
 
 	@Override
@@ -171,7 +199,8 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 	public void exerciseQueryCallback(Collection<Exercise> e, boolean done) {
 		exercises.addAll(e);
 		if (done) {
-			setCustomProgressBarVisibility(false);
+			exercisesLoaded = true;
+			update();
 			workoutDataSummaryAdapter.notifyDataSetChanged();
 		}
 	}
@@ -199,5 +228,14 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 			e = exercises.get(pos);
 		}
 		return Pair.create(d, e);
+	}
+
+	@Override
+	public void latestCallback(ExerciseData e, long exerciseId, boolean ok) {
+		if (ok) {
+			latestBestSet.put(exerciseId, e.getBestWeightSet());
+		}
+		latestCallbackCount++;
+		update();
 	}
 }

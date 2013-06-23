@@ -18,7 +18,7 @@ public class ExerciseDataEditActivity extends CustomTitleFragmentActivity
 		implements ActiveExerciseEditFragment.Listener {
 	public static final String EXERCISE_DATA = "exda";
 	public static final String EXERCISE_NAME = "exna";
-	private static final String SET_DATA = "sed";
+	public static final String SET_DATA = "sed";
 	private static final String SELECTED_INDEX = "sei";
 	private ActiveExerciseEditFragment activeExerciseEditFragment;
 	private View menuItemDelete;
@@ -33,10 +33,10 @@ public class ExerciseDataEditActivity extends CustomTitleFragmentActivity
 
 		String exerciseName = getIntent().getStringExtra(EXERCISE_NAME);
 		if (savedInstanceState == null) {
-			exerciseData = getIntent().getParcelableExtra(EXERCISE_DATA);
+			Intent i = getIntent();
+			exerciseData = i.getParcelableExtra(EXERCISE_DATA);
+			setData = i.getParcelableExtra(SET_DATA);
 			selectedIndex = AdapterView.INVALID_POSITION;
-			setData = exerciseData.getBestWeightSet();
-			// TODO Query latest exercise data?
 		} else {
 			exerciseData = savedInstanceState.getParcelable(EXERCISE_DATA);
 			selectedIndex = savedInstanceState.getInt(SELECTED_INDEX,
