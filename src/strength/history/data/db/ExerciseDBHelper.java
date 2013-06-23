@@ -137,54 +137,59 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
 				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL, "
 				+ Entry.MUSCLE_GROUP + " INTEGER NOT NULL);");
-		createDefaults(db);
 	}
 
-	private static void createDefaults(SQLiteDatabase db) {
+	public ArrayList<Exercise> createDefaults() {
 		// Unsure of the muscle groups :)
-		insert(db, new Exercise("Barbell Curl", MuscleGroup.ARMS));
-		insert(db, new Exercise("Dumbbell Curl", MuscleGroup.ARMS));
-		insert(db, new Exercise("Barbell Tricep Press", MuscleGroup.ARMS));
-		insert(db, new Exercise("Dumbbell Tricep Press", MuscleGroup.ARMS));
-		insert(db, new Exercise("Overhead Press", MuscleGroup.SHOULDERS));
-		insert(db, new Exercise("Wrist Curl", MuscleGroup.ARMS));
-		insert(db, new Exercise("Tricep Kickback", MuscleGroup.ARMS));
-		insert(db, new Exercise("Bench Press", MuscleGroup.CHEST));
-		insert(db, new Exercise("Cable Crossover", MuscleGroup.CHEST));
-		insert(db, new Exercise("Dumbbell Fly", MuscleGroup.CHEST));
-		insert(db, new Exercise("Incline Bench", MuscleGroup.CHEST));
-		insert(db, new Exercise("Dips", MuscleGroup.ARMS));
-		insert(db, new Exercise("Pushup", MuscleGroup.CHEST));
-		insert(db, new Exercise("Pullup", MuscleGroup.BACK));
-		insert(db, new Exercise("Back Raise", MuscleGroup.BACK));
-		insert(db, new Exercise("Bent-Over Row", MuscleGroup.BACK));
-		insert(db, new Exercise("Seated Row", MuscleGroup.BACK));
-		insert(db, new Exercise("Chinup", MuscleGroup.BACK));
-		insert(db, new Exercise("Lat Pulldown", MuscleGroup.BACK));
-		insert(db, new Exercise("Seated Reverse Fly", MuscleGroup.BACK));
-		insert(db, new Exercise("Military Press", MuscleGroup.SHOULDERS));
-		insert(db, new Exercise("Upright Row", MuscleGroup.BACK));
-		insert(db, new Exercise("Front Raise", MuscleGroup.BACK));
-		insert(db, new Exercise("Side Lateral Raise", MuscleGroup.ABS));
-		insert(db, new Exercise("Snatch", MuscleGroup.ARMS));
-		insert(db, new Exercise("Push Press", MuscleGroup.ARMS));
-		insert(db, new Exercise("Shrug", MuscleGroup.SHOULDERS));
-		insert(db, new Exercise("Crunch Machine", MuscleGroup.ABS));
-		insert(db, new Exercise("Crunch", MuscleGroup.ABS));
-		insert(db, new Exercise("Ab Twist", MuscleGroup.ABS));
-		insert(db, new Exercise("Bicycle Kick", MuscleGroup.ABS));
-		insert(db, new Exercise("Hanging Leg Raise", MuscleGroup.ABS));
-		insert(db, new Exercise("Hanging Knee Raise", MuscleGroup.ABS));
-		insert(db, new Exercise("Reverse Crunch", MuscleGroup.ABS));
-		insert(db, new Exercise("V Up", MuscleGroup.ABS));
-		insert(db, new Exercise("Situp", MuscleGroup.ABS));
-		insert(db, new Exercise("Squat", MuscleGroup.LEGS));
-		insert(db, new Exercise("Lunge", MuscleGroup.LEGS));
-		insert(db, new Exercise("Dead Lift", MuscleGroup.LEGS));
-		insert(db, new Exercise("Hamstring Curl", MuscleGroup.LEGS));
-		insert(db, new Exercise("Good Morning", MuscleGroup.BACK));
-		insert(db, new Exercise("Clean", MuscleGroup.LEGS));
-		insert(db, new Exercise("Leg Press", MuscleGroup.LEGS));
-		insert(db, new Exercise("Leg Extension", MuscleGroup.LEGS));
+		ArrayList<Exercise> res = new ArrayList<Exercise>();
+		res.add(new Exercise("Barbell Curl", MuscleGroup.ARMS));
+		res.add(new Exercise("Dumbbell Curl", MuscleGroup.ARMS));
+		res.add(new Exercise("Barbell Tricep Press", MuscleGroup.ARMS));
+		res.add(new Exercise("Dumbbell Tricep Press", MuscleGroup.ARMS));
+		res.add(new Exercise("Overhead Press", MuscleGroup.SHOULDERS));
+		res.add(new Exercise("Wrist Curl", MuscleGroup.ARMS));
+		res.add(new Exercise("Tricep Kickback", MuscleGroup.ARMS));
+		res.add(new Exercise("Bench Press", MuscleGroup.CHEST));
+		res.add(new Exercise("Cable Crossover", MuscleGroup.CHEST));
+		res.add(new Exercise("Dumbbell Fly", MuscleGroup.CHEST));
+		res.add(new Exercise("Incline Bench", MuscleGroup.CHEST));
+		res.add(new Exercise("Dips", MuscleGroup.ARMS));
+		res.add(new Exercise("Pushup", MuscleGroup.CHEST));
+		res.add(new Exercise("Pullup", MuscleGroup.BACK));
+		res.add(new Exercise("Back Raise", MuscleGroup.BACK));
+		res.add(new Exercise("Bent-Over Row", MuscleGroup.BACK));
+		res.add(new Exercise("Seated Row", MuscleGroup.BACK));
+		res.add(new Exercise("Chinup", MuscleGroup.BACK));
+		res.add(new Exercise("Lat Pulldown", MuscleGroup.BACK));
+		res.add(new Exercise("Seated Reverse Fly", MuscleGroup.BACK));
+		res.add(new Exercise("Military Press", MuscleGroup.SHOULDERS));
+		res.add(new Exercise("Upright Row", MuscleGroup.BACK));
+		res.add(new Exercise("Front Raise", MuscleGroup.BACK));
+		res.add(new Exercise("Side Lateral Raise", MuscleGroup.ABS));
+		res.add(new Exercise("Snatch", MuscleGroup.ARMS));
+		res.add(new Exercise("Push Press", MuscleGroup.ARMS));
+		res.add(new Exercise("Shrug", MuscleGroup.SHOULDERS));
+		res.add(new Exercise("Crunch Machine", MuscleGroup.ABS));
+		res.add(new Exercise("Crunch", MuscleGroup.ABS));
+		res.add(new Exercise("Ab Twist", MuscleGroup.ABS));
+		res.add(new Exercise("Bicycle Kick", MuscleGroup.ABS));
+		res.add(new Exercise("Hanging Leg Raise", MuscleGroup.ABS));
+		res.add(new Exercise("Hanging Knee Raise", MuscleGroup.ABS));
+		res.add(new Exercise("Reverse Crunch", MuscleGroup.ABS));
+		res.add(new Exercise("V Up", MuscleGroup.ABS));
+		res.add(new Exercise("Situp", MuscleGroup.ABS));
+		res.add(new Exercise("Squat", MuscleGroup.LEGS));
+		res.add(new Exercise("Lunge", MuscleGroup.LEGS));
+		res.add(new Exercise("Dead Lift", MuscleGroup.LEGS));
+		res.add(new Exercise("Hamstring Curl", MuscleGroup.LEGS));
+		res.add(new Exercise("Good Morning", MuscleGroup.BACK));
+		res.add(new Exercise("Clean", MuscleGroup.LEGS));
+		res.add(new Exercise("Leg Press", MuscleGroup.LEGS));
+		res.add(new Exercise("Leg Extension", MuscleGroup.LEGS));
+
+		for (Exercise e : res) {
+			insert(e);
+		}
+		return res;
 	}
 }

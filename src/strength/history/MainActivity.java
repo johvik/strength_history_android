@@ -11,6 +11,7 @@ import strength.history.data.structure.Workout;
 import strength.history.ui.SettingsActivity;
 import strength.history.ui.active.ActiveWorkoutListFragment;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
+import strength.history.ui.dialog.CreateDefaultDialog;
 import strength.history.ui.dialog.DateDialog;
 import strength.history.ui.dialog.WeightDialog;
 import strength.history.ui.history.HistoryActivity;
@@ -18,6 +19,7 @@ import strength.history.ui.workout.RunWorkoutActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +38,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		WeightDialog.Listener, DateDialog.Listener {
 	private static final String CUSTOM_DATE = "cdate";
 	private static final String SELECTED_WEIGHT = "sweight";
+	private static final String FIRST_RUN = "first_run";
 
 	private DataProvider mDataProvider = null;
 	private ImageButton imageButtonChangeDate;
@@ -113,6 +116,17 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 			weightLoaded = true;
 			updateProgressBar();
 		}
+
+		// Handle first run
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean firstRun = sharedPreferences.getBoolean(FIRST_RUN, true);
+		if (firstRun) {
+			Editor e = sharedPreferences.edit();
+			e.putBoolean(FIRST_RUN, false);
+			e.commit();
+			onFirstRun();
+		}
 	}
 
 	@Override
@@ -144,6 +158,12 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		DataListener.remove(this);
+	}
+
+	private void onFirstRun() {
+		FragmentManager fm = getSupportFragmentManager();
+		CreateDefaultDialog d = new CreateDefaultDialog();
+		d.show(fm, "fragment_create_default_dialog");
 	}
 
 	private void showDateDialog(Calendar c) {

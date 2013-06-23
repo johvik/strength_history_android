@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -50,11 +51,11 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 			new Comparator<Exercise>() {
 				@Override
 				public int compare(Exercise lhs, Exercise rhs) {
-					if (lhs.compareTo(rhs) == 0) {
-						return 0;
-					} else {
-						return lhs.getName().compareTo(rhs.getName());
+					int c = lhs.getName().compareTo(rhs.getName());
+					if (c == 0) {
+						c = lhs.compareTo(rhs);
 					}
+					return c;
 				}
 			}, true);
 	private SortedList<WorkoutData> workoutData = new SortedList<WorkoutData>(
@@ -325,6 +326,9 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (done) {
 			exercisesLoaded = true;
 			update();
+			for (Exercise ex : exercises) {
+				Log.d("ok", "" + ex);
+			}
 		}
 	}
 

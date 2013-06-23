@@ -79,6 +79,11 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	}
 
 	@Override
+	public void createDefaults(Exercise e, Context context) {
+		mExerciseProvider.createDefaults(context, mMessenger);
+	}
+
+	@Override
 	public void delete(Exercise e, Context context) {
 		mExerciseProvider.delete(e, context, mMessenger);
 	}
