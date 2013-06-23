@@ -15,7 +15,6 @@ import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -326,9 +325,6 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		if (done) {
 			exercisesLoaded = true;
 			update();
-			for (Exercise ex : exercises) {
-				Log.d("ok", "" + ex);
-			}
 		}
 	}
 
