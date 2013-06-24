@@ -72,5 +72,9 @@
     <string name="select_chart">Select chart</string>
     <string name="generating_defaults">Generating defaults</string>
     <string name="latest_workoutdata_title">Latest %1$s</string>
+    <string name="backup">Backup</string>
+    <string name="importt">Import</string>
+    <string name="backup_summary">Create a backup of the data</string>
+    <string name="import_summary">Restore data from a backup</string>
 
 </resources>

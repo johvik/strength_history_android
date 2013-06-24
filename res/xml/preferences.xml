@@ -23,5 +23,19 @@
             android:targetClass="strength.history.ui.workout.WorkoutsActivity"
             android:targetPackage="strength.history" />
     </Preference>
+    <Preference
+        android:summary="@string/backup_summary"
+        android:title="@string/backup" >
+        <intent
+            android:targetClass="strength.history.ui.BackupActivity"
+            android:targetPackage="strength.history" />
+    </Preference>
+    <Preference
+        android:summary="@string/import_summary"
+        android:title="@string/importt" >
+        <intent
+            android:targetClass="strength.history.ui.ImportActivity"
+            android:targetPackage="strength.history" />
+    </Preference>
 
 </PreferenceScreen>
