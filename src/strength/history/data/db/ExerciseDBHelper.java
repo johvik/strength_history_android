@@ -23,7 +23,7 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 				MUSCLE_GROUP };
 	}
 
-	private static final String DATABASE_NAME = "exercise.db";
+	public static final String DATABASE_NAME = "exercise.db";
 	private static final int DATABASE_VERSION = 1;
 
 	/**
@@ -61,6 +61,11 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 		values.put(Entry.MUSCLE_GROUP, e.getMuscleGroup().ordinal());
 
 		return values;
+	}
+
+	@Override
+	protected String getDBFileName() {
+		return DATABASE_NAME;
 	}
 
 	@Override

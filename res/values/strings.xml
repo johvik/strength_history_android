@@ -76,5 +76,8 @@
     <string name="importt">Import</string>
     <string name="backup_summary">Create a backup of the data</string>
     <string name="import_summary">Restore data from a backup</string>
+    <string name="select_import_file">Select file to import</string>
+    <string name="error_no_file_manager">Please install a file manager.</string>
+    <string name="error_file_error">Error: Failed to open file.</string>
 
 </resources>

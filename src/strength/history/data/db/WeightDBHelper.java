@@ -23,7 +23,7 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 				WEIGHT };
 	}
 
-	private static final String DATABASE_NAME = "weight.db";
+	public static final String DATABASE_NAME = "weight.db";
 	private static final int DATABASE_VERSION = 1;
 
 	/**
@@ -61,6 +61,11 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 		values.put(Entry.WEIGHT, e.getWeight());
 
 		return values;
+	}
+
+	@Override
+	protected String getDBFileName() {
+		return DATABASE_NAME;
 	}
 
 	@Override

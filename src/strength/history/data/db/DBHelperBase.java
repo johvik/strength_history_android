@@ -1,6 +1,13 @@
 package strength.history.data.db;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import strength.history.data.structure.SyncBase;
 
@@ -40,6 +47,8 @@ public abstract class DBHelperBase<E extends SyncBase<E>> extends
 	 * @return The content values
 	 */
 	protected abstract ContentValues toContentValues(E e);
+
+	protected abstract String getDBFileName();
 
 	/**
 	 * Deletes it from the DB
@@ -87,5 +96,32 @@ public abstract class DBHelperBase<E extends SyncBase<E>> extends
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.e(this.getClass().getSimpleName(), "onUpgrade not supported");
+	}
+
+	public final void createBackup(Context context, ZipOutputStream backupFile,
+			byte[] buffer) throws IOException {
+		String fileName = getDBFileName();
+		File file = context.getDatabasePath(fileName);
+		FileInputStream fis = new FileInputStream(file);
+		ZipEntry entry = new ZipEntry(fileName);
+		backupFile.putNextEntry(entry);
+		int count;
+		while ((count = fis.read(buffer)) != -1) {
+			backupFile.write(buffer, 0, count);
+		}
+		backupFile.closeEntry();
+		fis.close();
+	}
+
+	public final void importBackup(Context context, ZipInputStream importFile,
+			byte[] buffer) throws IOException {
+		String fileName = getDBFileName();
+		File file = context.getDatabasePath(fileName);
+		FileOutputStream fos = new FileOutputStream(file);
+		int count;
+		while ((count = importFile.read(buffer)) != -1) {
+			fos.write(buffer, 0, count);
+		}
+		fos.close();
 	}
 }

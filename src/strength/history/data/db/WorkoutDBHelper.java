@@ -24,7 +24,7 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		}
 	}
 
-	private static final String DATABASE_NAME = "workout.db";
+	public static final String DATABASE_NAME = "workout.db";
 	private static final int DATABASE_VERSION = 1;
 
 	/**
@@ -61,6 +61,11 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		values.put(Entry.NAME, e.getName());
 
 		return values;
+	}
+
+	@Override
+	protected String getDBFileName() {
+		return DATABASE_NAME;
 	}
 
 	@Override
