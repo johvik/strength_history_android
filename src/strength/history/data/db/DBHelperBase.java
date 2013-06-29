@@ -102,19 +102,22 @@ public abstract class DBHelperBase<E extends SyncBase<E>> extends
 			byte[] buffer) throws IOException {
 		String fileName = getDBFileName();
 		File file = context.getDatabasePath(fileName);
-		FileInputStream fis = new FileInputStream(file);
-		ZipEntry entry = new ZipEntry(fileName);
-		backupFile.putNextEntry(entry);
-		int count;
-		while ((count = fis.read(buffer)) != -1) {
-			backupFile.write(buffer, 0, count);
+		if (file.exists()) {
+			FileInputStream fis = new FileInputStream(file);
+			ZipEntry entry = new ZipEntry(fileName);
+			backupFile.putNextEntry(entry);
+			int count;
+			while ((count = fis.read(buffer)) != -1) {
+				backupFile.write(buffer, 0, count);
+			}
+			backupFile.closeEntry();
+			fis.close();
 		}
-		backupFile.closeEntry();
-		fis.close();
 	}
 
 	public final void importBackup(Context context, ZipInputStream importFile,
 			byte[] buffer) throws IOException {
+		close();
 		String fileName = getDBFileName();
 		File file = context.getDatabasePath(fileName);
 		FileOutputStream fos = new FileOutputStream(file);

@@ -78,6 +78,11 @@
     <string name="import_summary">Restore data from a backup</string>
     <string name="select_import_file">Select file to import</string>
     <string name="error_no_file_manager">Please install a file manager.</string>
-    <string name="error_file_error">Error: Failed to open file.</string>
+    <string name="error_backup">Backup failed.</string>
+    <string name="error_import">Import failed.</string>
+    <string name="import_done">Data imported.</string>
+    <string name="backup_save_via">Save via</string>
+    <string name="backup_subject">%1$s backup</string>
+    <string name="backup_text">Data backup from %1$s</string>
 
 </resources>

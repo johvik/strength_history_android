@@ -41,6 +41,7 @@ public class CreateDefaultDialog extends DialogFragment implements
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity a = getActivity();
+		// TODO This looks weird on older phones
 		ProgressBar p = new ProgressBar(a);
 		setCancelable(false);
 		return new AlertDialog.Builder(a).setCancelable(false)

@@ -1,26 +1,22 @@
 package strength.history.ui;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import strength.history.R;
-import strength.history.data.db.ExerciseDBHelper;
+import strength.history.data.DataImport;
 import strength.history.ui.custom.CustomTitleActivity;
 
 public class ImportActivity extends CustomTitleActivity {
 	private static final int FILE_SELECT_CODE = 0;
+	private ProgressBar progressBarImport;
+	private static ImportActivity importActivity = null;
+	private static boolean importing = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +28,18 @@ public class ImportActivity extends CustomTitleActivity {
 				finish();
 			}
 		});
-		showFileChooser();
+		progressBarImport = (ProgressBar) findViewById(R.id.progressBarImport);
+		importActivity = this;
+		if (savedInstanceState == null) {
+			showFileChooser();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		progressBarImport.setVisibility(importing ? View.VISIBLE
+				: View.INVISIBLE);
 	}
 
 	@Override
@@ -42,8 +49,7 @@ public class ImportActivity extends CustomTitleActivity {
 
 	private void showFileChooser() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		// TODO Set filter and finish activity
-		intent.setType("*/*");
+		intent.setType("application/zip");
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		try {
 			startActivityForResult(Intent.createChooser(intent,
@@ -56,36 +62,45 @@ public class ImportActivity extends CustomTitleActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-		case FILE_SELECT_CODE:
+		if (requestCode == FILE_SELECT_CODE) {
 			if (resultCode == RESULT_OK) {
-				Uri uri = data.getData();
-				try {
-					InputStream is = getContentResolver().openInputStream(uri);
-					ZipInputStream zis = new ZipInputStream(
-							new BufferedInputStream(is));
-					ZipEntry ze;
-					byte[] buffer = new byte[1024];
-					Context c = getApplicationContext();
-					while ((ze = zis.getNextEntry()) != null) {
-						String fileName = ze.getName();
-						Log.d("ImportActivity", "Importing: " + fileName);
-						if (fileName.equals(ExerciseDBHelper.DATABASE_NAME)) {
-							ExerciseDBHelper.getInstance(c).importBackup(c,
-									zis, buffer);
-						} else {
-							// TODO Add rest
-						}
-					}
-					zis.close();
-					is.close();
-				} catch (IOException e) {
-					Toast.makeText(this, getString(R.string.error_file_error),
-							Toast.LENGTH_SHORT).show();
+				if (!importing) {
+					importing = true;
+					progressBarImport.setVisibility(View.VISIBLE);
+					Uri uri = data.getData();
+					new Thread(new DataImport(getApplicationContext(), uri))
+							.start();
 				}
+			} else {
+				finish();
 			}
-			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public static void onImportDone(boolean ok) {
+		importing = false;
+		if (importActivity != null) {
+			importActivity.dataImported(ok);
+		}
+	}
+
+	private void dataImported(final boolean ok) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				progressBarImport.setVisibility(View.INVISIBLE);
+				if (ok) {
+					Toast.makeText(ImportActivity.this,
+							getString(R.string.import_done), Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					Toast.makeText(ImportActivity.this,
+							getString(R.string.error_import),
+							Toast.LENGTH_SHORT).show();
+				}
+				finish();
+			}
+		});
 	}
 }
