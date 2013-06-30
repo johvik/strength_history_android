@@ -61,6 +61,6 @@ public class DataBackup implements Runnable {
 	}
 
 	public static File getBackupFile(File dataDirectory) {
-		return new File(dataDirectory, "test.zip");
+		return new File(dataDirectory, "backup.zip");
 	}
 }

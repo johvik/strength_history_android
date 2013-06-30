@@ -55,6 +55,13 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		mWorkoutDataProvider.tryRemoveListener(object);
 	}
 
+	public void clear() {
+		mExerciseProvider.clear();
+		mWeightProvider.clear();
+		mWorkoutProvider.clear();
+		mWorkoutDataProvider.clear();
+	}
+
 	@Override
 	public final void handleMessage(Message msg) {
 		ServiceBase.Service service = ServiceBase.Service.parse(msg.arg1);

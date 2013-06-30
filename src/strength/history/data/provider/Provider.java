@@ -247,6 +247,13 @@ public abstract class Provider<E extends SyncBase<E>> {
 		runLocalService(e, context, messenger, getUpdateArg());
 	}
 
+	/**
+	 * Clears the data in the provider.
+	 */
+	public final void clear() {
+		onBeforePurge();
+	}
+
 	public abstract void tryAddListener(Object object);
 
 	public abstract void tryRemoveListener(Object object);

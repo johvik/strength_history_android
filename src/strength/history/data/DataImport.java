@@ -58,7 +58,8 @@ public class DataImport implements Runnable {
 			}
 			zis.close();
 			is.close();
-			// TODO Clear loaded data!
+			// Clear all cached data.
+			DataListener.remove(null).clear();
 			return count > 0;
 		} catch (IOException e) {
 		}
