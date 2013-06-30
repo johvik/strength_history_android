@@ -17,7 +17,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.widget.ProgressBar;
+import android.view.View;
 
 public class CreateDefaultDialog extends DialogFragment implements
 		ExerciseProvider.Events.Defaults {
@@ -41,11 +41,11 @@ public class CreateDefaultDialog extends DialogFragment implements
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity a = getActivity();
-		// TODO This looks weird on older phones
-		ProgressBar p = new ProgressBar(a);
+		View v = a.getLayoutInflater().inflate(R.layout.dialog_create_default,
+				null, false);
 		setCancelable(false);
 		return new AlertDialog.Builder(a).setCancelable(false)
-				.setTitle(getString(R.string.generating_defaults)).setView(p)
+				.setTitle(getString(R.string.generating_defaults)).setView(v)
 				.create();
 	}
 
