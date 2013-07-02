@@ -71,18 +71,12 @@ public class WorkoutEditFragment extends Fragment implements
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onResume() {
+		super.onResume();
 		loaded = false;
 		masterActivity.setLoaded(loaded);
 		dataProvider = DataListener.add(this);
 		dataProvider.queryExercise(getActivity().getApplicationContext());
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		DataListener.remove(this);
 	}
 
 	@Override
@@ -106,6 +100,7 @@ public class WorkoutEditFragment extends Fragment implements
 	@Override
 	public void onPause() {
 		super.onPause();
+		DataListener.remove(this);
 		save();
 		toast.cancel();
 	}

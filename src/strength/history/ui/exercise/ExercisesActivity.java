@@ -94,10 +94,6 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 						showExerciseDeleteConfirmDialog();
 					}
 				});
-		setCustomProgressBarVisibility(true);
-		dataProvider = DataListener.add(this);
-		// get exercises
-		dataProvider.queryExercise(getApplicationContext());
 
 		setTitle(R.string.exercises);
 		setCustomBackButton(new OnClickListener() {
@@ -116,20 +112,19 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		DataListener.remove(this);
 		if (exerciseDeleteConfirmDialog != null) {
 			exerciseDeleteConfirmDialog.dismiss();
 		}
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		DataListener.remove(this);
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
+		setCustomProgressBarVisibility(true);
+		dataProvider = DataListener.add(this);
+		// get exercises
+		dataProvider.queryExercise(getApplicationContext());
 		if (mDualPane) {
 			listViewExercises.setItemChecked(mCurCheckPosition, true);
 		}

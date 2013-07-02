@@ -113,10 +113,7 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 		}
 
 		updateProgressBar();
-		mDataProvider = DataListener.add(this);
-		if (savedInstanceState == null) {
-			mDataProvider.latestWeight(getApplicationContext());
-		} else {
+		if (savedInstanceState != null) {
 			savedWeight = savedInstanceState.getDouble(SELECTED_WEIGHT,
 					Weight.DEFAULT);
 			weightLoaded = true;
@@ -145,6 +142,10 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mDataProvider = DataListener.add(this);
+		if (!weightLoaded) {
+			mDataProvider.latestWeight(getApplicationContext());
+		}
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		unit = sharedPreferences.getString(

@@ -95,10 +95,7 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 						showWorkoutDeleteConfirmDialog();
 					}
 				});
-		updateProgressBar();
-		dataProvider = DataListener.add(this);
-		// get workouts
-		dataProvider.queryWorkout(getApplicationContext());
+		setCustomProgressBarVisibility(true);
 
 		setTitle(R.string.workouts);
 		setCustomBackButton(new OnClickListener() {
@@ -117,20 +114,19 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		DataListener.remove(this);
 		if (workoutDeleteConfirmDialog != null) {
 			workoutDeleteConfirmDialog.dismiss();
 		}
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		DataListener.remove(this);
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
+		updateProgressBar();
+		dataProvider = DataListener.add(this);
+		// get workouts
+		dataProvider.queryWorkout(getApplicationContext());
 		if (mDualPane) {
 			listViewWorkouts.setItemChecked(mCurCheckPosition, true);
 		}
