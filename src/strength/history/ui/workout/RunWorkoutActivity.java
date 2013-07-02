@@ -139,7 +139,6 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// TODO Clear all in resume/pause?
 		setCustomProgressBarVisibility(true);
 		dataProvider = DataListener.add(this);
 		Context c = getApplicationContext();

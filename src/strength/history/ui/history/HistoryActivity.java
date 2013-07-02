@@ -130,7 +130,6 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 			selectedIndex = savedInstanceState.getInt(SELECTED_INDEX,
 					AdapterView.INVALID_POSITION);
 		}
-		// TODO How to handle date in edit?
 	}
 
 	@Override
@@ -163,7 +162,6 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// TODO Is it bad to stop?
 		Context c = getApplicationContext();
 		dataProvider.stop((Workout) null, c);
 		dataProvider.stop((WorkoutData) null, c);

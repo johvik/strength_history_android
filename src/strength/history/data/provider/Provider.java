@@ -23,8 +23,6 @@ public abstract class Provider<E extends SyncBase<E>> {
 	protected final HashSet<E> data = new HashSet<E>();
 	protected boolean loaded = false;
 
-	// TODO How to handle multiple queries at the same time?
-
 	@SuppressWarnings("static-method")
 	protected int getDeleteArg() {
 		return Request.DELETE.ordinal();

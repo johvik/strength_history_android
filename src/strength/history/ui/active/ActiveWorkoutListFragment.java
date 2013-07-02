@@ -195,7 +195,6 @@ public class ActiveWorkoutListFragment extends Fragment implements
 		}
 		activeWorkoutAdapter.notifyDataSetChanged();
 		if (loadedWorkouts >= totalWorkouts) {
-			// TODO This might get messed up
 			masterActivity.setLoaded(true);
 		}
 	}
