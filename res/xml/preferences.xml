@@ -38,4 +38,10 @@
             android:targetPackage="strength.history" />
     </Preference>
 
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="pref_backup_email_key"
+        android:summary="@string/backup_email_summary"
+        android:title="@string/backup_email" />
+
 </PreferenceScreen>

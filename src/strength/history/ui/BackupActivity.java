@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Date;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,8 +87,15 @@ public class BackupActivity extends CustomTitleActivity {
 	}
 
 	private void sendFile(File file) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String email = sharedPreferences.getString(
+				SettingsActivity.PREF_BACKUP_EMAIL_KEY, "");
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("application/zip");
+		if (email.length() > 0) {
+			i.putExtra(Intent.EXTRA_EMAIL, new String[] { email });
+		}
 		i.putExtra(
 				Intent.EXTRA_SUBJECT,
 				getString(R.string.backup_subject, getString(R.string.app_name)));

@@ -15,6 +15,7 @@ import android.widget.TextView;
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 	public static final String PREF_WEIGHT_UNITS_KEY = "pref_weight_units_key";
+	public static final String PREF_BACKUP_EMAIL_KEY = "pref_backup_email_key";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class SettingsActivity extends PreferenceActivity implements
 		super.onResume();
 		SharedPreferences sharedPreferences = getPreferenceScreen()
 				.getSharedPreferences();
-		updateUnitTitle(sharedPreferences);
+		updateUnitSummary(sharedPreferences);
 		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
 
@@ -63,11 +64,11 @@ public class SettingsActivity extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(PREF_WEIGHT_UNITS_KEY)) {
-			updateUnitTitle(sharedPreferences);
+			updateUnitSummary(sharedPreferences);
 		}
 	}
 
-	private void updateUnitTitle(SharedPreferences sharedPreferences) {
+	private void updateUnitSummary(SharedPreferences sharedPreferences) {
 		findPreference(PREF_WEIGHT_UNITS_KEY).setSummary(
 				getString(R.string.unit_preference_summary, sharedPreferences
 						.getString(PREF_WEIGHT_UNITS_KEY,

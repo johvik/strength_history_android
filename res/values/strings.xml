@@ -84,5 +84,7 @@
     <string name="backup_save_via">Save via</string>
     <string name="backup_subject">%1$s backup</string>
     <string name="backup_text">Data backup from %1$s</string>
+    <string name="backup_email">Backup email</string>
+    <string name="backup_email_summary">This address will be filled in if sent via email.</string>
 
 </resources>
