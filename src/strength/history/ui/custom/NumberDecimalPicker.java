@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 public class NumberDecimalPicker extends NumberPickerBase<Double> {
 	private double decimalFix = 10; // 1 decimal
-	private double increase = 0.5;
+	private double stepSize = 0.5;
 
 	public NumberDecimalPicker(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -55,12 +55,18 @@ public class NumberDecimalPicker extends NumberPickerBase<Double> {
 	}
 
 	@Override
+	public void setStepSize(Double number) {
+		// TODO Change number of decimals at the same time?
+		stepSize = number;
+	}
+
+	@Override
 	protected Double dec() {
-		return getNumber() - increase;
+		return getNumber() - stepSize;
 	}
 
 	@Override
 	protected Double inc() {
-		return getNumber() + increase;
+		return getNumber() + stepSize;
 	}
 }

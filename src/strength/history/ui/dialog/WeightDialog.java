@@ -30,6 +30,7 @@ public class WeightDialog extends DialogFragment {
 			throw new ClassCastException();
 		}
 		weightPicker = new NumberDecimalPicker(activity);
+		weightPicker.setStepSize(0.1);
 		listener = (Listener) activity;
 	}
 

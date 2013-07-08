@@ -72,6 +72,8 @@ public abstract class NumberPickerBase<T extends Number> extends FrameLayout {
 
 	public abstract void setNumber(T number);
 
+	public abstract void setStepSize(T number);
+
 	protected abstract T dec();
 
 	protected abstract T inc();

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 public class NumberPicker extends NumberPickerBase<Integer> {
-	private int increase = 1;
+	private int stepSize = 1;
 
 	public NumberPicker(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -41,12 +41,17 @@ public class NumberPicker extends NumberPickerBase<Integer> {
 	}
 
 	@Override
+	public void setStepSize(Integer number) {
+		stepSize = number;
+	}
+
+	@Override
 	protected Integer dec() {
-		return getNumber() - increase;
+		return getNumber() - stepSize;
 	}
 
 	@Override
 	protected Integer inc() {
-		return getNumber() + increase;
+		return getNumber() + stepSize;
 	}
 }
