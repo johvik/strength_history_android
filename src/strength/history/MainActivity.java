@@ -41,6 +41,8 @@ public class MainActivity extends CustomTitleFragmentActivity implements
 	private static final String SELECTED_WEIGHT = "sweight";
 	private static final String FIRST_RUN = "first_run";
 
+	// TODO Fix when multiple things are added with a custom date! (same mstime)
+
 	private DataProvider mDataProvider = null;
 	private ImageButton imageButtonChangeDate;
 	private TextView textViewDate;
