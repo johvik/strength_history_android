@@ -86,5 +86,6 @@
     <string name="backup_text">Data backup from %1$s</string>
     <string name="backup_email">Backup email</string>
     <string name="backup_email_summary">This address will be filled in if sent via email.</string>
+    <string name="standard_increase">Standard increase</string>
 
 </resources>

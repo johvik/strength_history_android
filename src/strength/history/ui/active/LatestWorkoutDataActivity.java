@@ -158,7 +158,7 @@ public class LatestWorkoutDataActivity extends CustomTitleFragmentActivity
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT));
+				MuscleGroup.DEFAULT, 0.0));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);

@@ -199,7 +199,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT));
+				MuscleGroup.DEFAULT, 0.0));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);
@@ -258,7 +258,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				buttonNext.setText(R.string.next);
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
-						"", MuscleGroup.DEFAULT));
+						"", MuscleGroup.DEFAULT, 0.0));
 				if (pos != -1) {
 					Exercise ex = exercises.get(pos);
 					setTitle((index + 1) + "/" + size + " " + ex.getName());

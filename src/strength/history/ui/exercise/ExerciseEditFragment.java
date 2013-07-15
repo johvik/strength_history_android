@@ -3,6 +3,7 @@ package strength.history.ui.exercise;
 import strength.history.R;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Exercise.MuscleGroup;
+import strength.history.ui.custom.NumberDecimalPicker;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ public class ExerciseEditFragment extends Fragment {
 
 	private EditText editTextName;
 	private Spinner spinnerMuscleGroup;
+	private NumberDecimalPicker numberDecimalPickerStandardIncrease;
 	private Exercise mExercise = null;
 	private ArrayAdapter<MuscleGroup> muscleGroupAdapter;
 
@@ -55,6 +57,8 @@ public class ExerciseEditFragment extends Fragment {
 			mExercise.setName(editTextName.getText().toString());
 			mExercise.setMuscleGroup(muscleGroupAdapter
 					.getItem(spinnerMuscleGroup.getSelectedItemPosition()));
+			mExercise.setStandardIncrease(numberDecimalPickerStandardIncrease
+					.getNumber());
 		}
 	}
 
@@ -69,6 +73,8 @@ public class ExerciseEditFragment extends Fragment {
 			editTextName.setText(mExercise.getName());
 			spinnerMuscleGroup.setSelection(muscleGroupAdapter
 					.getPosition(mExercise.getMuscleGroup()));
+			numberDecimalPickerStandardIncrease.setNumber(mExercise
+					.getStandardIncrease());
 		}
 	}
 
@@ -81,6 +87,9 @@ public class ExerciseEditFragment extends Fragment {
 		spinnerMuscleGroup = (Spinner) view
 				.findViewById(R.id.spinnerMuscleGroup);
 		spinnerMuscleGroup.setAdapter(muscleGroupAdapter);
+		numberDecimalPickerStandardIncrease = (NumberDecimalPicker) view
+				.findViewById(R.id.numberDecimalPickerStandardIncrease);
+		numberDecimalPickerStandardIncrease.setStepSize(0.1);
 		return view;
 	}
 }

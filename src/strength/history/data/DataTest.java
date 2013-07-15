@@ -24,11 +24,11 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 					// Remove all data
 					dataProvider.purge(getApplicationContext());
 					Thread.sleep(500);
-					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS),
-							getApplicationContext());
+					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS,
+							0.0), getApplicationContext());
 					dataProvider.delete(e, getApplicationContext());
-					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS),
-							getApplicationContext());
+					dataProvider.insert(new Exercise("abc", MuscleGroup.ARMS,
+							0.0), getApplicationContext());
 					dataProvider.update(e, getApplicationContext());
 					dataProvider.queryExercise(getApplicationContext());
 					// TODO Add more tests

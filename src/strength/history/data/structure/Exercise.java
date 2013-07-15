@@ -62,15 +62,18 @@ public class Exercise extends SyncBase<Exercise> {
 
 	private String name;
 	private MuscleGroup muscleGroup;
+	private double standardIncrease;
 
 	/**
 	 * Constructs a new exercise
 	 * 
 	 * @param name
 	 * @param muscleGroup
+	 * @param standardIncrease
 	 */
-	public Exercise(String name, MuscleGroup muscleGroup) {
-		this(-1, new Date().getTime(), name, muscleGroup);
+	public Exercise(String name, MuscleGroup muscleGroup,
+			double standardIncrease) {
+		this(-1, new Date().getTime(), name, muscleGroup, standardIncrease);
 	}
 
 	/**
@@ -80,23 +83,27 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param sync
 	 * @param name
 	 * @param muscleGroup
+	 * @param standardIncrease
 	 */
-	public Exercise(long id, long sync, String name, MuscleGroup muscleGroup) {
+	public Exercise(long id, long sync, String name, MuscleGroup muscleGroup,
+			double standardIncrease) {
 		super(id, sync);
 		this.name = name;
 		this.muscleGroup = muscleGroup;
+		this.standardIncrease = standardIncrease;
 	}
 
 	protected Exercise(Parcel in) {
 		super(in);
 		name = in.readString();
 		muscleGroup = MuscleGroup.parse(in.readInt());
+		standardIncrease = in.readDouble();
 	}
 
 	@Override
 	public String toString() {
 		return "Exercise=" + getId() + ":" + getSync() + " " + name + " "
-				+ muscleGroup;
+				+ muscleGroup + " " + standardIncrease;
 	}
 
 	@Override
@@ -113,19 +120,22 @@ public class Exercise extends SyncBase<Exercise> {
 
 	@Override
 	protected Exercise _copy() {
-		return new Exercise(getId(), getSync(), name, muscleGroup);
+		return new Exercise(getId(), getSync(), name, muscleGroup,
+				standardIncrease);
 	}
 
 	@Override
 	protected void _updateFrom(Exercise another) {
 		name = another.name;
 		muscleGroup = another.muscleGroup;
+		standardIncrease = another.standardIncrease;
 	}
 
 	@Override
 	protected void _writeToParcel(Parcel out, int flags) {
 		out.writeString(name);
 		out.writeInt(muscleGroup.ordinal());
+		out.writeDouble(standardIncrease);
 	}
 
 	/**
@@ -162,5 +172,13 @@ public class Exercise extends SyncBase<Exercise> {
 
 	public void setMuscleGroup(MuscleGroup muscleGroup) {
 		this.muscleGroup = muscleGroup;
+	}
+
+	public double getStandardIncrease() {
+		return standardIncrease;
+	}
+
+	public void setStandardIncrease(double standardIncrease) {
+		this.standardIncrease = standardIncrease;
 	}
 }
