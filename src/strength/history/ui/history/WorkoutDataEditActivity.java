@@ -106,6 +106,9 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 							i.putExtra(ExerciseDataEditActivity.SET_DATA, s);
 							i.putExtra(ExerciseDataEditActivity.EXERCISE_NAME,
 									e != null ? e.getName() : "?");
+							i.putExtra(ExerciseDataEditActivity.INCREASE,
+									e != null ? e.getStandardIncrease()
+											: Exercise.DEFAULT_INCREASE);
 							editPosition = position;
 							startActivityForResult(i, EDIT_EXERCISE_DATA);
 						}
@@ -222,7 +225,7 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT, 0.0));
+				MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);

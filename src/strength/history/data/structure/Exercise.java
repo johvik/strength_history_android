@@ -11,6 +11,8 @@ import android.os.Parcelable;
  * Exercise class
  */
 public class Exercise extends SyncBase<Exercise> {
+	public static double DEFAULT_INCREASE = 2.5;
+
 	public enum MuscleGroup {
 		// important order
 		// a change will change the type of all existing exercises

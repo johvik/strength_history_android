@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 import strength.history.R;
+import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.ui.active.ActiveExerciseEditFragment;
@@ -19,21 +20,24 @@ public class ExerciseDataEditActivity extends CustomTitleFragmentActivity
 	public static final String EXERCISE_DATA = "exda";
 	public static final String EXERCISE_NAME = "exna";
 	public static final String SET_DATA = "sed";
+	public static final String INCREASE = "sinc";
 	private static final String SELECTED_INDEX = "sei";
 	private ActiveExerciseEditFragment activeExerciseEditFragment;
 	private View menuItemDelete;
 	private View menuItemEdit;
 	private ExerciseData exerciseData;
 	private SetData setData;
+	private double increase;
 	private int selectedIndex;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String exerciseName = getIntent().getStringExtra(EXERCISE_NAME);
+		Intent i = getIntent();
+		String exerciseName = i.getStringExtra(EXERCISE_NAME);
+		increase = i.getDoubleExtra(INCREASE, Exercise.DEFAULT_INCREASE);
 		if (savedInstanceState == null) {
-			Intent i = getIntent();
 			exerciseData = i.getParcelableExtra(EXERCISE_DATA);
 			setData = i.getParcelableExtra(SET_DATA);
 			selectedIndex = AdapterView.INVALID_POSITION;
@@ -106,8 +110,9 @@ public class ExerciseDataEditActivity extends CustomTitleFragmentActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-		activeExerciseEditFragment.setExerciseData(Pair.create(exerciseData,
-				Pair.create(selectedIndex, setData)));
+		activeExerciseEditFragment.setExerciseData(
+				Pair.create(exerciseData, Pair.create(selectedIndex, setData)),
+				increase);
 	}
 
 	@Override

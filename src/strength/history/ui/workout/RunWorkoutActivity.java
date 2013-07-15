@@ -199,7 +199,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT, 0.0));
+				MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);
@@ -258,15 +258,18 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				buttonNext.setText(R.string.next);
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
-						"", MuscleGroup.DEFAULT, 0.0));
+						"", MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
+				double increase = Exercise.DEFAULT_INCREASE;
 				if (pos != -1) {
 					Exercise ex = exercises.get(pos);
+					increase = ex.getStandardIncrease();
 					setTitle((index + 1) + "/" + size + " " + ex.getName());
 				}
 				Pair<Integer, SetData> p = savedSetData.get(e.getExerciseId());
 				int selectedIndex = p.first;
-				activeExerciseEditFragment.setExerciseData(Pair.create(e,
-						Pair.create(selectedIndex, p.second)));
+				activeExerciseEditFragment.setExerciseData(
+						Pair.create(e, Pair.create(selectedIndex, p.second)),
+						increase);
 				fragmentActiveExerciseEditView.setVisibility(View.VISIBLE);
 				listViewRunSummary.setVisibility(View.GONE);
 				removeMenuItem(menuItemCreate);

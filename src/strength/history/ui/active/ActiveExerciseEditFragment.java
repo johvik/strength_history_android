@@ -1,6 +1,7 @@
 package strength.history.ui.active;
 
 import strength.history.R;
+import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.ui.custom.NumberDecimalPicker;
@@ -42,10 +43,15 @@ public class ActiveExerciseEditFragment extends Fragment {
 		setDataAdapter = new SetDataAdapter(activity.getApplicationContext());
 	}
 
-	public void setExerciseData(Pair<ExerciseData, Pair<Integer, SetData>> p) {
+	public void setExerciseData(Pair<ExerciseData, Pair<Integer, SetData>> p,
+			double increase) {
 		exerciseData = p.first;
 		selectedIndex = p.second.first;
 		savedSetData = p.second.second;
+		if (increase == 0) { // Prevent it from being 0
+			increase = Exercise.DEFAULT_INCREASE;
+		}
+		numberDecimalPickerWeight.setStepSize(increase);
 		update();
 	}
 
