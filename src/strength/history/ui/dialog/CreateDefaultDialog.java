@@ -21,6 +21,7 @@ import android.view.View;
 
 public class CreateDefaultDialog extends DialogFragment implements
 		ExerciseProvider.Events.Defaults {
+	public static final boolean STRONGLIFTS_SETUP = true;
 	private DataProvider dataProvider;
 	private Context applicationContext;
 
@@ -51,50 +52,52 @@ public class CreateDefaultDialog extends DialogFragment implements
 
 	@Override
 	public void exerciseCreateDefaultsCallback(Collection<Exercise> e) {
-		ArrayList<String> search = new ArrayList<String>();
-		String squat = "Squat";
-		search.add(squat);
-		String overheadPress = "Overhead Press";
-		search.add(overheadPress);
-		String deadLift = "Dead Lift";
-		search.add(deadLift);
-		String benchPress = "Bench Press";
-		search.add(benchPress);
-		String bentOverRow = "Bent-Over Row";
-		search.add(bentOverRow);
+		if (STRONGLIFTS_SETUP) {
+			ArrayList<String> search = new ArrayList<String>();
+			String squat = "Squat";
+			search.add(squat);
+			String overheadPress = "Overhead Press";
+			search.add(overheadPress);
+			String deadLift = "Dead Lift";
+			search.add(deadLift);
+			String benchPress = "Bench Press";
+			search.add(benchPress);
+			String bentOverRow = "Bent-Over Row";
+			search.add(bentOverRow);
 
-		HashMap<String, Exercise> res = new HashMap<String, Exercise>();
-		for (Exercise ex : e) {
-			String name = ex.getName();
-			for (int i = 0, j = search.size(); i < j; i++) {
-				String si = search.get(i);
-				if (si.equals(name)) {
-					search.remove(i);
-					j--;
-					res.put(si, ex);
+			HashMap<String, Exercise> res = new HashMap<String, Exercise>();
+			for (Exercise ex : e) {
+				String name = ex.getName();
+				for (int i = 0, j = search.size(); i < j; i++) {
+					String si = search.get(i);
+					if (si.equals(name)) {
+						search.remove(i);
+						j--;
+						res.put(si, ex);
+					}
 				}
 			}
-		}
 
-		Exercise eSquat = res.get(squat);
-		Exercise eOverheadPress = res.get(overheadPress);
-		Exercise eDeadLift = res.get(deadLift);
-		Exercise eBenchPress = res.get(benchPress);
-		Exercise eBentOverRow = res.get(bentOverRow);
+			Exercise eSquat = res.get(squat);
+			Exercise eOverheadPress = res.get(overheadPress);
+			Exercise eDeadLift = res.get(deadLift);
+			Exercise eBenchPress = res.get(benchPress);
+			Exercise eBentOverRow = res.get(bentOverRow);
 
-		try {
-			Workout a = new Workout("StrongLifts 5x5 A");
-			a.add(eSquat.getId());
-			a.add(eBenchPress.getId());
-			a.add(eBentOverRow.getId());
-			Workout b = new Workout("StrongLifts 5x5 B");
-			b.add(eSquat.getId());
-			b.add(eOverheadPress.getId());
-			b.add(eDeadLift.getId());
-			dataProvider.insert(a, applicationContext);
-			dataProvider.insert(b, applicationContext);
-		} catch (NullPointerException ex) {
-			Log.e("CreateDefaultDialog", ex.getLocalizedMessage());
+			try {
+				Workout a = new Workout("StrongLifts 5x5 A");
+				a.add(eSquat.getId());
+				a.add(eBenchPress.getId());
+				a.add(eBentOverRow.getId());
+				Workout b = new Workout("StrongLifts 5x5 B");
+				b.add(eSquat.getId());
+				b.add(eOverheadPress.getId());
+				b.add(eDeadLift.getId());
+				dataProvider.insert(a, applicationContext);
+				dataProvider.insert(b, applicationContext);
+			} catch (NullPointerException ex) {
+				Log.e("CreateDefaultDialog", ex.getLocalizedMessage());
+			}
 		}
 		dismiss();
 	}

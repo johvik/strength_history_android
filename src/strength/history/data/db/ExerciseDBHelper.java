@@ -11,6 +11,7 @@ import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Exercise.MuscleGroup;
+import strength.history.ui.dialog.CreateDefaultDialog;
 
 /**
  * DB helper for Exercise
@@ -151,93 +152,96 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 	public ArrayList<Exercise> createDefaults() {
 		// Unsure of the muscle groups :)
 		ArrayList<Exercise> res = new ArrayList<Exercise>();
-		res.add(new Exercise("Barbell Curl", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Dumbbell Curl", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Barbell Tricep Press", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Dumbbell Tricep Press", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Overhead Press", MuscleGroup.SHOULDERS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Wrist Curl", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Tricep Kickback", MuscleGroup.ARMS,
 				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Bench Press", MuscleGroup.CHEST,
 				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Cable Crossover", MuscleGroup.CHEST,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Dumbbell Fly", MuscleGroup.CHEST,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Incline Bench", MuscleGroup.CHEST,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Dips", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Pushup", MuscleGroup.CHEST,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Pullup", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Back Raise", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Bent-Over Row", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Seated Row", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Chinup", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Lat Pulldown", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Seated Reverse Fly", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Military Press", MuscleGroup.SHOULDERS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Upright Row", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Front Raise", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Side Lateral Raise", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Snatch", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Push Press", MuscleGroup.ARMS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Shrug", MuscleGroup.SHOULDERS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Crunch Machine", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Crunch", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Ab Twist", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Bicycle Kick", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Hanging Leg Raise", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Hanging Knee Raise", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Reverse Crunch", MuscleGroup.ABS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("V Up", MuscleGroup.ABS, Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Situp", MuscleGroup.ABS,
 				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Squat", MuscleGroup.LEGS,
 				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Lunge", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Dead Lift", MuscleGroup.LEGS,
 				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Hamstring Curl", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Good Morning", MuscleGroup.BACK,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Clean", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Leg Press", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Leg Extension", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
+		if (!CreateDefaultDialog.STRONGLIFTS_SETUP) {
+			res.add(new Exercise("Barbell Curl", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Dumbbell Curl", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Barbell Tricep Press", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Dumbbell Tricep Press", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Wrist Curl", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Tricep Kickback", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Cable Crossover", MuscleGroup.CHEST,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Dumbbell Fly", MuscleGroup.CHEST,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Incline Bench", MuscleGroup.CHEST,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Dips", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Pushup", MuscleGroup.CHEST,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Pullup", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Back Raise", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Seated Row", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Chinup", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Lat Pulldown", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Seated Reverse Fly", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Military Press", MuscleGroup.SHOULDERS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Upright Row", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Front Raise", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Side Lateral Raise", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Snatch", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Push Press", MuscleGroup.ARMS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Shrug", MuscleGroup.SHOULDERS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Crunch Machine", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Crunch", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Ab Twist", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Bicycle Kick", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Hanging Leg Raise", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Hanging Knee Raise", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Reverse Crunch", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("V Up", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Situp", MuscleGroup.ABS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Lunge", MuscleGroup.LEGS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Hamstring Curl", MuscleGroup.LEGS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Good Morning", MuscleGroup.BACK,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Clean", MuscleGroup.LEGS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Leg Press", MuscleGroup.LEGS,
+					Exercise.DEFAULT_INCREASE));
+			res.add(new Exercise("Leg Extension", MuscleGroup.LEGS,
+					Exercise.DEFAULT_INCREASE));
+		}
 
 		for (Exercise e : res) {
 			insert(e);
