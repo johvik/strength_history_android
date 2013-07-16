@@ -71,6 +71,10 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 			new Comparator<Weight>() {
 				@Override
 				public int compare(Weight lhs, Weight rhs) {
+					if (lhs.getTime() == rhs.getTime()) {
+						// Inconsistent but fixes a bug in the chart library
+						return 0;
+					}
 					return rhs.compareTo(lhs);
 				}
 			}, true);
@@ -79,7 +83,8 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 		public int compare(Pair<Long, SetData> lhs, Pair<Long, SetData> rhs) {
 			int c = rhs.first.compareTo(lhs.first);
 			if (c == 0) {
-				return lhs.second.compareTo(rhs.second);
+				// Inconsistent but fixes a bug in the chart library
+				// return lhs.second.compareTo(rhs.second);
 			}
 			return c;
 		}
@@ -87,8 +92,6 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	private HashMap<Long, SortedList<Pair<Long, SetData>>> groupedData = new HashMap<Long, SortedList<Pair<Long, SetData>>>();
 	private int selectedIndex = 0;
 	private StringSelectDialog stringSelectDialog = null;
-
-	// TODO Chart hangs when two values share the same y-value
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
