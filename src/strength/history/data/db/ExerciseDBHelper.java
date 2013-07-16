@@ -160,8 +160,7 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 				Exercise.DEFAULT_INCREASE));
 		res.add(new Exercise("Squat", MuscleGroup.LEGS,
 				Exercise.DEFAULT_INCREASE));
-		res.add(new Exercise("Dead Lift", MuscleGroup.LEGS,
-				Exercise.DEFAULT_INCREASE));
+		res.add(new Exercise("Dead Lift", MuscleGroup.LEGS, 5.0));
 		if (!CreateDefaultDialog.STRONGLIFTS_SETUP) {
 			res.add(new Exercise("Barbell Curl", MuscleGroup.ARMS,
 					Exercise.DEFAULT_INCREASE));
