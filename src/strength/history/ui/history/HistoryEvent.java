@@ -8,7 +8,7 @@ import strength.history.data.structure.WorkoutData;
 
 import android.content.Context;
 
-public class HistoryEvent {
+public class HistoryEvent implements Comparable<HistoryEvent> {
 	private Weight w = null;
 	private WorkoutData d = null;
 
@@ -20,17 +20,30 @@ public class HistoryEvent {
 		this.d = d;
 	}
 
-	public boolean isSame(HistoryEvent e) {
-		if (w != null) {
-			if (e.w != null) {
-				return w.getId() == e.w.getId();
+	@Override
+	public int compareTo(HistoryEvent another) {
+		boolean isWeight = isWeight();
+		boolean anoterIsWeight = another.isWeight();
+		if (isWeight && anoterIsWeight) {
+			// Both weight
+			return w.compareTo(another.w);
+		} else if (!isWeight && !anoterIsWeight) {
+			// Both workout data
+			return d.compareTo(another.d);
+		} else {
+			// Different type
+			// Descending time
+			int c = Long.valueOf(another.getTime()).compareTo(getTime());
+			if (c == 0) {
+				// For consistency
+				if (isWeight) {
+					return -1;
+				} else {
+					return 1;
+				}
 			}
-		} else if (d != null) {
-			if (e.d != null) {
-				return d.getId() == e.d.getId();
-			}
+			return c;
 		}
-		return false;
 	}
 
 	public boolean isWeight() {

@@ -43,10 +43,7 @@ public class HistoryActivity extends CustomTitleFragmentActivity implements
 			new Comparator<HistoryEvent>() {
 				@Override
 				public int compare(HistoryEvent lhs, HistoryEvent rhs) {
-					if (lhs.isSame(rhs)) {
-						return 0;
-					}
-					return Long.valueOf(rhs.getTime()).compareTo(lhs.getTime());
+					return lhs.compareTo(rhs);
 				}
 			}, true);
 	private DataProvider dataProvider;

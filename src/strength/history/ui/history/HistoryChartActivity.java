@@ -88,6 +88,8 @@ public class HistoryChartActivity extends CustomTitleFragmentActivity implements
 	private int selectedIndex = 0;
 	private StringSelectDialog stringSelectDialog = null;
 
+	// TODO Chart hangs when two values share the same y-value
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
