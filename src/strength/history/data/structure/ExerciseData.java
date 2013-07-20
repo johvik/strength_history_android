@@ -6,10 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
+	private static final String JSON_EXERCISE_ID = "exi";
+	private static final String JSON_SETS = "sets";
 	private long exercise_id;
 	private ArrayList<SetData> sets = new ArrayList<SetData>();
 
@@ -43,6 +49,29 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 			ExerciseData d = (ExerciseData) o;
 			return getId() == d.getId();
 		}
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject object = new JSONObject();
+		object.put(JSON_EXERCISE_ID, exercise_id);
+		JSONArray array = new JSONArray();
+		for (SetData s : sets) {
+			array.put(s.toJSON());
+		}
+		object.put(JSON_SETS, array);
+		return object;
+	}
+
+	public static final ExerciseData fromJSON(JSONObject object)
+			throws JSONException {
+		long exercise_id = object.getLong(JSON_EXERCISE_ID);
+		ExerciseData e = new ExerciseData(exercise_id);
+		JSONArray array = object.getJSONArray(JSON_SETS);
+		for (int i = 0, j = array.length(); i < j; i++) {
+			e.add(SetData.fromJSON(array.getJSONObject(i)));
+		}
+		return e;
 	}
 
 	@Override

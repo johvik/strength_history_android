@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,6 +20,7 @@ public class Exercise extends SyncBase<Exercise> {
 		// important order
 		// a change will change the type of all existing exercises
 		ARMS, CHEST, BACK, SHOULDERS, ABS, LEGS;
+		// TODO Remove muscle group!!!
 
 		public static final MuscleGroup DEFAULT = ARMS;
 		public static final MuscleGroup[] SORTED_VALUES = MuscleGroup.values();
@@ -62,6 +66,9 @@ public class Exercise extends SyncBase<Exercise> {
 		}
 	}
 
+	private static final String JSON_NAME = "name";
+	private static final String JSON_MUSCLEGROUP = "mg";
+	private static final String JSON_STANDARD_INCREASE = "si";
 	private String name;
 	private MuscleGroup muscleGroup;
 	private double standardIncrease;
@@ -118,6 +125,29 @@ public class Exercise extends SyncBase<Exercise> {
 			Exercise e = (Exercise) o;
 			return getId() == e.getId();
 		}
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject object = new JSONObject();
+		object.put(JSON_ID, getId());
+		object.put(JSON_SYNC, getSync());
+		object.put(JSON_NAME, name);
+		// TODO How to handle muscle group? Change it to static int list
+		object.put(JSON_MUSCLEGROUP, muscleGroup.ordinal());
+		object.put(JSON_STANDARD_INCREASE, standardIncrease);
+		return object;
+	}
+
+	public static final Exercise fromJSON(JSONObject object)
+			throws JSONException {
+		long id = object.getLong(JSON_ID);
+		long sync = object.getLong(JSON_SYNC);
+		String name = object.getString(JSON_NAME);
+		MuscleGroup muscleGroup = MuscleGroup.parse(object
+				.getInt(JSON_MUSCLEGROUP));
+		double standardIncrease = object.getDouble(JSON_STANDARD_INCREASE);
+		return new Exercise(id, sync, name, muscleGroup, standardIncrease);
 	}
 
 	@Override

@@ -2,12 +2,21 @@ package strength.history.data;
 
 import java.util.Collection;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Exercise.MuscleGroup;
+import strength.history.data.structure.ExerciseData;
+import strength.history.data.structure.SetData;
+import strength.history.data.structure.Weight;
+import strength.history.data.structure.Workout;
+import strength.history.data.structure.WorkoutData;
 import junit.framework.Assert;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class DataTest extends Activity implements ExerciseProvider.Events {
 	private Exercise e = null;
@@ -43,6 +52,47 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 				}
 			}
 		}).start();
+	}
+
+	public static void testJSON() {
+		try {
+			{
+				Exercise e1 = new Exercise(1, 2, "test", MuscleGroup.BACK, 65.2);
+				JSONObject o1 = e1.toJSON();
+				Exercise e2 = Exercise.fromJSON(o1);
+				JSONObject o2 = e2.toJSON();
+				Assert.assertEquals(o1.toString(), o2.toString());
+			}
+			{
+				Workout e1 = new Workout(2, 3, "test");
+				e1.add(55L);
+				JSONObject o1 = e1.toJSON();
+				Workout e2 = Workout.fromJSON(o1);
+				JSONObject o2 = e2.toJSON();
+				Assert.assertEquals(o1.toString(), o2.toString());
+			}
+			{
+				Weight e1 = new Weight(2, 3, 5, 52.5);
+				JSONObject o1 = e1.toJSON();
+				Weight e2 = Weight.fromJSON(o1);
+				JSONObject o2 = e2.toJSON();
+				Assert.assertEquals(o1.toString(), o2.toString());
+			}
+			{
+				WorkoutData e1 = new WorkoutData(3, 4, 5, 6);
+				ExerciseData d = new ExerciseData(52, 242);
+				d.add(new SetData(85, 984.2, 2));
+				e1.add(d);
+				JSONObject o1 = e1.toJSON();
+				WorkoutData e2 = WorkoutData.fromJSON(o1);
+				JSONObject o2 = e2.toJSON();
+				Assert.assertEquals(o1.toString(), o2.toString());
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			Assert.assertTrue(false);
+		}
+		Log.d("DataTest", "testJSON done");
 	}
 
 	@Override

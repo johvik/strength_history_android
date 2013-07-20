@@ -7,11 +7,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class WorkoutData extends SyncBase<WorkoutData> implements
 		List<ExerciseData> {
+	private static final String JSON_TIME = "time";
+	private static final String JSON_WORKOUT_ID = "woi";
+	private static final String JSON_EXERCISES = "exs";
 	private long time;
 	private long workout_id;
 	private ArrayList<ExerciseData> exercises = new ArrayList<ExerciseData>();
@@ -67,6 +74,35 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 			return Long.valueOf(getId()).compareTo(another.getId());
 		}
 		return c;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject object = new JSONObject();
+		object.put(JSON_ID, getId());
+		object.put(JSON_SYNC, getSync());
+		object.put(JSON_TIME, time);
+		object.put(JSON_WORKOUT_ID, workout_id);
+		JSONArray array = new JSONArray();
+		for (ExerciseData e : exercises) {
+			array.put(e.toJSON());
+		}
+		object.put(JSON_EXERCISES, array);
+		return object;
+	}
+
+	public static final WorkoutData fromJSON(JSONObject object)
+			throws JSONException {
+		long id = object.getLong(JSON_ID);
+		long sync = object.getLong(JSON_SYNC);
+		long time = object.getLong(JSON_TIME);
+		long workout_id = object.getLong(JSON_WORKOUT_ID);
+		WorkoutData w = new WorkoutData(id, sync, time, workout_id);
+		JSONArray array = object.getJSONArray(JSON_EXERCISES);
+		for (int i = 0, j = array.length(); i < j; i++) {
+			w.add(ExerciseData.fromJSON(array.getJSONObject(i)));
+		}
+		return w;
 	}
 
 	@Override

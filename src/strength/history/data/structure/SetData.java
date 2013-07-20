@@ -1,9 +1,14 @@
 package strength.history.data.structure;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SetData extends Base<SetData> {
+	private static final String JSON_WEIGHT = "we";
+	private static final String JSON_REPETITIONS = "reps";
 	private double weight;
 	private int repetitions;
 
@@ -38,6 +43,21 @@ public class SetData extends Base<SetData> {
 			SetData d = (SetData) o;
 			return getId() == d.getId();
 		}
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject object = new JSONObject();
+		object.put(JSON_WEIGHT, weight);
+		object.put(JSON_REPETITIONS, repetitions);
+		return object;
+	}
+
+	public static final SetData fromJSON(JSONObject object)
+			throws JSONException {
+		double weight = object.getDouble(JSON_WEIGHT);
+		int repetitions = object.getInt(JSON_REPETITIONS);
+		return new SetData(weight, repetitions);
 	}
 
 	@Override

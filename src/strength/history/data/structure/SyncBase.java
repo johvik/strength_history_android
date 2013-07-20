@@ -1,5 +1,8 @@
 package strength.history.data.structure;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 
 /**
@@ -8,6 +11,7 @@ import android.os.Parcel;
  * @param <T>
  */
 public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
+	protected static final String JSON_SYNC = "sync";
 	private long sync;
 
 	/**
@@ -53,6 +57,9 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 
 	@Override
 	public abstract boolean equals(Object o);
+
+	@Override
+	public abstract JSONObject toJSON() throws JSONException;
 
 	/**
 	 * Gets the sync state of the object

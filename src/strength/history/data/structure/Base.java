@@ -1,5 +1,8 @@
 package strength.history.data.structure;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,6 +15,7 @@ import android.os.Parcelable;
 @SuppressLint("ParcelCreator")
 public abstract class Base<T extends Base<?>> implements Comparable<T>,
 		Parcelable {
+	protected static final String JSON_ID = "id";
 	private long id;
 	private T backup = null;
 
@@ -115,4 +119,6 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	public final void setId(long id) {
 		this.id = id;
 	}
+
+	public abstract JSONObject toJSON() throws JSONException;
 }

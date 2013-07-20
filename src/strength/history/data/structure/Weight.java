@@ -2,6 +2,9 @@ package strength.history.data.structure;
 
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +13,8 @@ import android.os.Parcelable;
  */
 public class Weight extends SyncBase<Weight> {
 	public static final double DEFAULT = 75.0;
+	private static final String JSON_TIME = "time";
+	private static final String JSON_WEIGHT = "we";
 	private long time;
 	private double weight;
 
@@ -75,6 +80,24 @@ public class Weight extends SyncBase<Weight> {
 			return Long.valueOf(getId()).compareTo(another.getId());
 		}
 		return c;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject object = new JSONObject();
+		object.put(JSON_ID, getId());
+		object.put(JSON_SYNC, getSync());
+		object.put(JSON_TIME, time);
+		object.put(JSON_WEIGHT, weight);
+		return object;
+	}
+
+	public static final Weight fromJSON(JSONObject object) throws JSONException {
+		long id = object.getLong(JSON_ID);
+		long sync = object.getLong(JSON_SYNC);
+		long time = object.getLong(JSON_TIME);
+		double weight = object.getDouble(JSON_WEIGHT);
+		return new Weight(id, sync, time, weight);
 	}
 
 	@Override
