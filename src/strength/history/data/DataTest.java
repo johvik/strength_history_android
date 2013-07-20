@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
-import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.data.structure.Weight;
@@ -34,12 +33,12 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 					dataProvider.purge(getApplicationContext());
 					Thread.sleep(500);
 					dataProvider
-							.insert(new Exercise("abc", MuscleGroup.ARMS,
+							.insert(new Exercise("abc",
 									Exercise.DEFAULT_INCREASE),
 									getApplicationContext());
 					dataProvider.delete(e, getApplicationContext());
 					dataProvider
-							.insert(new Exercise("abc", MuscleGroup.ARMS,
+							.insert(new Exercise("abc",
 									Exercise.DEFAULT_INCREASE),
 									getApplicationContext());
 					dataProvider.update(e, getApplicationContext());
@@ -57,7 +56,7 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 	public static void testJSON() {
 		try {
 			{
-				Exercise e1 = new Exercise(1, 2, "test", MuscleGroup.BACK, 65.2);
+				Exercise e1 = new Exercise(1, 2, "test", 65.2);
 				JSONObject o1 = e1.toJSON();
 				Exercise e2 = Exercise.fromJSON(o1);
 				JSONObject o2 = e2.toJSON();

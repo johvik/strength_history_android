@@ -12,7 +12,6 @@
     <string name="empty_str"></string>
     <string name="plus">+</string>
     <string name="minus">-</string>
-    <string name="muscle_group">Muscle group</string>
     <string name="empty_listview_hint_create">Nothing here! Try to create something.</string>
     <string name="empty_listview">Nothing here!</string>
     <string name="create_exercise">Create exercise</string>
@@ -28,7 +27,6 @@
     <string name="save_workout">Save workout</string>
     <string name="no_exercises_found">No exercises found.</string>
     <string name="select_exercise">Select exercise</string>
-    <string name="select_muscle_group">Select muscle group</string>
     <string name="start_workout">Start workout</string>
     <string name="self_weight_entry">Self weight entry</string>
     <string name="settings">Settings</string>

@@ -23,7 +23,6 @@ import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
-import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.active.ActiveExerciseEditFragment;
 import strength.history.ui.active.WorkoutDataSummaryAdapter;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
@@ -199,7 +198,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
+				Exercise.DEFAULT_INCREASE));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);
@@ -258,7 +257,7 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 				buttonNext.setText(R.string.next);
 				ExerciseData e = workoutData.get(index);
 				int pos = exercises.indexOf(new Exercise(e.getExerciseId(), 0,
-						"", MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
+						"", Exercise.DEFAULT_INCREASE));
 				double increase = Exercise.DEFAULT_INCREASE;
 				if (pos != -1) {
 					Exercise ex = exercises.get(pos);

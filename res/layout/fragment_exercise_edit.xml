@@ -30,22 +30,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ui_half_space"
-            android:layout_marginLeft="@dimen/ui_half_space"
-            android:layout_marginTop="@dimen/ui_space"
-            android:text="@string/muscle_group"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <Spinner
-            android:id="@+id/spinnerMuscleGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/select_muscle_group"
-            tools:listitem="@android:layout/simple_spinner_item" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ui_half_space"
             android:layout_marginTop="@dimen/ui_space"
             android:text="@string/standard_increase"

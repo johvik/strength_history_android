@@ -9,7 +9,6 @@ import strength.history.data.DataProvider;
 import strength.history.data.SortedList;
 import strength.history.data.provider.ExerciseProvider;
 import strength.history.data.structure.Exercise;
-import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 import strength.history.ui.dialog.ExerciseDeleteConfirmDialog;
 import android.content.Intent;
@@ -248,8 +247,7 @@ public class ExercisesActivity extends CustomTitleFragmentActivity implements
 	public void onExerciseCreateClick() {
 		listViewExercises.setItemChecked(mCurCheckPosition, false);
 		mCurCheckPosition = -1;
-		starteEditExercise(new Exercise("", MuscleGroup.DEFAULT,
-				Exercise.DEFAULT_INCREASE));
+		starteEditExercise(new Exercise("", Exercise.DEFAULT_INCREASE));
 	}
 
 	@Override

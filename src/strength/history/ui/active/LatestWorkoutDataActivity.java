@@ -20,7 +20,6 @@ import strength.history.data.structure.Exercise;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
-import strength.history.data.structure.Exercise.MuscleGroup;
 import strength.history.ui.custom.CustomTitleFragmentActivity;
 
 public class LatestWorkoutDataActivity extends CustomTitleFragmentActivity
@@ -158,7 +157,7 @@ public class LatestWorkoutDataActivity extends CustomTitleFragmentActivity
 		}
 		ExerciseData d = workoutData.get(position);
 		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
-				MuscleGroup.DEFAULT, Exercise.DEFAULT_INCREASE));
+				Exercise.DEFAULT_INCREASE));
 		Exercise e = null;
 		if (pos != -1) {
 			e = exercises.get(pos);
