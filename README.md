@@ -1,4 +1,4 @@
-strength_history
-================
+Strength History Android
+========================
 
-An android app aiming to store your strength training history
+An Android application aiming to store your strength training history.
