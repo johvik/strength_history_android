@@ -14,7 +14,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
-	private static final String JSON_EXERCISE_ID = "exi";
+	private static final String JSON_EXERCISE_ID = "exercise";
 	private static final String JSON_SETS = "sets";
 	private long exercise_id;
 	private ArrayList<SetData> sets = new ArrayList<SetData>();
@@ -32,11 +32,6 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 		super(in);
 		exercise_id = in.readLong();
 		in.readTypedList(sets, SetData.CREATOR);
-	}
-
-	@Override
-	public String toString() {
-		return "ExerciseData=" + getId() + " " + exercise_id + " " + sets;
 	}
 
 	@Override

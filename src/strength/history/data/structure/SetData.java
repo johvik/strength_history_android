@@ -7,7 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SetData extends Base<SetData> {
-	private static final String JSON_WEIGHT = "we";
+	private static final String JSON_WEIGHT = "weight";
 	private static final String JSON_REPETITIONS = "reps";
 	private double weight;
 	private int repetitions;
@@ -26,11 +26,6 @@ public class SetData extends Base<SetData> {
 		super(in);
 		weight = in.readDouble();
 		repetitions = in.readInt();
-	}
-
-	@Override
-	public String toString() {
-		return "SetData=" + getId() + " " + weight + "kg x" + repetitions;
 	}
 
 	@Override

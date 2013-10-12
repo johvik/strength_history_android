@@ -15,7 +15,7 @@ public class Exercise extends SyncBase<Exercise> {
 	public static double DEFAULT_INCREASE = 2.5;
 
 	private static final String JSON_NAME = "name";
-	private static final String JSON_STANDARD_INCREASE = "si";
+	private static final String JSON_STANDARD_INCREASE = "standardIncrease";
 	private String name;
 	private double standardIncrease;
 
@@ -47,12 +47,6 @@ public class Exercise extends SyncBase<Exercise> {
 		super(in);
 		name = in.readString();
 		standardIncrease = in.readDouble();
-	}
-
-	@Override
-	public String toString() {
-		return "Exercise=" + getId() + ":" + getSync() + " " + name + " "
-				+ standardIncrease;
 	}
 
 	@Override

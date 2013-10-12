@@ -14,7 +14,7 @@ import android.os.Parcelable;
 public class Weight extends SyncBase<Weight> {
 	public static final double DEFAULT = 75.0;
 	private static final String JSON_TIME = "time";
-	private static final String JSON_WEIGHT = "we";
+	private static final String JSON_WEIGHT = "weight";
 	private long time;
 	private double weight;
 
@@ -46,12 +46,6 @@ public class Weight extends SyncBase<Weight> {
 		super(in);
 		time = in.readLong();
 		weight = in.readDouble();
-	}
-
-	@Override
-	public String toString() {
-		return "Weight=" + getId() + ":" + getSync() + " "
-				+ new Date(time).toLocaleString() + " " + weight + " kg";
 	}
 
 	@Override

@@ -17,8 +17,8 @@ import android.os.Parcelable;
 public class WorkoutData extends SyncBase<WorkoutData> implements
 		List<ExerciseData> {
 	private static final String JSON_TIME = "time";
-	private static final String JSON_WORKOUT_ID = "woi";
-	private static final String JSON_EXERCISES = "exs";
+	private static final String JSON_WORKOUT_ID = "workout";
+	private static final String JSON_EXERCISE_DATA = "data";
 	private long time;
 	private long workout_id;
 	private ArrayList<ExerciseData> exercises = new ArrayList<ExerciseData>();
@@ -38,13 +38,6 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		time = in.readLong();
 		workout_id = in.readLong();
 		in.readTypedList(exercises, ExerciseData.CREATOR);
-	}
-
-	@Override
-	public String toString() {
-		return "WorkoutData=" + getId() + ":" + getSync() + " "
-				+ new Date(time).toLocaleString() + " " + workout_id + " "
-				+ exercises;
 	}
 
 	@Override
@@ -87,7 +80,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		for (ExerciseData e : exercises) {
 			array.put(e.toJSON());
 		}
-		object.put(JSON_EXERCISES, array);
+		object.put(JSON_EXERCISE_DATA, array);
 		return object;
 	}
 
@@ -98,7 +91,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		long time = object.getLong(JSON_TIME);
 		long workout_id = object.getLong(JSON_WORKOUT_ID);
 		WorkoutData w = new WorkoutData(id, sync, time, workout_id);
-		JSONArray array = object.getJSONArray(JSON_EXERCISES);
+		JSONArray array = object.getJSONArray(JSON_EXERCISE_DATA);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(ExerciseData.fromJSON(array.getJSONObject(i)));
 		}

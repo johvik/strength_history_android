@@ -16,7 +16,7 @@ import android.os.Parcelable;
 
 public class Workout extends SyncBase<Workout> implements List<Long> {
 	private static final String JSON_NAME = "name";
-	private static final String JSON_EXERCISE_IDS = "exer";
+	private static final String JSON_EXERCISES_ID = "exercises";
 	private String name;
 	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
 
@@ -33,12 +33,6 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		super(in);
 		name = in.readString();
 		in.readList(exercise_ids, Long.class.getClassLoader());
-	}
-
-	@Override
-	public String toString() {
-		return "Workout=" + getId() + ":" + getSync() + " " + name + " "
-				+ exercise_ids;
 	}
 
 	@Override
@@ -63,7 +57,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		for (Long e : exercise_ids) {
 			array.put(e);
 		}
-		object.put(JSON_EXERCISE_IDS, array);
+		object.put(JSON_EXERCISES_ID, array);
 		return object;
 	}
 
@@ -73,7 +67,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		long sync = object.getLong(JSON_SYNC);
 		String name = object.getString(JSON_NAME);
 		Workout w = new Workout(id, sync, name);
-		JSONArray array = object.getJSONArray(JSON_EXERCISE_IDS);
+		JSONArray array = object.getJSONArray(JSON_EXERCISES_ID);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(array.getLong(i));
 		}

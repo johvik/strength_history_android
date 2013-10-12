@@ -15,7 +15,7 @@ import android.os.Parcelable;
 @SuppressLint("ParcelCreator")
 public abstract class Base<T extends Base<?>> implements Comparable<T>,
 		Parcelable {
-	protected static final String JSON_ID = "id";
+	protected static final String JSON_ID = "_id";
 	private long id;
 	private T backup = null;
 
@@ -28,7 +28,13 @@ public abstract class Base<T extends Base<?>> implements Comparable<T>,
 	}
 
 	@Override
-	public abstract String toString();
+	public final String toString() {
+		try {
+			return toJSON().toString(2);
+		} catch (JSONException e) {
+			return e.getLocalizedMessage();
+		}
+	}
 
 	protected abstract T _copy();
 
