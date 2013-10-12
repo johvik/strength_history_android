@@ -82,8 +82,12 @@
     <string name="backup_save_via">Save via</string>
     <string name="backup_subject">%1$s backup</string>
     <string name="backup_text">Data backup from %1$s</string>
-    <string name="backup_email">Backup email</string>
-    <string name="backup_email_summary">This address will be filled in if sent via email.</string>
+    <string name="email">Email</string>
+    <string name="email_summary">This address will be used for backup and for authentication.</string>
+    <string name="password">Password</string>
+    <string name="password_summary">Password to your account.</string>
     <string name="standard_increase">Standard increase</string>
+    <string name="pref_cat_user">User data</string>
+    <string name="pref_cat_backup">Data backup</string>
 
 </resources>

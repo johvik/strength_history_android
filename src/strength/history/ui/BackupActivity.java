@@ -90,7 +90,7 @@ public class BackupActivity extends CustomTitleActivity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String email = sharedPreferences.getString(
-				SettingsActivity.PREF_BACKUP_EMAIL_KEY, "");
+				SettingsActivity.PREF_EMAIL_KEY, "").trim();
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("application/zip");
 		if (email.length() > 0) {

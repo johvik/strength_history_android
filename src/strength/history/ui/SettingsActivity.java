@@ -15,7 +15,9 @@ import android.widget.TextView;
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 	public static final String PREF_WEIGHT_UNITS_KEY = "pref_weight_units_key";
-	public static final String PREF_BACKUP_EMAIL_KEY = "pref_backup_email_key";
+	public static final String PREF_EMAIL_KEY = "pref_email_key";
+	// TODO Improve password security
+	public static final String PREF_PASSWORD_KEY = "pref_password_key";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

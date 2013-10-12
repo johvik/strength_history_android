@@ -23,25 +23,36 @@
             android:targetClass="strength.history.ui.workout.WorkoutsActivity"
             android:targetPackage="strength.history" />
     </Preference>
-    <Preference
-        android:summary="@string/backup_summary"
-        android:title="@string/backup" >
-        <intent
-            android:targetClass="strength.history.ui.BackupActivity"
-            android:targetPackage="strength.history" />
-    </Preference>
-    <Preference
-        android:summary="@string/import_summary"
-        android:title="@string/importt" >
-        <intent
-            android:targetClass="strength.history.ui.ImportActivity"
-            android:targetPackage="strength.history" />
-    </Preference>
 
-    <EditTextPreference
-        android:defaultValue=""
-        android:key="pref_backup_email_key"
-        android:summary="@string/backup_email_summary"
-        android:title="@string/backup_email" />
+    <PreferenceCategory android:title="@string/pref_cat_user" >
+        <EditTextPreference
+            android:defaultValue=""
+            android:inputType="textEmailAddress"
+            android:key="pref_email_key"
+            android:summary="@string/email_summary"
+            android:title="@string/email" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:inputType="textPassword"
+            android:key="pref_password_key"
+            android:summary="@string/password_summary"
+            android:title="@string/password" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_backup" >
+        <Preference
+            android:summary="@string/backup_summary"
+            android:title="@string/backup" >
+            <intent
+                android:targetClass="strength.history.ui.BackupActivity"
+                android:targetPackage="strength.history" />
+        </Preference>
+        <Preference
+            android:summary="@string/import_summary"
+            android:title="@string/importt" >
+            <intent
+                android:targetClass="strength.history.ui.ImportActivity"
+                android:targetPackage="strength.history" />
+        </Preference>
+    </PreferenceCategory>
 
 </PreferenceScreen>
