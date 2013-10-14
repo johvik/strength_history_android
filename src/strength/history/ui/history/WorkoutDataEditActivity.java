@@ -223,7 +223,7 @@ public class WorkoutDataEditActivity extends CustomTitleFragmentActivity
 			return Pair.create(null, null);
 		}
 		ExerciseData d = workoutData.get(position);
-		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "",
+		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "", "",
 				Exercise.DEFAULT_INCREASE));
 		Exercise e = null;
 		if (pos != -1) {

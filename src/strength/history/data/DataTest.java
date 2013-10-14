@@ -56,14 +56,14 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 	public static void testJSON() {
 		try {
 			{
-				Exercise e1 = new Exercise(1, 2, "test", 65.2);
+				Exercise e1 = new Exercise(1, 2, "", "test", 65.2);
 				JSONObject o1 = e1.toJSON();
 				Exercise e2 = Exercise.fromJSON(o1);
 				JSONObject o2 = e2.toJSON();
 				Assert.assertEquals(o1.toString(), o2.toString());
 			}
 			{
-				Workout e1 = new Workout(2, 3, "test");
+				Workout e1 = new Workout(2, 3, "", "test");
 				e1.add(55L);
 				JSONObject o1 = e1.toJSON();
 				Workout e2 = Workout.fromJSON(o1);
@@ -71,14 +71,14 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 				Assert.assertEquals(o1.toString(), o2.toString());
 			}
 			{
-				Weight e1 = new Weight(2, 3, 5, 52.5);
+				Weight e1 = new Weight(2, 3, "", 5, 52.5);
 				JSONObject o1 = e1.toJSON();
 				Weight e2 = Weight.fromJSON(o1);
 				JSONObject o2 = e2.toJSON();
 				Assert.assertEquals(o1.toString(), o2.toString());
 			}
 			{
-				WorkoutData e1 = new WorkoutData(3, 4, 5, 6);
+				WorkoutData e1 = new WorkoutData(3, 4, "", 5, 6);
 				ExerciseData d = new ExerciseData(52, 242);
 				d.add(new SetData(85, 984.2, 2));
 				e1.add(d);

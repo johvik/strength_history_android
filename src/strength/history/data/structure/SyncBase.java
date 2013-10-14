@@ -12,17 +12,21 @@ import android.os.Parcel;
  */
 public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	protected static final String JSON_SYNC = "sync";
+	protected static final String JSON_SERVER_ID = "_id";
 	private long sync;
+	private String serverId;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param id
 	 * @param sync
+	 * @param serverId
 	 */
-	public SyncBase(long id, long sync) {
+	public SyncBase(long id, long sync, String serverId) {
 		super(id);
 		this.sync = sync;
+		this.serverId = serverId;
 	}
 
 	/**
@@ -33,6 +37,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	protected SyncBase(Parcel in) {
 		super(in);
 		sync = in.readLong();
+		serverId = in.readString();
 	}
 
 	/**
@@ -45,6 +50,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	public final void updateFrom(T another) {
 		setId(another.getId());
 		sync = another.sync;
+		serverId = another.serverId;
 		_updateFrom(another);
 	}
 
@@ -52,11 +58,22 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	public final void writeToParcel(Parcel out, int flags) {
 		out.writeLong(getId());
 		out.writeLong(sync);
+		out.writeString(serverId);
 		_writeToParcel(out, flags);
 	}
 
 	@Override
 	public abstract boolean equals(Object o);
+
+	@Override
+	public int compareTo(T another) {
+		int c = serverId.compareTo(another.serverId);
+		if (serverId.length() == 0) {
+			// Super compares id
+			c = super.compareTo(another);
+		}
+		return c;
+	}
 
 	@Override
 	public abstract JSONObject toJSON() throws JSONException;
@@ -78,5 +95,14 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 */
 	public final void setSync(long sync) {
 		this.sync = sync;
+	}
+
+	/**
+	 * Gets the id of the object on the server
+	 * 
+	 * @return The id
+	 */
+	public final String getServerId() {
+		return serverId;
 	}
 }

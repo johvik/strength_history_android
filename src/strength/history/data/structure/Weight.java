@@ -25,7 +25,7 @@ public class Weight extends SyncBase<Weight> {
 	 * @param weight
 	 */
 	public Weight(long time, double weight) {
-		this(-1, new Date().getTime(), time, weight);
+		this(-1, new Date().getTime(), "", time, weight);
 	}
 
 	/**
@@ -33,11 +33,12 @@ public class Weight extends SyncBase<Weight> {
 	 * 
 	 * @param id
 	 * @param sync
+	 * @param serverId
 	 * @param time
 	 * @param weight
 	 */
-	public Weight(long id, long sync, long time, double weight) {
-		super(id, sync);
+	public Weight(long id, long sync, String serverId, long time, double weight) {
+		super(id, sync, serverId);
 		this.time = time;
 		this.weight = weight;
 	}
@@ -55,8 +56,7 @@ public class Weight extends SyncBase<Weight> {
 		} else if (!(o instanceof Weight)) {
 			return false;
 		} else {
-			Weight w = (Weight) o;
-			return getId() == w.getId() && time == w.time;
+			return compareTo((Weight) o) == 0;
 		}
 	}
 
@@ -71,7 +71,7 @@ public class Weight extends SyncBase<Weight> {
 	public int compareTo(Weight another) {
 		int c = Long.valueOf(another.time).compareTo(time); // descending time
 		if (c == 0) {
-			return Long.valueOf(getId()).compareTo(another.getId());
+			c = super.compareTo(another);
 		}
 		return c;
 	}
@@ -81,22 +81,29 @@ public class Weight extends SyncBase<Weight> {
 		JSONObject object = new JSONObject();
 		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
+		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_TIME, time);
 		object.put(JSON_WEIGHT, weight);
 		return object;
 	}
 
 	public static final Weight fromJSON(JSONObject object) throws JSONException {
-		long id = object.getLong(JSON_ID);
+		long id;
+		try {
+			id = object.getLong(JSON_ID);
+		} catch (JSONException e) {
+			id = -1;
+		}
 		long sync = object.getLong(JSON_SYNC);
+		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		double weight = object.getDouble(JSON_WEIGHT);
-		return new Weight(id, sync, time, weight);
+		return new Weight(id, sync, serverId, time, weight);
 	}
 
 	@Override
 	protected Weight _copy() {
-		return new Weight(getId(), getSync(), time, weight);
+		return new Weight(getId(), getSync(), getServerId(), time, weight);
 	}
 
 	@Override

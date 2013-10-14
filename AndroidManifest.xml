@@ -36,6 +36,9 @@
         <service
             android:name="strength.history.data.service.local.LocalWorkoutDataService"
             android:exported="false" />
+        <service
+            android:name="strength.history.data.service.SyncService"
+            android:exported="false" />
 
         <activity android:name="strength.history.ui.BackupActivity" />
         <activity android:name="strength.history.ui.ImportActivity" />

@@ -60,7 +60,8 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
 
 	public String getEventString(Context context, SortedList<Workout> workouts) {
 		if (d != null) {
-			int pos = workouts.indexOf(new Workout(d.getWorkoutId(), 0, ""));
+			int pos = workouts
+					.indexOf(new Workout(d.getWorkoutId(), 0, "", ""));
 			if (pos != -1) {
 				return workouts.get(pos).getName();
 			} else {

@@ -1,6 +1,7 @@
 package strength.history.data;
 
 import strength.history.data.provider.ExerciseProvider;
+import strength.history.data.provider.SyncProvider;
 import strength.history.data.provider.WeightProvider;
 import strength.history.data.provider.WorkoutDataProvider;
 import strength.history.data.provider.WorkoutProvider;
@@ -9,7 +10,6 @@ import strength.history.data.structure.Exercise;
 import strength.history.data.structure.Weight;
 import strength.history.data.structure.Workout;
 import strength.history.data.structure.WorkoutData;
-
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -21,13 +21,14 @@ import android.util.Log;
  */
 public class DataProvider extends Handler implements ExerciseProvider.Provides,
 		WeightProvider.Provides, WorkoutProvider.Provides,
-		WorkoutDataProvider.Provides {
+		WorkoutDataProvider.Provides, SyncProvider.Provides {
 	private Messenger mMessenger = new Messenger(this);
 
 	private ExerciseProvider mExerciseProvider = new ExerciseProvider();
 	private WeightProvider mWeightProvider = new WeightProvider();
 	private WorkoutProvider mWorkoutProvider = new WorkoutProvider();
 	private WorkoutDataProvider mWorkoutDataProvider = new WorkoutDataProvider();
+	private SyncProvider mSyncProvider = new SyncProvider();
 
 	/**
 	 * Warning deletes everything!
@@ -204,5 +205,10 @@ public class DataProvider extends Handler implements ExerciseProvider.Provides,
 	@Override
 	public void update(WorkoutData e, Context context) {
 		mWorkoutDataProvider.update(e, context, mMessenger);
+	}
+
+	@Override
+	public void sync(Context context) {
+		mSyncProvider.sync(context, mMessenger);
 	}
 }

@@ -26,7 +26,7 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param standardIncrease
 	 */
 	public Exercise(String name, double standardIncrease) {
-		this(-1, new Date().getTime(), name, standardIncrease);
+		this(-1, new Date().getTime(), "", name, standardIncrease);
 	}
 
 	/**
@@ -34,11 +34,13 @@ public class Exercise extends SyncBase<Exercise> {
 	 * 
 	 * @param id
 	 * @param sync
+	 * @param serverId
 	 * @param name
 	 * @param standardIncrease
 	 */
-	public Exercise(long id, long sync, String name, double standardIncrease) {
-		super(id, sync);
+	public Exercise(long id, long sync, String serverId, String name,
+			double standardIncrease) {
+		super(id, sync, serverId);
 		this.name = name;
 		this.standardIncrease = standardIncrease;
 	}
@@ -56,8 +58,7 @@ public class Exercise extends SyncBase<Exercise> {
 		} else if (!(o instanceof Exercise)) {
 			return false;
 		} else {
-			Exercise e = (Exercise) o;
-			return getId() == e.getId();
+			return compareTo((Exercise) o) == 0;
 		}
 	}
 
@@ -66,6 +67,7 @@ public class Exercise extends SyncBase<Exercise> {
 		JSONObject object = new JSONObject();
 		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
+		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_NAME, name);
 		object.put(JSON_STANDARD_INCREASE, standardIncrease);
 		return object;
@@ -73,16 +75,23 @@ public class Exercise extends SyncBase<Exercise> {
 
 	public static final Exercise fromJSON(JSONObject object)
 			throws JSONException {
-		long id = object.getLong(JSON_ID);
+		long id;
+		try {
+			id = object.getLong(JSON_ID);
+		} catch (JSONException e) {
+			id = -1;
+		}
 		long sync = object.getLong(JSON_SYNC);
+		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
 		double standardIncrease = object.getDouble(JSON_STANDARD_INCREASE);
-		return new Exercise(id, sync, name, standardIncrease);
+		return new Exercise(id, sync, serverId, name, standardIncrease);
 	}
 
 	@Override
 	protected Exercise _copy() {
-		return new Exercise(getId(), getSync(), name, standardIncrease);
+		return new Exercise(getId(), getSync(), getServerId(), name,
+				standardIncrease);
 	}
 
 	@Override

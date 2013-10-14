@@ -263,7 +263,9 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
-			res = new WorkoutData(id, sync, time, workout_id);
+			// TODO Add serverId to the db
+			String serverId = "";
+			res = new WorkoutData(id, sync, serverId, time, workout_id);
 			// Load data
 			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,
 					Entry.ExerciseData.ALL_COLUMNS,
@@ -315,7 +317,10 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
-			WorkoutData w = new WorkoutData(id, sync, time, workout_id);
+			// TODO Add serverId to the db
+			String serverId = "";
+			WorkoutData w = new WorkoutData(id, sync, serverId, time,
+					workout_id);
 			// Load data
 			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,
 					Entry.ExerciseData.ALL_COLUMNS,

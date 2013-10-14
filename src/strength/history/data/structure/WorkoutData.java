@@ -24,11 +24,12 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	private ArrayList<ExerciseData> exercises = new ArrayList<ExerciseData>();
 
 	public WorkoutData(long time, long workout_id) {
-		this(-1, new Date().getTime(), time, workout_id);
+		this(-1, new Date().getTime(), "", time, workout_id);
 	}
 
-	public WorkoutData(long id, long sync, long time, long workout_id) {
-		super(id, sync);
+	public WorkoutData(long id, long sync, String serverId, long time,
+			long workout_id) {
+		super(id, sync, serverId);
 		this.time = time;
 		this.workout_id = workout_id;
 	}
@@ -47,8 +48,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		} else if (!(o instanceof WorkoutData)) {
 			return false;
 		} else {
-			WorkoutData d = (WorkoutData) o;
-			return getId() == d.getId() && time == d.time;
+			return compareTo((WorkoutData) o) == 0;
 		}
 	}
 
@@ -64,7 +64,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		// Don't care about array
 		int c = Long.valueOf(another.time).compareTo(time); // descending time
 		if (c == 0) {
-			return Long.valueOf(getId()).compareTo(another.getId());
+			c = super.compareTo(another);
 		}
 		return c;
 	}
@@ -74,6 +74,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		JSONObject object = new JSONObject();
 		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
+		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_TIME, time);
 		object.put(JSON_WORKOUT_ID, workout_id);
 		JSONArray array = new JSONArray();
@@ -86,11 +87,17 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 
 	public static final WorkoutData fromJSON(JSONObject object)
 			throws JSONException {
-		long id = object.getLong(JSON_ID);
+		long id;
+		try {
+			id = object.getLong(JSON_ID);
+		} catch (JSONException e) {
+			id = -1;
+		}
 		long sync = object.getLong(JSON_SYNC);
+		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		long workout_id = object.getLong(JSON_WORKOUT_ID);
-		WorkoutData w = new WorkoutData(id, sync, time, workout_id);
+		WorkoutData w = new WorkoutData(id, sync, serverId, time, workout_id);
 		JSONArray array = object.getJSONArray(JSON_EXERCISE_DATA);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(ExerciseData.fromJSON(array.getJSONObject(i)));
@@ -100,7 +107,8 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 
 	@Override
 	protected WorkoutData _copy() {
-		WorkoutData copy = new WorkoutData(getId(), getSync(), time, workout_id);
+		WorkoutData copy = new WorkoutData(getId(), getSync(), getServerId(),
+				time, workout_id);
 		for (ExerciseData e : exercises) {
 			copy.add(e._copy());
 		}

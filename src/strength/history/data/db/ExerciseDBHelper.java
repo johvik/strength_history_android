@@ -118,7 +118,9 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
 			double standardIncrease = cursor.getDouble(3);
-			res.add(new Exercise(id, sync, name, standardIncrease));
+			// TODO Add serverId to the db
+			String serverId = "";
+			res.add(new Exercise(id, sync, serverId, name, standardIncrease));
 			cursor.moveToNext();
 		}
 		cursor.close();

@@ -104,7 +104,9 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
-			res = new Weight(id, sync, time, weight);
+			// TODO Add serverId to the db
+			String serverId = "";
+			res = new Weight(id, sync, serverId, time, weight);
 		}
 		cursor.close();
 		db.close();
@@ -138,7 +140,9 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
-			res.add(new Weight(id, sync, time, weight));
+			// TODO Add serverId to the db
+			String serverId = "";
+			res.add(new Weight(id, sync, serverId, time, weight));
 			cursor.moveToNext();
 		}
 		cursor.close();

@@ -20,12 +20,14 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	private String name;
 	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
 
+	// TODO How to handle exercise_ids vs server ids??
+
 	public Workout(String name) {
-		this(-1, new Date().getTime(), name);
+		this(-1, new Date().getTime(), "", name);
 	}
 
-	public Workout(long id, long sync, String name) {
-		super(id, sync);
+	public Workout(long id, long sync, String serverId, String name) {
+		super(id, sync, serverId);
 		this.name = name;
 	}
 
@@ -42,8 +44,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		} else if (!(o instanceof Workout)) {
 			return false;
 		} else {
-			Workout w = (Workout) o;
-			return getId() == w.getId();
+			return compareTo((Workout) o) == 0;
 		}
 	}
 
@@ -52,6 +53,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		JSONObject object = new JSONObject();
 		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
+		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_NAME, name);
 		JSONArray array = new JSONArray();
 		for (Long e : exercise_ids) {
@@ -63,10 +65,16 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 
 	public static final Workout fromJSON(JSONObject object)
 			throws JSONException {
-		long id = object.getLong(JSON_ID);
+		long id;
+		try {
+			id = object.getLong(JSON_ID);
+		} catch (JSONException e) {
+			id = -1;
+		}
 		long sync = object.getLong(JSON_SYNC);
+		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
-		Workout w = new Workout(id, sync, name);
+		Workout w = new Workout(id, sync, serverId, name);
 		JSONArray array = object.getJSONArray(JSON_EXERCISES_ID);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(array.getLong(i));
@@ -76,7 +84,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 
 	@Override
 	protected Workout _copy() {
-		Workout copy = new Workout(getId(), getSync(), name);
+		Workout copy = new Workout(getId(), getSync(), getServerId(), name);
 		for (Long l : exercise_ids) {
 			copy.add(l.longValue());
 		}

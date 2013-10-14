@@ -135,7 +135,9 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 			long id = cursor.getLong(0);
 			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
-			Workout w = new Workout(id, sync, name);
+			// TODO Add serverId to the db
+			String serverId = "";
+			Workout w = new Workout(id, sync, serverId, name);
 			// Load bindings
 			Cursor c2 = db.query(Entry.Binding.TABLE_NAME,
 					Entry.Binding.ALL_COLUMNS, Entry.Binding.WORKOUT_ID + "=?",
