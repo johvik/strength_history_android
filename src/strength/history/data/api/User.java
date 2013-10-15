@@ -33,10 +33,9 @@ public class User {
 
 	public void logout() throws IOException {
 		Response response = RequestHandler.getInstance().getNoRead(
-				Config.SERVER_ADDRESS + "/logout");
+				Config.SERVER_ADDRESS + "/logout?no_redirect");
 
-		if (response.code == HttpURLConnection.HTTP_MOVED_TEMP) {
-			// Logout sends a 302 redirect
+		if (response.code == HttpURLConnection.HTTP_OK) {
 			authenticated = false;
 		} else {
 			throw new IOException("Failed to logout");
