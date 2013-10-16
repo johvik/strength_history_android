@@ -79,7 +79,6 @@ public class Weight extends SyncBase<Weight> {
 	@Override
 	public JSONObject toJSON() throws JSONException {
 		JSONObject object = new JSONObject();
-		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
 		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_TIME, time);
@@ -88,17 +87,11 @@ public class Weight extends SyncBase<Weight> {
 	}
 
 	public static final Weight fromJSON(JSONObject object) throws JSONException {
-		long id;
-		try {
-			id = object.getLong(JSON_ID);
-		} catch (JSONException e) {
-			id = -1;
-		}
 		long sync = object.getLong(JSON_SYNC);
 		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		double weight = object.getDouble(JSON_WEIGHT);
-		return new Weight(id, sync, serverId, time, weight);
+		return new Weight(-1, sync, serverId, time, weight);
 	}
 
 	@Override

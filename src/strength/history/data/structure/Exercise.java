@@ -65,7 +65,6 @@ public class Exercise extends SyncBase<Exercise> {
 	@Override
 	public JSONObject toJSON() throws JSONException {
 		JSONObject object = new JSONObject();
-		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
 		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_NAME, name);
@@ -75,17 +74,11 @@ public class Exercise extends SyncBase<Exercise> {
 
 	public static final Exercise fromJSON(JSONObject object)
 			throws JSONException {
-		long id;
-		try {
-			id = object.getLong(JSON_ID);
-		} catch (JSONException e) {
-			id = -1;
-		}
 		long sync = object.getLong(JSON_SYNC);
 		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
 		double standardIncrease = object.getDouble(JSON_STANDARD_INCREASE);
-		return new Exercise(id, sync, serverId, name, standardIncrease);
+		return new Exercise(-1, sync, serverId, name, standardIncrease);
 	}
 
 	@Override

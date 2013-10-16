@@ -73,7 +73,6 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	@Override
 	public JSONObject toJSON() throws JSONException {
 		JSONObject object = new JSONObject();
-		object.put(JSON_ID, getId());
 		object.put(JSON_SYNC, getSync());
 		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_TIME, time);
@@ -88,17 +87,11 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 
 	public static final WorkoutData fromJSON(JSONObject object)
 			throws JSONException {
-		long id;
-		try {
-			id = object.getLong(JSON_ID);
-		} catch (JSONException e) {
-			id = -1;
-		}
 		long sync = object.getLong(JSON_SYNC);
 		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		long workout_id = object.getLong(JSON_WORKOUT_ID);
-		WorkoutData w = new WorkoutData(id, sync, serverId, time, workout_id);
+		WorkoutData w = new WorkoutData(-1, sync, serverId, time, workout_id);
 		JSONArray array = object.getJSONArray(JSON_EXERCISE_DATA);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(ExerciseData.fromJSON(array.getJSONObject(i)));
