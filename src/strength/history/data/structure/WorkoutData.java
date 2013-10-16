@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Pair;
 
 public class WorkoutData extends SyncBase<WorkoutData> implements
 		List<ExerciseData> {
@@ -25,12 +24,12 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	private ArrayList<ExerciseData> exercises = new ArrayList<ExerciseData>();
 
 	public WorkoutData(long time, long workout_id) {
-		this(-1, new Date().getTime(), "", time, workout_id);
+		this(-1, new Date().getTime(), "", State.NEW, time, workout_id);
 	}
 
-	public WorkoutData(long id, long sync, String serverId, long time,
-			long workout_id) {
-		super(id, sync, serverId);
+	public WorkoutData(long id, long sync, String serverId, State state,
+			long time, long workout_id) {
+		super(id, sync, serverId, state);
 		this.time = time;
 		this.workout_id = workout_id;
 	}
@@ -91,7 +90,9 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		long workout_id = object.getLong(JSON_WORKOUT_ID);
-		WorkoutData w = new WorkoutData(-1, sync, serverId, time, workout_id);
+		WorkoutData w = new WorkoutData(-1, sync, serverId,
+				(serverId.length() == 0) ? State.NEW : State.UPDATED, time,
+				workout_id);
 		JSONArray array = object.getJSONArray(JSON_EXERCISE_DATA);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(ExerciseData.fromJSON(array.getJSONObject(i)));
@@ -102,7 +103,7 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	@Override
 	protected WorkoutData _copy() {
 		WorkoutData copy = new WorkoutData(getId(), getSync(), getServerId(),
-				time, workout_id);
+				getState(), time, workout_id);
 		for (ExerciseData e : exercises) {
 			copy.add(e._copy());
 		}
@@ -147,23 +148,19 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	}
 
 	/**
-	 * Gets the exercise data at position. And looks for the exercise id in the
-	 * provided list.
+	 * Gets the workout for this workout data
 	 * 
-	 * @param position
-	 * @param exercises
-	 * @return A pair with the exercise data and the exercise or null.
+	 * @param workouts
+	 *            List to look in
+	 * @return The workout or null
 	 */
-	public Pair<ExerciseData, Exercise> getPairItem(int position,
-			List<Exercise> exercises) {
-		ExerciseData d = get(position);
-		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "", "",
-				Exercise.DEFAULT_INCREASE));
-		Exercise e = null;
+	public Workout getWorkout(List<Workout> workouts) {
+		int pos = workouts
+				.indexOf(new Workout(workout_id, 0, "", State.NEW, ""));
 		if (pos != -1) {
-			e = exercises.get(pos);
+			return workouts.get(pos);
 		}
-		return Pair.create(d, e);
+		return null;
 	}
 
 	/*

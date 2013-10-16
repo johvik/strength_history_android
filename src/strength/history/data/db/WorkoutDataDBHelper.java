@@ -13,6 +13,7 @@ import strength.history.data.db.entry.WeightColumn;
 import strength.history.data.structure.ExerciseData;
 import strength.history.data.structure.SetData;
 import strength.history.data.structure.WorkoutData;
+import strength.history.data.structure.SyncBase.State;
 
 public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	private interface Entry extends BaseColumns, TimeColumn, SyncColumns {
@@ -263,9 +264,10 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
-			// TODO Add serverId to the db
+			// TODO Add serverId and state to the db
 			String serverId = "";
-			res = new WorkoutData(id, sync, serverId, time, workout_id);
+			State state = State.NEW;
+			res = new WorkoutData(id, sync, serverId, state, time, workout_id);
 			// Load data
 			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,
 					Entry.ExerciseData.ALL_COLUMNS,
@@ -317,9 +319,10 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			long workout_id = cursor.getLong(3);
-			// TODO Add serverId to the db
+			// TODO Add serverId and state to the db
 			String serverId = "";
-			WorkoutData w = new WorkoutData(id, sync, serverId, time,
+			State state = State.NEW;
+			WorkoutData w = new WorkoutData(id, sync, serverId, state, time,
 					workout_id);
 			// Load data
 			Cursor c2 = db.query(Entry.ExerciseData.TABLE_NAME,

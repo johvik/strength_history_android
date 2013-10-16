@@ -25,7 +25,7 @@ public class Weight extends SyncBase<Weight> {
 	 * @param weight
 	 */
 	public Weight(long time, double weight) {
-		this(-1, new Date().getTime(), "", time, weight);
+		this(-1, new Date().getTime(), "", State.NEW, time, weight);
 	}
 
 	/**
@@ -34,11 +34,13 @@ public class Weight extends SyncBase<Weight> {
 	 * @param id
 	 * @param sync
 	 * @param serverId
+	 * @param state
 	 * @param time
 	 * @param weight
 	 */
-	public Weight(long id, long sync, String serverId, long time, double weight) {
-		super(id, sync, serverId);
+	public Weight(long id, long sync, String serverId, State state, long time,
+			double weight) {
+		super(id, sync, serverId, state);
 		this.time = time;
 		this.weight = weight;
 	}
@@ -91,12 +93,16 @@ public class Weight extends SyncBase<Weight> {
 		String serverId = object.getString(JSON_SERVER_ID);
 		long time = object.getLong(JSON_TIME);
 		double weight = object.getDouble(JSON_WEIGHT);
-		return new Weight(-1, sync, serverId, time, weight);
+		// TODO Should it use UPDATED to trigger a sync if it has a server id?
+		return new Weight(-1, sync, serverId,
+				(serverId.length() == 0) ? State.NEW : State.UPDATED, time,
+				weight);
 	}
 
 	@Override
 	protected Weight _copy() {
-		return new Weight(getId(), getSync(), getServerId(), time, weight);
+		return new Weight(getId(), getSync(), getServerId(), getState(), time,
+				weight);
 	}
 
 	@Override

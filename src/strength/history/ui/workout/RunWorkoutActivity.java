@@ -196,7 +196,8 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 		if (workoutData == null) {
 			return Pair.create(null, null);
 		}
-		return workoutData.getPairItem(position, exercises);
+		ExerciseData d = workoutData.get(position);
+		return Pair.create(d, d.getExercise(exercises));
 	}
 
 	private void save() {
@@ -248,12 +249,10 @@ public class RunWorkoutActivity extends CustomTitleFragmentActivity implements
 			}
 			if (index < size) {
 				buttonNext.setText(R.string.next);
-				Pair<ExerciseData, Exercise> exp = workoutData.getPairItem(
-						index, exercises);
-				ExerciseData e = exp.first;
+				ExerciseData e = workoutData.get(index);
 				double increase = Exercise.DEFAULT_INCREASE;
-				if (exp.second != null) {
-					Exercise ex = exp.second;
+				Exercise ex = e.getExercise(exercises);
+				if (ex != null) {
 					increase = ex.getStandardIncrease();
 					setTitle((index + 1) + "/" + size + " " + ex.getName());
 				}

@@ -26,7 +26,7 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param standardIncrease
 	 */
 	public Exercise(String name, double standardIncrease) {
-		this(-1, new Date().getTime(), "", name, standardIncrease);
+		this(-1, new Date().getTime(), "", State.NEW, name, standardIncrease);
 	}
 
 	/**
@@ -35,12 +35,13 @@ public class Exercise extends SyncBase<Exercise> {
 	 * @param id
 	 * @param sync
 	 * @param serverId
+	 * @param state
 	 * @param name
 	 * @param standardIncrease
 	 */
-	public Exercise(long id, long sync, String serverId, String name,
-			double standardIncrease) {
-		super(id, sync, serverId);
+	public Exercise(long id, long sync, String serverId, State state,
+			String name, double standardIncrease) {
+		super(id, sync, serverId, state);
 		this.name = name;
 		this.standardIncrease = standardIncrease;
 	}
@@ -78,13 +79,15 @@ public class Exercise extends SyncBase<Exercise> {
 		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
 		double standardIncrease = object.getDouble(JSON_STANDARD_INCREASE);
-		return new Exercise(-1, sync, serverId, name, standardIncrease);
+		return new Exercise(-1, sync, serverId,
+				(serverId.length() == 0) ? State.NEW : State.UPDATED, name,
+				standardIncrease);
 	}
 
 	@Override
 	protected Exercise _copy() {
-		return new Exercise(getId(), getSync(), getServerId(), name,
-				standardIncrease);
+		return new Exercise(getId(), getSync(), getServerId(), getState(),
+				name, standardIncrease);
 	}
 
 	@Override

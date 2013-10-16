@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import strength.history.data.db.entry.NameColumn;
 import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.structure.Exercise;
+import strength.history.data.structure.SyncBase.State;
 
 /**
  * DB helper for Exercise
@@ -118,9 +119,11 @@ public class ExerciseDBHelper extends DBHelperBase<Exercise> {
 			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
 			double standardIncrease = cursor.getDouble(3);
-			// TODO Add serverId to the db
+			// TODO Add serverId and state to the db
 			String serverId = "";
-			res.add(new Exercise(id, sync, serverId, name, standardIncrease));
+			State state = State.NEW;
+			res.add(new Exercise(id, sync, serverId, state, name,
+					standardIncrease));
 			cursor.moveToNext();
 		}
 		cursor.close();

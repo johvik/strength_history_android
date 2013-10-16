@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import strength.history.data.structure.SyncBase.State;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -129,6 +130,22 @@ public class ExerciseData extends Base<ExerciseData> implements List<SetData> {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Gets the exercise for this exercise data
+	 * 
+	 * @param exercises
+	 *            List to look in
+	 * @return The exercise or null
+	 */
+	public Exercise getExercise(List<Exercise> exercises) {
+		int pos = exercises.indexOf(new Exercise(exercise_id, 0, "", State.NEW,
+				"", Exercise.DEFAULT_INCREASE));
+		if (pos != -1) {
+			return exercises.get(pos);
+		}
+		return null;
 	}
 
 	/*

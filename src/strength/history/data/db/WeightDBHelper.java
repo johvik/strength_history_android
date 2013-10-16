@@ -6,6 +6,7 @@ import strength.history.data.db.entry.SyncColumns;
 import strength.history.data.db.entry.TimeColumn;
 import strength.history.data.db.entry.WeightColumn;
 import strength.history.data.structure.Weight;
+import strength.history.data.structure.SyncBase.State;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -104,9 +105,10 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
-			// TODO Add serverId to the db
+			// TODO Add serverId and state to the db
 			String serverId = "";
-			res = new Weight(id, sync, serverId, time, weight);
+			State state = State.NEW;
+			res = new Weight(id, sync, serverId, state, time, weight);
 		}
 		cursor.close();
 		db.close();
@@ -140,9 +142,10 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 			long sync = cursor.getLong(1);
 			long time = cursor.getLong(2);
 			double weight = cursor.getDouble(3);
-			// TODO Add serverId to the db
+			// TODO Add serverId and state to the db
 			String serverId = "";
-			res.add(new Weight(id, sync, serverId, time, weight));
+			State state = State.NEW;
+			res.add(new Weight(id, sync, serverId, state, time, weight));
 			cursor.moveToNext();
 		}
 		cursor.close();

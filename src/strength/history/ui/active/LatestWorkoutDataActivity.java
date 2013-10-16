@@ -155,6 +155,7 @@ public class LatestWorkoutDataActivity extends CustomTitleFragmentActivity
 		if (workoutData == null) {
 			return Pair.create(null, null);
 		}
-		return workoutData.getPairItem(position, exercises);
+		ExerciseData d = workoutData.get(position);
+		return Pair.create(d, d.getExercise(exercises));
 	}
 }

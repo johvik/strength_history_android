@@ -11,10 +11,35 @@ import android.os.Parcel;
  * @param <T>
  */
 public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
+	public enum State {
+		/**
+		 * Data is unchanged since last sync
+		 */
+		OLD,
+		/**
+		 * The data has been added since last sync
+		 */
+		NEW,
+		/**
+		 * The data has been updated since last sync
+		 */
+		UPDATED,
+		/**
+		 * The data has been removed since last sync
+		 */
+		DELETED;
+		private static final State[] STATE_VALUES = State.values();
+
+		public static State parse(int i) {
+			return STATE_VALUES[i % STATE_VALUES.length];
+		}
+	};
+
 	protected static final String JSON_SYNC = "sync";
 	protected static final String JSON_SERVER_ID = "_id";
 	private long sync;
 	private String serverId;
+	private State state;
 
 	/**
 	 * Constructor
@@ -22,11 +47,13 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 * @param id
 	 * @param sync
 	 * @param serverId
+	 * @param state
 	 */
-	public SyncBase(long id, long sync, String serverId) {
+	public SyncBase(long id, long sync, String serverId, State state) {
 		super(id);
 		this.sync = sync;
 		this.serverId = serverId;
+		this.state = state;
 	}
 
 	/**
@@ -38,6 +65,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 		super(in);
 		sync = in.readLong();
 		serverId = in.readString();
+		state = State.parse(in.readInt());
 	}
 
 	/**
@@ -51,6 +79,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 		setId(another.getId());
 		sync = another.sync;
 		serverId = another.serverId;
+		state = another.state;
 		_updateFrom(another);
 	}
 
@@ -59,6 +88,7 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 		out.writeLong(getId());
 		out.writeLong(sync);
 		out.writeString(serverId);
+		out.writeInt(state.ordinal());
 		_writeToParcel(out, flags);
 	}
 
@@ -104,5 +134,14 @@ public abstract class SyncBase<T extends SyncBase<?>> extends Base<T> {
 	 */
 	public final String getServerId() {
 		return serverId;
+	}
+
+	/**
+	 * Gets the state of the local object
+	 * 
+	 * @return The state
+	 */
+	public final State getState() {
+		return state;
 	}
 }

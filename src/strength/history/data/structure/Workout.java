@@ -23,11 +23,11 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	// TODO How to handle exercise_ids vs server ids??
 
 	public Workout(String name) {
-		this(-1, new Date().getTime(), "", name);
+		this(-1, new Date().getTime(), "", State.NEW, name);
 	}
 
-	public Workout(long id, long sync, String serverId, String name) {
-		super(id, sync, serverId);
+	public Workout(long id, long sync, String serverId, State state, String name) {
+		super(id, sync, serverId, state);
 		this.name = name;
 	}
 
@@ -67,7 +67,8 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		long sync = object.getLong(JSON_SYNC);
 		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
-		Workout w = new Workout(-1, sync, serverId, name);
+		Workout w = new Workout(-1, sync, serverId,
+				(serverId.length() == 0) ? State.NEW : State.UPDATED, name);
 		JSONArray array = object.getJSONArray(JSON_EXERCISES_ID);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(array.getLong(i));
@@ -77,7 +78,8 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 
 	@Override
 	protected Workout _copy() {
-		Workout copy = new Workout(getId(), getSync(), getServerId(), name);
+		Workout copy = new Workout(getId(), getSync(), getServerId(),
+				getState(), name);
 		for (Long l : exercise_ids) {
 			copy.add(l.longValue());
 		}
