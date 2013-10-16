@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Pair;
 
 public class WorkoutData extends SyncBase<WorkoutData> implements
 		List<ExerciseData> {
@@ -150,6 +151,26 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 
 	public long getWorkoutId() {
 		return workout_id;
+	}
+
+	/**
+	 * Gets the exercise data at position. And looks for the exercise id in the
+	 * provided list.
+	 * 
+	 * @param position
+	 * @param exercises
+	 * @return A pair with the exercise data and the exercise or null.
+	 */
+	public Pair<ExerciseData, Exercise> getPairItem(int position,
+			List<Exercise> exercises) {
+		ExerciseData d = get(position);
+		int pos = exercises.indexOf(new Exercise(d.getExerciseId(), 0, "", "",
+				Exercise.DEFAULT_INCREASE));
+		Exercise e = null;
+		if (pos != -1) {
+			e = exercises.get(pos);
+		}
+		return Pair.create(d, e);
 	}
 
 	/*
