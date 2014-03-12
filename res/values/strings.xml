@@ -89,5 +89,6 @@
     <string name="standard_increase">Standard increase</string>
     <string name="pref_cat_user">User data</string>
     <string name="pref_cat_backup">Data backup</string>
+    <string name="show_in_list">Show in list</string>
 
 </resources>

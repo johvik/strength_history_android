@@ -155,8 +155,8 @@ public class WorkoutData extends SyncBase<WorkoutData> implements
 	 * @return The workout or null
 	 */
 	public Workout getWorkout(List<Workout> workouts) {
-		int pos = workouts
-				.indexOf(new Workout(workout_id, 0, "", State.NEW, ""));
+		int pos = workouts.indexOf(new Workout(workout_id, 0, "", State.NEW,
+				"", true));
 		if (pos != -1) {
 			return workouts.get(pos);
 		}

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class WorkoutEditFragment extends Fragment implements
 
 	private Button addButton;
 	private EditText editTextName;
+	private CheckBox checkBoxVisible;
 	private LinearLayout linearLayoutSpinners;
 	private Workout mWorkout = null;
 	private DataProvider dataProvider = null;
@@ -108,6 +110,7 @@ public class WorkoutEditFragment extends Fragment implements
 	private void save() {
 		if (mWorkout != null) {
 			mWorkout.setName(editTextName.getText().toString());
+			mWorkout.setVisible(checkBoxVisible.isChecked());
 			mWorkout.clear();
 			for (int i = 0, j = linearLayoutSpinners.getChildCount(); i < j; i++) {
 				ExercisePicker p = (ExercisePicker) linearLayoutSpinners
@@ -130,6 +133,7 @@ public class WorkoutEditFragment extends Fragment implements
 		mWorkout = e;
 		if (mWorkout != null) {
 			editTextName.setText(mWorkout.getName());
+			checkBoxVisible.setChecked(mWorkout.isVisible());
 			linearLayoutSpinners.removeAllViews();
 			for (int i = 0, j = mWorkout.size(); i < j; i++) {
 				ExercisePicker p = new ExercisePicker(getActivity());
@@ -165,6 +169,7 @@ public class WorkoutEditFragment extends Fragment implements
 		View view = inflater.inflate(R.layout.fragment_workout_edit, container,
 				false);
 		editTextName = (EditText) view.findViewById(R.id.editTextName);
+		checkBoxVisible = (CheckBox) view.findViewById(R.id.checkBoxVisible);
 		addButton = (Button) view.findViewById(R.id.buttonAdd);
 		linearLayoutSpinners = (LinearLayout) view
 				.findViewById(R.id.linearLayoutSpinners);

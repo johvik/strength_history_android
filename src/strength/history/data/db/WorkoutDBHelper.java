@@ -15,7 +15,9 @@ import strength.history.data.structure.SyncBase.State;
 public class WorkoutDBHelper extends DBHelperBase<Workout> {
 	private interface Entry extends BaseColumns, NameColumn, SyncColumns {
 		static final String TABLE_NAME = "workout";
-		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME };
+		static final String VISIBLE = "visible";
+		static final String[] ALL_COLUMNS = new String[] { _ID, SYNC, NAME,
+				VISIBLE };
 
 		interface Binding extends BaseColumns {
 			static final String TABLE_NAME = "binding";
@@ -60,6 +62,7 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 		ContentValues values = new ContentValues();
 		values.put(Entry.SYNC, e.getSync());
 		values.put(Entry.NAME, e.getName());
+		values.put(Entry.VISIBLE, e.isVisible() ? 1 : 0);
 
 		return values;
 	}
@@ -136,10 +139,11 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 			long id = cursor.getLong(0);
 			long sync = cursor.getLong(1);
 			String name = cursor.getString(2);
+			boolean visible = cursor.getInt(3) != 0;
 			// TODO Add serverId and state to the db
 			String serverId = "";
 			State state = State.NEW;
-			Workout w = new Workout(id, sync, serverId, state, name);
+			Workout w = new Workout(id, sync, serverId, state, name, visible);
 			// Load bindings
 			Cursor c2 = db.query(Entry.Binding.TABLE_NAME,
 					Entry.Binding.ALL_COLUMNS, Entry.Binding.WORKOUT_ID + "=?",
@@ -196,7 +200,8 @@ public class WorkoutDBHelper extends DBHelperBase<Workout> {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE " + Entry.TABLE_NAME + " (" + Entry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + Entry.SYNC
-				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL);");
+				+ " INTEGER NOT NULL, " + Entry.NAME + " TEXT NOT NULL, "
+				+ Entry.VISIBLE + " INTEGER NOT NULL);");
 
 		db.execSQL("CREATE TABLE " + Entry.Binding.TABLE_NAME + " ("
 				+ Entry.Binding._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "

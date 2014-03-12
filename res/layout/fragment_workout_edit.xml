@@ -23,6 +23,12 @@
         android:hint="@string/name"
         android:inputType="textCapSentences" />
 
+    <CheckBox
+        android:id="@+id/checkBoxVisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_in_list" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -64,7 +64,7 @@ public class DataTest extends Activity implements ExerciseProvider.Events {
 				Assert.assertEquals(o1.toString(), o2.toString());
 			}
 			{
-				Workout e1 = new Workout(2, 3, "", State.NEW, "test");
+				Workout e1 = new Workout(2, 3, "", State.NEW, "test", true);
 				e1.add(55L);
 				JSONObject o1 = e1.toJSON();
 				Workout e2 = Workout.fromJSON(o1);

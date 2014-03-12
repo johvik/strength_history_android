@@ -141,7 +141,7 @@ public class ActiveWorkoutListFragment extends Fragment implements
 
 	@Override
 	public void insertCallback(Workout e, boolean ok) {
-		if (ok) {
+		if (ok && e.isVisible()) {
 			// New ones doesn't have history
 			activeWorkoutList.add(Pair.create(e, (WorkoutData) null));
 			totalWorkouts++;
@@ -152,14 +152,34 @@ public class ActiveWorkoutListFragment extends Fragment implements
 	@Override
 	public void updateCallback(Workout old, Workout e, boolean ok) {
 		if (ok) {
-			long id = e.getId();
-			for (int i = 0, j = activeWorkoutList.size(); i < j; i++) {
-				if (id == activeWorkoutList.get(i).first.getId()) {
-					// Use old data
-					Pair<Workout, WorkoutData> p = activeWorkoutList.remove(i);
-					activeWorkoutList.add(Pair.create(e, p.second));
-					activeWorkoutAdapter.notifyDataSetChanged();
-					break;
+			boolean visible = e.isVisible();
+			if (visible) {
+				if (old.isVisible()) {
+					// Already visible (just update)
+					long id = e.getId();
+					for (int i = 0, j = activeWorkoutList.size(); i < j; i++) {
+						if (id == activeWorkoutList.get(i).first.getId()) {
+							// Use old data
+							Pair<Workout, WorkoutData> p = activeWorkoutList
+									.remove(i);
+							activeWorkoutList.add(Pair.create(e, p.second));
+							activeWorkoutAdapter.notifyDataSetChanged();
+							break;
+						}
+					}
+				} else {
+					// It becomes shown
+					totalWorkouts += 1;
+					activeWorkoutList.add(Pair.create(e, (WorkoutData) null));
+					dataProvider.latestWorkoutData(e.getId(), getActivity());
+				}
+			} else {
+				// Invisible
+				if (old.isVisible()) {
+					// It becomes hidden (same as delete)
+					deleteCallback(e, ok);
+				} else {
+					// Already invisible: do nothing
 				}
 			}
 		}
@@ -175,8 +195,10 @@ public class ActiveWorkoutListFragment extends Fragment implements
 			}
 		}
 		for (Workout w : e) {
-			activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
-			dataProvider.latestWorkoutData(w.getId(), getActivity());
+			if (w.isVisible()) { // Only add visible
+				activeWorkoutList.add(Pair.create(w, (WorkoutData) null));
+				dataProvider.latestWorkoutData(w.getId(), getActivity());
+			}
 		}
 	}
 

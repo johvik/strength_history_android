@@ -17,23 +17,28 @@ import android.os.Parcelable;
 public class Workout extends SyncBase<Workout> implements List<Long> {
 	private static final String JSON_NAME = "name";
 	private static final String JSON_EXERCISES_ID = "exercises";
+	private static final String JSON_VISIBLE = "visible";
 	private String name;
 	private ArrayList<Long> exercise_ids = new ArrayList<Long>();
+	private boolean visible;
 
 	// TODO How to handle exercise_ids vs server ids??
 
 	public Workout(String name) {
-		this(-1, new Date().getTime(), "", State.NEW, name);
+		this(-1, new Date().getTime(), "", State.NEW, name, true);
 	}
 
-	public Workout(long id, long sync, String serverId, State state, String name) {
+	public Workout(long id, long sync, String serverId, State state,
+			String name, boolean visible) {
 		super(id, sync, serverId, state);
 		this.name = name;
+		this.visible = visible;
 	}
 
 	protected Workout(Parcel in) {
 		super(in);
 		name = in.readString();
+		visible = in.readByte() != 0;
 		in.readList(exercise_ids, Long.class.getClassLoader());
 	}
 
@@ -54,6 +59,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		object.put(JSON_SYNC, getSync());
 		object.put(JSON_SERVER_ID, getServerId());
 		object.put(JSON_NAME, name);
+		object.put(JSON_VISIBLE, visible);
 		JSONArray array = new JSONArray();
 		for (Long e : exercise_ids) {
 			array.put(e);
@@ -67,8 +73,10 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 		long sync = object.getLong(JSON_SYNC);
 		String serverId = object.getString(JSON_SERVER_ID);
 		String name = object.getString(JSON_NAME);
+		boolean visible = object.getBoolean(JSON_VISIBLE);
 		Workout w = new Workout(-1, sync, serverId,
-				(serverId.length() == 0) ? State.NEW : State.UPDATED, name);
+				(serverId.length() == 0) ? State.NEW : State.UPDATED, name,
+				visible);
 		JSONArray array = object.getJSONArray(JSON_EXERCISES_ID);
 		for (int i = 0, j = array.length(); i < j; i++) {
 			w.add(array.getLong(i));
@@ -79,7 +87,7 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	@Override
 	protected Workout _copy() {
 		Workout copy = new Workout(getId(), getSync(), getServerId(),
-				getState(), name);
+				getState(), name, visible);
 		for (Long l : exercise_ids) {
 			copy.add(l.longValue());
 		}
@@ -89,12 +97,14 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 	@Override
 	protected void _updateFrom(Workout another) {
 		name = another.name;
+		visible = another.visible;
 		exercise_ids = another.exercise_ids;
 	}
 
 	@Override
 	protected void _writeToParcel(Parcel out, int flags) {
 		out.writeString(name);
+		out.writeByte((byte) (visible ? 1 : 0));
 		out.writeList(exercise_ids);
 	}
 
@@ -124,6 +134,14 @@ public class Workout extends SyncBase<Workout> implements List<Long> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	/*

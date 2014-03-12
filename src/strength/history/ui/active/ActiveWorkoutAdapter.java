@@ -48,7 +48,8 @@ public class ActiveWorkoutAdapter extends
 		}
 
 		Pair<Workout, WorkoutData> e = list.get(position);
-		text1.setText(e.first.getName());
+		Workout w = e.first;
+		text1.setText(w.getName());
 		WorkoutData d = e.second;
 		if (d != null) {
 			text2.setText(DateFormat.getMediumDateFormat(context).format(
