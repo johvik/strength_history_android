@@ -23,32 +23,26 @@ public abstract class Provider<E extends SyncBase<E>> {
 	protected final HashSet<E> data = new HashSet<E>();
 	protected boolean loaded = false;
 
-	@SuppressWarnings("static-method")
 	protected int getDeleteArg() {
 		return Request.DELETE.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getInsertArg() {
 		return Request.INSERT.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getPurgeArg() {
 		return Request.PURGE.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getQueryArg() {
 		return Request.QUERY.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getStopArg() {
 		return Request.STOP.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getUpdateArg() {
 		return Request.UPDATE.ordinal();
 	}

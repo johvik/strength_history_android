@@ -31,9 +31,10 @@ public class WorkoutsActivity extends CustomTitleFragmentActivity implements
 			new Comparator<Workout>() {
 				@Override
 				public int compare(Workout lhs, Workout rhs) {
-					int c = lhs.getName().compareTo(rhs.getName());
-					if (c == 0) {
-						c = lhs.compareTo(rhs);
+					int c = lhs.compareTo(rhs);
+					if (c != 0) {
+						// Sort by name if not the same workout
+						c = lhs.getName().compareTo(rhs.getName());
 					}
 					return c;
 				}

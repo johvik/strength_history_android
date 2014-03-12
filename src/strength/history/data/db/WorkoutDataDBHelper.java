@@ -180,7 +180,6 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	 * @param exerciseQueryId
 	 * @return null if nothing was found
 	 */
-	@SuppressWarnings("static-method")
 	public ExerciseData latestExerciseData(long exerciseQueryId) {
 		if (exerciseQueryId == -1) {
 			return null;
@@ -246,7 +245,6 @@ public class WorkoutDataDBHelper extends DBHelperBase<WorkoutData> {
 	 * @param workoutQueryId
 	 * @return null if nothing was found
 	 */
-	@SuppressWarnings("static-method")
 	public WorkoutData latestWorkoutData(long workoutQueryId) {
 		WorkoutData res = null;
 		if (workoutQueryId == -1) {

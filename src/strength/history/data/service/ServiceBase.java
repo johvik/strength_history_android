@@ -16,27 +16,22 @@ public abstract class ServiceBase<E extends SyncBase<E>> extends IntentService {
 
 	protected abstract int getArg1();
 
-	@SuppressWarnings("static-method")
 	protected int getDeleteArg() {
 		return Request.DELETE.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getInsertArg() {
 		return Request.INSERT.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getQueryArg() {
 		return Request.QUERY.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getStopArg() {
 		return Request.STOP.ordinal();
 	}
 
-	@SuppressWarnings("static-method")
 	protected int getUpdateArg() {
 		return Request.UPDATE.ordinal();
 	}

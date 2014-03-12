@@ -92,7 +92,6 @@ public class WeightDBHelper extends DBHelperBase<Weight> {
 	 * 
 	 * @return null if nothing was found
 	 */
-	@SuppressWarnings("static-method")
 	public Weight latest() {
 		Weight res = null;
 		SQLiteDatabase db = instance.getReadableDatabase();
